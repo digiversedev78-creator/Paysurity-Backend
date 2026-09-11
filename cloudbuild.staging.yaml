@@ -1,0 +1,58 @@
+steps:
+  # 1. Build the NestJS API Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/api:$COMMIT_SHA'
+      - '-f'
+      - 'apps/api/Dockerfile'
+      - '.'
+    id: 'build-api'
+
+  # 2. Build the Admin Portal Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/admin-portal:$COMMIT_SHA'
+      - '-f'
+      - 'apps/admin-portal/Dockerfile'
+      - '.'
+    id: 'build-admin-portal'
+    waitFor: ['-'] # Run concurrently
+
+  # 3. Build the Public Website Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/public-website:$COMMIT_SHA'
+      - '-f'
+      - 'apps/public-website/Dockerfile'
+      - '.'
+    id: 'build-public-website'
+    waitFor: ['-'] # Run concurrently
+
+  # 4. Build the Merchant Dashboard Config
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/merchant-dashboard:$COMMIT_SHA'
+      - '-f'
+      - 'apps/merchant-dashboard/Dockerfile'
+      - '.'
+    id: 'build-merchant-dashboard'
+    waitFor: ['-'] # Run concurrently
+
+# Push all built images to Google Artifact Registry
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/api:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/admin-portal:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/public-website:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/paysurity-repo/merchant-dashboard:$COMMIT_SHA'
+
+options:
+  machineType: 'E2_HIGHCPU_8' # Use a faster machine type for parallel monorepo builds
+  logging: CLOUD_LOGGING_ONLY

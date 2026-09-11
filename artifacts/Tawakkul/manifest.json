@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Hyderabadi Goat Dum Biryani",
+    "target_price": 22.49,
+    "status": "ASSET_LIVE",
+    "source": "Grubhub",
+    "asset_id": "tawakkul_biryani_001",
+    "gcs_target": "gs://paysurity-assets/Tawakkul/hyderabadi_goat_dum_biryani.jpg"
+  },
+  {
+    "name": "Lamb Chops",
+    "target_price": 18.99,
+    "status": "ASSET_LIVE",
+    "source": "Grubhub",
+    "asset_id": "tawakkul_lamb_002",
+    "gcs_target": "gs://paysurity-assets/Tawakkul/lamb_chops.jpg"
+  },
+  {
+    "name": "Malai Kebab",
+    "target_price": 12.99,
+    "status": "ASSET_LIVE",
+    "source": "Grubhub",
+    "asset_id": "tawakkul_malai_003",
+    "gcs_target": "gs://paysurity-assets/Tawakkul/malai_kebab.jpg"
+  }
+]

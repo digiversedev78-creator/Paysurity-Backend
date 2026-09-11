@@ -1,0 +1,71 @@
+﻿src/modules/checkout/orders.service.ts(65,113): error TS1005: ';' expected.
+src/modules/checkout/orders.service.ts(65,115): error TS1434: Unexpected keyword or identifier.
+src/modules/checkout/orders.service.ts(65,118): error TS1434: Unexpected keyword or identifier.
+src/modules/checkout/orders.service.ts(65,121): error TS1128: Declaration or statement expected.
+src/modules/checkout/orders.service.ts(133,19): error TS1005: ',' expected.
+src/modules/checkout/orders.service.ts(133,24): error TS1005: ',' expected.
+src/modules/checkout/orders.service.ts(133,27): error TS1005: ',' expected.
+src/modules/checkout/orders.service.ts(133,29): error TS1181: Array element destructuring pattern expected.
+src/modules/checkout/orders.service.ts(133,30): error TS1005: ';' expected.
+src/modules/gift-cards/gift-cards.service.ts(57,55): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(58,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(58,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(65,60): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(101,11): error TS1134: Variable declaration expected.
+src/modules/gift-cards/gift-cards.service.ts(101,68): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(102,24): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(115,51): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(116,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(116,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(133,51): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(134,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(134,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(152,55): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(153,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(153,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(160,45): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(160,85): error TS1109: Expression expected.
+src/modules/gift-cards/gift-cards.service.ts(162,5): error TS1109: Expression expected.
+src/modules/gift-cards/gift-cards.service.ts(180,64): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(182,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(182,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(209,55): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(210,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(210,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(225,64): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(231,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(231,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(258,55): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(259,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(259,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(270,64): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(275,28): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(275,85): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(306,43): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(307,30): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(307,87): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(322,34): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(322,127): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(335,52): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(341,30): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(341,87): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(374,43): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(375,30): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(375,87): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(390,52): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(396,30): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(396,87): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(428,55): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(429,30): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(429,87): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(443,57): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(445,19): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(446,19): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(453,55): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(454,30): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(454,87): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(475,52): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(475,90): error TS1005: ';' expected.
+src/modules/gift-cards/gift-cards.service.ts(475,91): error TS1128: Declaration or statement expected.
+src/modules/gift-cards/gift-cards.service.ts(475,93): error TS1434: Unexpected keyword or identifier.
+src/modules/gift-cards/gift-cards.service.ts(492,1): error TS1128: Declaration or statement expected.

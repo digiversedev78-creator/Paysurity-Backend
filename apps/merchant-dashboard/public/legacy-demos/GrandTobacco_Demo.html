@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySurity Demo - Grand Tobacco (Compliance POS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #050505; color: white; display: flex; height: 100vh; overflow: hidden; margin: 0; flex-direction: column; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .phone { width: 340px; height: 700px; background: #000; border-radius: 40px; border: 8px solid #1a1a1a; position: relative; overflow: hidden; margin: auto; }
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1a1a1a; border-radius: 0 0 12px 12px; z-index: 10; }
+        .screen { background: #f1f5f9; height: 100%; padding-top: 40px; color: #111; display:flex; flex-direction:column; }
+        @keyframes slideIn { from{ opacity:0; transform: translateX(20px); } to{ opacity:1; transform: translateX(0); } }
+        .slide { animation: slideIn 0.3s forwards; }
+    </style>
+</head>
+<body>
+    <header class="h-14 bg-[#111] border-b border-gray-800 flex items-center justify-between px-6 shrink-0 z-10">
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-red-500">PAYSURITY COMPLIANCE ENGINE</span>
+            <span class="text-xs text-gray-500">SCENARIO: RESTRICTED GOODS KYC LOCK</span>
+        </div>
+        <div class="text-xs font-mono text-red-400 border border-red-500/30 px-3 py-1 rounded bg-red-500/10">TENANT: GRAND TOBACCO HUB</div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden">
+        <!-- LEFT: POS View -->
+        <div class="flex-1 bg-white text-black p-6 flex flex-col items-center justify-center border-r border-gray-300">
+            <div class="text-xs tracking-widest text-gray-400 absolute top-20 left-6">LEFT: CASHIER POS TABLET</div>
+            
+            <div class="w-full max-w-md bg-gray-50 rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+                <div class="bg-black text-white p-4 font-bold text-center text-xl">Grand Tobacco Hub</div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
+                        <div class="font-bold text-lg">Cohiba Siglo VI (Box of 10)</div>
+                        <div class="font-bold text-lg">$450.00</div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm text-gray-500 mb-6 border-b border-gray-200 pb-4">
+                        <div>State Tobacco Tax (IL)</div>
+                        <div>$36.00</div>
+                    </div>
+                    <div class="flex justify-between items-center font-black text-3xl mb-8">
+                        <div>Total</div>
+                        <div>$486.00</div>
+                    </div>
+
+                    <div id="kyc-overlay" class="bg-red-50 border-2 border-red-500 rounded-xl p-4 mb-6">
+                        <div class="font-bold text-red-700 mb-1 flex items-center gap-2"><span>⚠️</span> RESTRICTED COMMODITY WARNING</div>
+                        <div class="text-xs text-red-600 mb-4">System locked. State law requires cryptographic ID scan to proceed with payment capture.</div>
+                        <button onclick="scanIdAndPay()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all">
+                            Scan Customer ID & Process Payment
+                        </button>
+                    </div>
+
+                    <div id="kyc-success" class="hidden bg-emerald-50 border-2 border-emerald-500 rounded-xl p-4 text-center">
+                        <div class="text-4xl mb-2">✅</div>
+                        <div class="font-bold text-emerald-700">Payment & ID Cleared</div>
+                        <div class="text-xs text-emerald-600">State API Registry: Validated (Age 34)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MIDDLE: Telemetry -->
+        <div class="w-[35%] bg-black font-mono text-[11px] p-4 overflow-y-auto" id="terminal">
+            <div class="text-red-500 mb-4 tracking-widest border-b border-gray-800 pb-2">MIDDLE: COMPLIANCE LEDGER TELEMETRY</div>
+            <div class="text-gray-500">> POS Ready. Cart locked by Compliance Rule ID: IL-TOBACCO-04.</div>
+        </div>
+
+        <!-- RIGHT: Customer App -->
+        <div class="w-[400px] bg-[#0a0a0a] flex flex-col items-center justify-center p-4">
+            <div class="text-xs tracking-widest text-gray-400 mb-6 w-full text-center border-b border-gray-800 pb-2">RIGHT: END USER LOYALTY WALLET</div>
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="screen px-5 relative">
+                    <div class="w-full h-40 bg-gradient-to-br from-gray-900 to-black rounded-3xl p-6 text-white shadow-xl mb-6 flex flex-col justify-between mt-4">
+                        <div class="flex justify-between items-center"><div class="font-bold uppercase tracking-widest text-xs text-amber-500">Gold Member</div><div class="text-2xl">👑</div></div>
+                        <div>
+                            <div class="text-[10px] text-gray-400 uppercase">Loyalty Points</div>
+                            <div class="text-3xl font-black" id="points">4,500</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-bold text-gray-800 mb-3 px-1">Digital Receipts</h3>
+                    <div id="receipt-list" class="flex flex-col gap-3">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                            <div><div class="font-bold text-sm text-gray-900">Premium Cutter</div><div class="text-xs text-gray-500">Last Week</div></div>
+                            <div class="font-bold text-sm">-$25.00</div>
+                        </div>
+                    </div>
+
+                    <div id="new-receipt" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] bg-white p-6 rounded-3xl shadow-2xl border-2 border-gray-900 slide">
+                        <div class="text-center font-bold text-xl mb-1">Grand Tobacco</div>
+                        <div class="text-center text-xs text-gray-500 mb-6">IL-Store #04</div>
+                        <div class="text-center text-4xl font-black mb-6">-$486.00</div>
+                        <div class="flex items-center justify-center gap-2 text-sm font-bold text-amber-600 bg-amber-50 py-2 rounded-lg">
+                            <span>✨</span> +486 Points Earned!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        function appendLog(html) { const div = document.createElement('div'); div.innerHTML = html; div.className="mb-1 slide"; terminal.appendChild(div); terminal.scrollTop = terminal.scrollHeight; }
+
+        let active = false;
+        async function scanIdAndPay() {
+            if(active) return; active = true;
+            document.getElementById('kyc-overlay').classList.add('hidden');
+            
+            appendLog("<span class='text-blue-400'>[HARDWARE] Scanning PDF417 Barcode from DL...</span>");
+            await delay(800);
+            appendLog("<span class='text-yellow-400'>[COMPLIANCE] Extracting DOB Hash. Connecting to State Identity Registry...</span>");
+            await delay(1200);
+            appendLog("<span class='text-emerald-400'>[COMPLIANCE] Hash verified. DOB: 1992-04-12. Age: 34 > 21.</span>");
+            await delay(500);
+            appendLog("<span class='text-purple-400'>[POS_ENGINE] Compliance lock lifted. Charging default card ending in 4421...</span>");
+            await delay(1200);
+            
+            document.getElementById('kyc-success').classList.remove('hidden');
+            appendLog("<span class='text-white bg-green-900 border border-green-500 px-1'>[LEDGER] Payment Captured: $486.00. Dispatching Loyalty Sync.</span>");
+            
+            await delay(500);
+            appendLog("<span class='text-amber-400'>[LOYALTY_SYNC] Minting 486 Gold Points to User Wallet.</span>");
+            
+            // Mobile UI
+            document.getElementById('new-receipt').classList.remove('hidden');
+            document.getElementById('points').innerText = "4,986";
+            document.getElementById('points').classList.add('text-amber-400');
+        }
+    </script>
+</body>
+</html>

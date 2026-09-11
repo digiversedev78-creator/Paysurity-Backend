@@ -1,0 +1,2771 @@
+﻿# Canonical Requirements: Public Website (paysurity.com)
+**Vertical:** Public Marketing Website (WEB)  
+**Version:** v2.0-canonical  
+**Date:** 2026-03-12  
+**Source Docs:** 03_PUBLIC_WEBSITE_COM.md, 90_CROSSCUTTING_INVARIANTS.md  
+**Total Canonical Requirements:** 9 | **Deduplication Ratio:** 92 â†’ 9 (90%)
+
+---
+
+## Business Context
+The PaySurity public website (paysurity.com) is the primary top-of-funnel asset. It is the first impression for every prospect merchant, every potential affiliate, every investor, and every job candidate. Its performance determines how much organic traffic PaySurity can capture vs. spending on paid ads â€” a direct CFO concern. Its conversion rate (visitor â†’ merchant application) determines the cost-per-merchant-acquired â€” the CEO's growth lever.
+
+**Marketing Position:** The site must communicate PaySurity's "one platform" value proposition â€” no separate POS, payroll, wallets, or e-commerce vendors â€” and route every prospect efficiently into the appropriate product onboarding funnel.
+
+**Conversion Funnel:**
+```
+Organic/Paid Traffic â†’ Landing Page â†’ Calculator / AI Assistant â†’ Lead Capture â†’ "Apply Now" â†’ Onboarding Wizard
+```
+
+**Success KPIs (Owned by CMO):**
+| Metric | Target |
+|---|---|
+| Organic traffic growth (MoM) | â‰¥ 5% |
+| Lead capture rate (visitors â†’ lead form submitted) | â‰¥ 3% |
+| Apply Now conversion rate (lead â†’ application started) | â‰¥ 20% |
+| Core Web Vitals (LCP) | < 2.5 seconds |
+
+---
+
+## Capability Groups
+| Group | Requirements |
+|---|---|
+| Site Structure & SEO | REQ-WEB-001 |
+| Vertical Landing Pages | REQ-WEB-002 |
+| Lead Capture & CRM | REQ-WEB-003, REQ-WEB-006 |
+| AI Content & Blog | REQ-WEB-004, REQ-WEB-007 |
+| Marketing & Attribution | REQ-WEB-005, REQ-WEB-008, REQ-WEB-009 |
+
+---
+
+### REQ-WEB-001: Core Site Structure & SEO Baseline
+**Capability Group:** Site Structure & SEO | **Priority:** Must  
+**Source Refs:** PSR-V6-03550, PSR-V6-03551  
+**Actors:** Anonymous Visitor | SEO System  
+**Type:** functional
+
+**Business Value:** SEO is PaySurity's highest-ROI marketing channel at scale â€” organic traffic converts at 2â€“3Ã— paid traffic with near-zero marginal cost per visitor. A site without an auto-generated sitemap, correct canonical URLs, or JSON-LD structured data is invisible to Google's indexing systems. Core Web Vitals directly affect Google's page ranking algorithm. Getting these right from day 1 compounds into a long-term traffic asset.
+
+**Requirement:**
+The website SHALL include all core marketing pages (Home, Merchant Services, Digital Wallets, Payroll, all POS vertical pages, About, Contact, Legal/Privacy) with a full SEO baseline: unique title tags, unique meta descriptions, canonical URLs, JSON-LD structured data (schema.org/Organization on Home), and auto-generated sitemaps submitted to major search engines.
+
+**Key Acceptance Criteria:**
+- Auto-generated sitemap.xml: includes all published pages; updated within 5 minutes of any content publish; referenced in robots.txt.
+- Every page: unique title tag (max 60 characters) and unique meta description (max 160 characters) â€” no duplicate meta across pages.
+- JSON-LD structured data: Organization schema on homepage; WebSite schema with sitelinks search box; Article schema on blog posts.
+- Core Web Vitals targets: LCP < 2.5s, CLS < 0.1, INP < 200ms â€” measured monthly via Google PageSpeed Insights API.
+- robots.txt: correctly configured for all environments â€” staging and dev environments use `Disallow: /` to prevent indexing.
+- All images: lazy-loaded, served via CDN, with descriptive alt text.
+
+**Success Metrics (CMO/COO):**
+- Google Search Console indexing coverage: â‰¥ 95% of pages indexed
+- Core Web Vitals pass rate (LCP, CLS, INP): 100% of pages
+- Organic traffic growth MoM: â‰¥ 5% after initial indexing period (months 3+)
+
+---
+
+### REQ-WEB-002: Vertical-Specific Landing Pages
+**Capability Group:** Vertical Landing Pages | **Priority:** Must  
+**Source Refs:** PSR-V6-03555, PSR-V6-03556  
+**Actors:** Prospect Merchant | Anonymous Visitor  
+**Type:** functional
+
+**Business Value:** Vertical-specific landing pages are the conversion workhorses â€” a restaurant owner searching "best restaurant POS software" must land on a page that speaks directly to their problem, not a generic "business payments" homepage. Dedicated vertical URLs also unlock the ability to run vertical-specific PPC campaigns with Quality Score optimization. The "Apply Now" CTA with vertical pre-selected removes one more decision point from the prospect's path.
+
+**Requirement:**
+Each PaySurity product vertical (BistroBeest, GrocerEase, RetailPro, Digital Wallets, Payroll, Affiliates, E-Commerce) SHALL have a dedicated, search-engine-indexable landing page with tailored vertical-specific messaging, feature highlights, a pricing overview, social proof (testimonials), and a clear "Apply Now" CTA that routes into the merchant onboarding wizard with the vertical pre-selected.
+
+**Key Acceptance Criteria:**
+- Dedicated URL per vertical (e.g., /restaurant, /grocery, /retail, /digital-wallets, /payroll, /affiliates).
+- Each page: unique title tag and meta description targeting vertical-specific search terms.
+- Above-the-fold: primary CTA visible without scrolling on both mobile and desktop viewports.
+- "Apply Now" CTA: routes to onboarding wizard with vertical automatically pre-selected based on source page.
+- Social proof: at minimum 2 testimonials per vertical page from merchants in that vertical; structured data for Review schema.
+- Pricing overview: at minimum a "starting from $X/month" or "competitive interchange++ pricing" callout â€” enough to qualify the prospect's price sensitivity.
+
+**Success Metrics (CMO):**
+- Vertical landing page organic ranking (target: top 10 for primary vertical keyword): tracked monthly
+- Apply Now click-through rate from vertical landing pages: â‰¥ 5%
+- Bounce rate on vertical landing pages: â‰¤ 55%
+
+---
+
+### REQ-WEB-003: Lead Capture & CRM Integration
+**Capability Group:** Lead Capture & CRM | **Priority:** Must  
+**Source Refs:** PSR-V6-03560, PSR-V6-03561  
+**Actors:** Prospect Merchant | Sales Team  
+**Type:** functional
+
+**Business Value:** Lead capture is the bridge between anonymous traffic and the merchant relationship. A CRM record with full attribution context (which page, which UTM campaign, which vertical they explored, which referral partner sent them) is the difference between a sales team making a relevant, warm outreach vs. a cold "tell me about your business" call. Pre-populated CRM fields from the savings calculator reduce lead enrichment time by 80%.
+
+**Requirement:**
+All contact forms, "Request a Demo" forms, and savings calculator result captures SHALL submit lead records to the CRM within 5 seconds of form submission, with full attribution context. Bot protection SHALL be enforced on all forms.
+
+**Key Acceptance Criteria:**
+- CAPTCHA: reCAPTCHA v3 (invisible) on all lead forms; fallback to reCAPTCHA v2 checkbox for low-score sessions.
+- CRM record: created within 5 seconds of form submission; includes: name, email, phone (if captured), business type, estimated volume (if calculator source), UTM parameters (source, medium, campaign, content, term), referral QR partner ID (if applicable), and source page URL.
+- Auto-responder: email sent to lead within 2 minutes of form submission confirming receipt and setting expectation for follow-up.
+- Duplicate handling: if email already exists in CRM, update the existing record with new attribution data rather than creating a duplicate.
+- GDPR/CCPA: form includes unchecked opt-in checkbox for marketing communications with compliant disclosure; form submission only requires business contact information â€” not personal PII consent.
+
+**Success Metrics (CMO/Sales):**
+- Lead form submission â†’ CRM record creation time: â‰¤ 5 seconds (99th percentile)
+- Auto-responder delivery rate: â‰¥ 99%
+- Form bot submission rate (blocked by CAPTCHA): < 5% of submissions
+
+---
+
+### REQ-WEB-004: AI Blog & Content Engine
+**Capability Group:** AI Content & Blog | **Priority:** Should  
+**Source Refs:** PSR-V6-03565, PSR-V6-03566  
+**Actors:** Marketing Admin | SEO System  
+**Type:** functional
+
+**Business Value:** A blog that publishes 2â€“4 articles per week on relevant SMB payments, POS, and payroll topics competes directly for the long-tail search queries where PaySurity's prospects make their buying decisions. At $0 marginal CPC, blog-driven SEO traffic has a 3â€“5 year compounding value that exceeds any paid channel. AI-assisted drafting reduces the content production cost from $300â€“$500/article to $50â€“$80 â€” making consistent publishing economically viable for a startup.
+
+**Requirement:**
+The system SHALL support an AI-assisted blog content engine where Marketing Admin configures topic buckets per vertical and the AI generates draft articles. All AI-generated drafts MUST go through human review and approval before publication. Every published post SHALL include structured data, canonicalization, and vertical category taxonomy.
+
+**Key Acceptance Criteria:**
+- Topic configuration: Marketing Admin sets topic areas per vertical (e.g., "restaurant POS, tip reporting, kitchen technology" for BistroBeest); AI generates 3â€“5 draft titles per topic area per week.
+- AI drafts: delivered to editorial queue only â€” no auto-publish path exists; draft includes SEO metadata suggestions (title tag, meta description, target keyword).
+- Editorial calendar: scheduling interface for draft review, editing, approval, and publish date setting.
+- Published post requirements: unique canonical URL, Article JSON-LD schema, Open Graph tags for social sharing, category tag mapping to a vertical (e.g., `/blog/restaurant-pos/`).
+- Reading time estimate and table of contents auto-generated for posts > 1,500 words.
+
+**Success Metrics (CMO):**
+- Blog-driven organic sessions per month (at 6 months of consistent publishing): â‰¥ 5,000 sessions/month
+- Publishing cadence with AI assist: â‰¥ 2 articles/week
+- Average time-on-page for blog articles: â‰¥ 2 minutes (content quality signal)
+
+---
+
+### REQ-WEB-005: Referral QR & UTM Attribution Tracking
+**Capability Group:** Marketing & Attribution | **Priority:** Must  
+**Source Refs:** PSR-V6-03570, PSR-V6-03571  
+**Actors:** Referral Partner | System  
+**Type:** functional
+
+**Business Value:** Attribution accuracy is the trust backbone of the Partner Program. A referral partner who brings in 3 merchants but gets credit for 1 (because the UTM was stripped by a redirect) loses confidence in the program and stops referring. Server-side attribution backup ensures that even when browser-side cookies are cleared or blocked (iOS privacy restrictions, Firefox ETP), the referral is recognized.
+
+**Requirement:**
+Each Referral Partner SHALL receive a unique QR code and UTM-tagged URL at activation. The website MUST preserve attribution through the full conversion funnel â€” from first visit to onboarding application submission â€” via both client-side UTM parameter storage and server-side session attribution records.
+
+**Key Acceptance Criteria:**
+- QR code: generated per partner at activation; downloadable immediately in PNG and SVG formats from the partner portal.
+- UTM parameters: preserved through all site-side redirects (no stripping); stored in the browser session via first-party cookie AND a server-side session record written at first touch.
+- Server-side record: partner ID, timestamp, landing page, and session ID stored at first-touch â€” provides fallback attribution if cookie is cleared before conversion.
+- 30-day attribution window: from first click to application submission; first-touch attribution model.
+- CRM write: on lead capture or application submission, Referral Partner ID (from cookie or server-side fallback) written to CRM and application record.
+- Attribution immutability: finalized on first live merchant transaction (same as REQ-AFR-008 trigger).
+
+**Success Metrics (CMO/CFO):**
+- Referral UTM preservation rate (referral attributed in CRM vs. referral link clicks): â‰¥ 95%
+- Attribution disputes per quarter: < 1% of all referral credits
+- QR code download rate (partner activates and downloads materials within 7 days): â‰¥ 80%
+
+---
+
+### REQ-WEB-006: Savings Calculator Widget (Lead Capture)
+**Capability Group:** Lead Capture & CRM | **Priority:** Must  
+**Source Refs:** PSR-V6-03575  
+**Actors:** Prospect Merchant | Sales Team  
+**Type:** functional
+
+**Business Value:** The savings calculator is the highest-converting lead capture tool in the fintech marketing playbook â€” it creates personalized, quantified value before the prospect even speaks to a salesperson. A prospect who sees "$3,200/year in savings" is 5Ã— more likely to apply than one who just reads a feature list. The email capture gate converts anonymous curiosity into a named lead with qualification data pre-attached.
+
+**Requirement:**
+The savings calculator widget SHALL accept the prospect's current monthly processing volume, average ticket size, and current effective rate, and produce a side-by-side savings comparison. Results SHALL be gated behind an email capture form, which simultaneously creates a qualified CRM lead and triggers an emailed PDF report.
+
+**Key Acceptance Criteria:**
+- Inputs: monthly processing volume ($), average ticket size ($), current effective rate (%), business type (dropdown).
+- Calculation: current monthly cost computed from inputs; PaySurity projected cost applied from the appropriate pricing model for the business type and volume tier.
+- Output: current monthly cost, PaySurity projected monthly cost, monthly savings ($), annual savings ($), percentage savings â€” displayed on-screen.
+- Gate: results visible on page only after email (+ first name) form submission with GDPR/CCPA-compliant disclosure.
+- PDF report: auto-generated and emailed within 2 minutes of submission; report mirrors on-screen comparison with PaySurity branding.
+- CRM write: lead created with all calculator inputs + email + first name; tagged as "Calculator Lead" for sales team prioritization.
+- Embeddable: widget embeddable as a JavaScript snippet or iframe on Reseller partner sites; Reseller branding override and attribution carried through.
+- Statement file privacy: if a merchant uploads a processing statement PDF for auto-extraction, the file SHALL be deleted from the server within 24 hours of the session end.
+
+**Success Metrics (CMO/CFO):**
+- Calculator start-to-gate-submitted conversion rate: â‰¥ 25%
+- Calculator-sourced leads that advance to "Apply Now": â‰¥ 30%
+- PDF report email delivery rate: â‰¥ 99%
+
+---
+
+### REQ-WEB-007: AI Hero Assistant (Public Site)
+**Capability Group:** AI Content & Blog | **Priority:** Should  
+**Source Refs:** PSR-V6-03580  
+**Actors:** Anonymous Visitor  
+**Type:** functional
+
+**Business Value:** An AI assistant on the homepage intercepts the 60%+ of visitors who don't convert via traditional navigation â€” they have a specific question that the static page layout doesn't answer directly. The assistant converts visitor intent into a guided product discovery path, surfacing the relevant vertical or pricing page. Any question it can't answer gets routed to "Talk to Sales" â€” turning a frustrated visitor into a warm lead.
+
+**Requirement:**
+The public site SHALL include an AI chat assistant widget that answers visitor questions about PaySurity products, pricing, and the sign-up process. The assistant SHALL constrain answers to approved knowledge base content and route complex or unanswered queries to the "Talk to Sales" CTA or live chat if available.
+
+**Key Acceptance Criteria:**
+- Knowledge base constraint: assistant answers drawn exclusively from approved content (product pages, FAQ, pricing pages) â€” no hallucination about unsupported features, rates not yet published, or capabilities not yet live.
+- "Talk to Sales" trigger: any question the assistant cannot answer from the knowledge base â†’ assistant offers "Talk to Sales" link or "Request a Demo" CTA.
+- PII: no PII collected during AI chat without explicit opt-in; if a visitor voluntarily shares contact info in chat, prompt to fill out the lead form instead.
+- Chat transcript: available for Marketing Admin export for content gap analysis (what questions are most asked but unanswered).
+- Response latency: assistant response within 2 seconds of query submission.
+
+**Success Metrics (CMO):**
+- AI assistant "Talk to Sales" hand-off rate: â‰¥ 15% of chat sessions (healthy conversion signal)
+- Assistant satisfaction rating (thumbs up/down): â‰¥ 75% positive
+- Chat-to-lead capture rate (visitor who chats â†’ fills lead form): â‰¥ 10%
+
+---
+
+### REQ-WEB-008: Social Media Content Automation
+**Capability Group:** Marketing & Attribution | **Priority:** Could  
+**Source Refs:** PSR-V6-03585  
+**Actors:** Marketing Admin  
+**Type:** functional
+
+**Business Value:** Consistent social publishing drives brand recall and referral link distribution â€” critical for the Affiliate/Reseller program which relies on social sharing. AI-assisted social draft generation from blog posts eliminates the most time-consuming part of social management (content creation), while keeping human approval in the loop to protect brand voice.
+
+**Requirement:**
+The system SHOULD provide a social media content scheduling feature that auto-generates draft social posts from published blog content, allows Marketing Admin to review, edit, and schedule, and publishes to configured channels (LinkedIn, Twitter/X, Facebook Page).
+
+**Key Acceptance Criteria:**
+- Auto-draft: social post draft generated from published blog post within 1 hour of publish; drafts ready in editorial queue for review.
+- Human approval: no post auto-published; Marketing Admin must approve each draft before scheduling.
+- Scheduling calendar: visual calendar with platform-specific character limits enforced at draft stage (no truncation surprise at publish).
+- Engagement metrics: post-publish metrics (impressions, clicks, shares) pulled via platform APIs and visible per scheduled post in the social calendar.
+
+**Success Metrics (CMO):**
+- Social post publication cadence (blog-driven): â‰¥ 2 posts/week per enabled channel
+- Engagement rate per post: tracked as a marketing KPI; segment target varies by platform
+
+---
+
+### REQ-WEB-009: Analytics & Conversion Tracking
+**Capability Group:** Marketing & Attribution | **Priority:** Must  
+**Source Refs:** PSR-V6-03590  
+**Actors:** Marketing Admin  
+**Type:** functional
+
+**Business Value:** Marketing without proper conversion tracking is unmeasured spend. Without GA4 + GTM properly configured, PaySurity cannot calculate cost-per-lead, cost-per-application, or which channels (organic, paid, referral) drive the highest-quality merchant applications. This data directly determines the CMO's channel spend allocation decisions.
+
+**Requirement:**
+The site SHALL integrate with GA4 and Google Tag Manager. All key conversion events SHALL be tracked via GTM dataLayer pushes and configured as GA4 conversion goals. Monthly summary reports SHALL be auto-generated and delivered to the marketing team.
+
+**Key Acceptance Criteria:**
+- GA4 + GTM: installed on all pages; GTM container manages all tag firing â€” no hardcoded analytics scripts outside GTM.
+- Tracked conversion events: contact form submission, demo request, calculator start, calculator gate submission, Apply Now click, savings PDF download.
+- First-party data: event data sent to GA4 using first-party cookies (no third-party cookie dependency); CCPA compliance maintained via cookie consent banner that honors opt-out before GA4 fires.
+- Auto-report: monthly summary (traffic by source/medium, landing page performance, conversion funnel) auto-generated and emailed to Marketing Admin by the 5th of each month.
+- A/B testing: GTM-driven A/B test capability for CTA text and page layout variants; test results visible in GA4 with minimum 95% statistical confidence before declaring a winner.
+
+**Success Metrics (CMO):**
+- Conversion event tracking accuracy: confirmed by monthly GA4 vs. CRM lead count reconciliation; target: â‰¥ 95% match
+- Cost per qualified lead (calculator + form captures): tracked monthly; target to decrease MoM
+- Monthly organic session-to-lead conversion rate: â‰¥ 3%
+# Canonical Requirements: Merchant Services & Onboarding
+**Vertical:** Merchant Services (MER) | **Version:** v2.0-dev-prompt | **Date:** 2026-03-12  
+**Standard:** `DEV_IMPLEMENTATION_STANDARD.md` â€” all values from DB, no hardcoding  
+**Test Tenant:** BistroBeest (`tenant_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)  
+**KYB Provider:** Stripe Identity (primary) | Manual review fallback  
+**Payment Gateway Underwriting:** FluidPay
+
+---
+
+## Database Schema
+
+**Migration:** `db/migrations/003_merchant_onboarding.sql`
+
+```sql
+-- Merchant applications: pre-tenant record during onboarding funnel
+CREATE TABLE merchant_applications (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  application_number    VARCHAR(20) NOT NULL UNIQUE,  -- format: APP-{YYYYMMDD}-{seq6}
+  status                VARCHAR(30) NOT NULL DEFAULT 'STARTED'
+                        CHECK (status IN (
+                          'STARTED',            -- application form opened
+                          'INFO_SUBMITTED',     -- business info complete
+                          'KYB_IN_PROGRESS',   -- identity verification underway
+                          'KYB_PASSED',         -- identity checks passed
+                          'KYB_FAILED',         -- identity checks failed (terminal for this application)
+                          'UNDER_REVIEW',       -- PaySurity underwriter reviewing
+                          'APPROVED',           -- underwriter approved; begin configuration
+                          'REJECTED',           -- underwriter rejected (terminal)
+                          'ACTIVE'              -- configuration complete; live
+                        )),
+  -- Business identity
+  legal_business_name   VARCHAR(255) NOT NULL,
+  dba_name              VARCHAR(255),
+  business_type         VARCHAR(30) NOT NULL
+                        CHECK (business_type IN ('SOLE_PROP','LLC','C_CORP','S_CORP','PARTNERSHIP','NONPROFIT')),
+  vertical              VARCHAR(30) NOT NULL
+                        CHECK (vertical IN ('RESTAURANT','GROCERY','RETAIL','ECOMMERCE','SALON','OTHER')),
+  ein                   VARCHAR(10),                   -- stored encrypted in GCP Secret Manager
+  ein_secret_ref        VARCHAR(255),                  -- GCP secret ref for EIN
+  -- Contact (ADV-CRM-01: Zero-Knowledge Personas)
+  -- Plaintext storage is strictly prohibited. PII must be hashed at ingestion-time.
+  owner_first_name_hash VARCHAR(255) NOT NULL,
+  owner_last_name_hash  VARCHAR(255) NOT NULL,
+  owner_email_hash      VARCHAR(255) NOT NULL,
+  owner_phone_hash      VARCHAR(255),
+  business_address      JSONB NOT NULL,               -- {street, city, state, zip, country}
+  -- Plan selection
+  selected_plan_code    VARCHAR(20) REFERENCES subscription_plans(plan_code),
+  billing_cycle         VARCHAR(10) DEFAULT 'MONTHLY',
+  -- Referral / affiliate
+  referral_code         VARCHAR(50),
+  affiliate_id          UUID REFERENCES affiliates(id),
+  -- Assigned CSM
+  assigned_csm_user_id  UUID REFERENCES users(id),
+  -- Rejection detail
+  rejection_reason      TEXT,
+  rejection_category    VARCHAR(50),
+  -- Timestamps
+  submitted_at          TIMESTAMPTZ,
+  kyb_started_at        TIMESTAMPTZ,
+  kyb_completed_at      TIMESTAMPTZ,
+  approved_at           TIMESTAMPTZ,
+  rejected_at           TIMESTAMPTZ,
+  activated_at          TIMESTAMPTZ,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  -- Resulting tenant (set on APPROVED)
+  tenant_id             UUID REFERENCES tenants(id)
+);
+CREATE INDEX idx_applications_status ON merchant_applications(status, created_at DESC);
+CREATE INDEX idx_applications_email ON merchant_applications(owner_email);
+
+-- KYB verifications: business identity checks via Stripe Identity (or manual)
+CREATE TABLE kyb_verifications (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  application_id        UUID NOT NULL REFERENCES merchant_applications(id),
+  check_type            VARCHAR(30) NOT NULL
+                        CHECK (check_type IN (
+                          'BUSINESS_REGISTRATION',   -- Secretary of State check
+                          'BENEFICIAL_OWNER_ID',      -- Owner ID scan + liveness
+                          'SANCTIONS_SCREENING',      -- OFAC check
+                          'ADVERSE_MEDIA',            -- news screening
+                          'BANK_ACCOUNT_VERIFY',      -- micro-deposit or Plaid instant verify
+                          'EIN_VERIFY'               -- IRS EIN verification
+                        )),
+  provider              VARCHAR(30) NOT NULL DEFAULT 'STRIPE_IDENTITY'
+                        CHECK (provider IN ('STRIPE_IDENTITY','MANUAL','MIDDESK','PERSONA')),
+  status                VARCHAR(20) NOT NULL DEFAULT 'PENDING'
+                        CHECK (status IN ('PENDING','IN_PROGRESS','PASSED','FAILED','SKIPPED','REVIEW')),
+  provider_session_id   VARCHAR(255),
+  provider_report_ref   VARCHAR(255),               -- GCS path to provider report PDF
+  risk_score            INTEGER,                    -- if provider returns a score (0-100)
+  failure_reason        TEXT,
+  reviewed_by           UUID REFERENCES users(id),  -- for MANUAL provider
+  completed_at          TIMESTAMPTZ,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX idx_kyb_application ON kyb_verifications(application_id, check_type);
+
+-- Underwriting reviews: PaySurity risk assessment
+CREATE TABLE underwriting_reviews (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  application_id        UUID NOT NULL REFERENCES merchant_applications(id) UNIQUE,
+  reviewer_user_id      UUID REFERENCES users(id),
+  risk_category         VARCHAR(20)
+                        CHECK (risk_category IN ('LOW','MEDIUM','HIGH','PROHIBITED')),
+  mcc_code              VARCHAR(4),                 -- Merchant Category Code from VISA/MC tables
+  processing_volume_estimate_cents INTEGER,         -- monthly volume estimate from application
+  avg_ticket_estimate_cents INTEGER,
+  card_present_pct      INTEGER,                    -- % of transactions expected card-present
+  chargeback_reserve_pct INTEGER DEFAULT 0,         -- % of volume held in reserve
+  payout_delay_days     INTEGER DEFAULT 2,          -- settlement delay for risk
+  approved_plan_code    VARCHAR(20),                -- may differ from selected_plan_code
+  conditions            JSONB,                      -- [{condition, due_date}]
+  notes                 TEXT,
+  decision              VARCHAR(20)
+                        CHECK (decision IN ('APPROVED','REJECTED','DEFERRED','ADDITIONAL_INFO')),
+  decided_at            TIMESTAMPTZ,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Onboarding workspace: tracks 5-phase progress post-approval
+CREATE TABLE onboarding_workspaces (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id             UUID NOT NULL REFERENCES tenants(id) UNIQUE,
+  application_id        UUID NOT NULL REFERENCES merchant_applications(id),
+  assigned_csm          UUID REFERENCES users(id),
+  current_phase         INTEGER NOT NULL DEFAULT 1 CHECK (current_phase BETWEEN 1 AND 5),
+  -- Checklist completion (booleans stored per phase)
+  phase1_complete       BOOLEAN NOT NULL DEFAULT FALSE,  -- Discovery: data import done
+  phase2_complete       BOOLEAN NOT NULL DEFAULT FALSE,  -- Configuration: brand/menu/loyalty set
+  phase3_complete       BOOLEAN NOT NULL DEFAULT FALSE,  -- Training: staff trained, QA signed
+  phase4_complete       BOOLEAN NOT NULL DEFAULT FALSE,  -- Parallel run: reconciliation clean
+  phase5_complete       BOOLEAN NOT NULL DEFAULT FALSE,  -- Go live: legacy off, hyper-care started
+  go_live_date          DATE,
+  hyper_care_ends_at    DATE,
+  notes                 TEXT,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE onboarding_workspaces ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON onboarding_workspaces USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**Seed:** `db/seeds/003_mer_seed.sql`
+
+```sql
+INSERT INTO platform_config (key, value, data_type, description, is_merchant_overridable)
+VALUES
+  ('mer.kyb.required_checks',          '["BUSINESS_REGISTRATION","BENEFICIAL_OWNER_ID","SANCTIONS_SCREENING","EIN_VERIFY"]', 'json', 'KYB check types run for every application', FALSE),
+  ('mer.kyb.high_risk_checks',         '["ADVERSE_MEDIA","BANK_ACCOUNT_VERIFY"]', 'json', 'Additional checks for HIGH risk category', FALSE),
+  ('mer.kyb.provider',                 'STRIPE_IDENTITY', 'string', 'KYB provider (Stripe Identity primary)', FALSE),
+  ('mer.kyb.stripe_base_url',          'https://api.stripe.com/v1', 'string', 'Stripe API base URL for identity', FALSE),
+  ('mer.underwriting.auto_approve_threshold', '50', 'integer', 'Risk score 0-50: auto-approve; 51-75: manual review; 76+: reject', FALSE),
+  ('mer.underwriting.auto_reject_threshold','76', 'integer', 'Risk score >= this â†’ auto-reject', FALSE),
+  ('mer.onboarding.hyper_care_days',   '30',    'integer', 'Days of post-go-live CSM hyper-care support', FALSE),
+  ('mer.fluidpay.underwriting_path',   '/api/v1/merchant/register', 'string', 'FluidPay endpoint to register approved merchant', FALSE),
+  ('mer.application.expiry_days',      '30',    'integer', 'Days before incomplete application expires', FALSE)
+ON CONFLICT (key) DO NOTHING;
+```
+
+---
+
+## REQ-MER-001: Merchant Application & KYB Flow
+
+**Priority:** Must | **Actors:** Prospective Merchant, PaySurity CSM, Risk Underwriter
+
+### Architectural Controls (Provisional Onboarding & Integrity)
+1. **Provisional Micro-Processing (Instant Start):** Merchants skip the manual Underwriting delay. They are granted `PROVISIONAL` status. All transactions captured use `AUTOMATIC` gateway capture, but the `tenants` table applies a strict `payout_locked = TRUE` hold. Accumulation is capped at a hard limit of **$2,500**.
+   * **72-Hour Provisional Threshold:** If a merchant remains in `PROVISIONAL` status for > 72 business hours, the system must either auto-refund all escrowed holdings or transition the account to 'High-Priority Manual Review' to avoid money transmission/escrow non-compliance.
+2. **Deterministic Idempotency:** The gateway router must use deterministic mapping (e.g., `paymentIntent.id`) for the `X-Idempotency-Key` to safely prevent duplicate gateway capture sweeps during network retries.
+   * **Idempotency Key TTL:** The gateway router explicitly defines key caching with a 24-hour Time-To-Live (TTL).
+3. **Passive Behavioral Biometrics (DIBB) & 3D Selfie Liveness:** 
+   * **DIBB:** Tracks copy-paste velocity, hesitation on PII inputs, and Micro-Gestural Telemetry (Gyroscope/Accelerometer jitter) as primary bot-detection signals.
+   * **Liveness Validation:** Requires Active Illumination (Flash-Reflection) Analysis directly in the browser. "No-Upload" logic ensures no raw biometric video is stored.
+4. **Gross-to-Net Ledger Mutability (Net Settlement):**
+   * **Canonical Formula:** `Net_Settlement = sum(Gross_Sales) - (Interchange_Fees + Scheme_Fees + PaySurity_Markup) - Provisional_Escrow`
+   * **Execution Rule:** Available Liquidity cannot just equal `totalVolume`. The system MUST map the transaction against `payment_fees` (joining on `transaction_id`) and strictly deduct all network Processing Costs before applying an escrow lock.
+
+---
+
+#### Service Layer: `src/modules/merchant/application.service.ts`
+
+```typescript
+/**
+ * startApplication(params) â€” Creates merchant_applications record.
+ * Generates application_number: 'APP-{YYYYMMDD}-{6-char nanoid}'.
+ * Sends welcome email via NOT engine with secure link to continue application.
+ * Returns: { application_id, continue_url }
+ */
+async startApplication(params: {
+  legalBusinessName: string;
+  ownerFirstName: string;
+  ownerLastName: string;
+  ownerEmail: string;
+  ownerPhone: string;    -- validated E.164 per Rule 7
+  vertical: string;
+  selectedPlanCode: string;
+  referralCode?: string;
+}): Promise<ApplicationStart>
+
+/**
+ * runKYBChecks(applicationId) â€” Orchestrates all required KYB checks in parallel.
+ * Required checks read from platform_config 'mer.kyb.required_checks' array.
+ * For each check:
+ *   1. Creates kyb_verifications record (status=IN_PROGRESS)
+ *   2. Calls appropriate provider (Stripe Identity /identity/verification_sessions)
+ *   3. Gets webhook callback from provider â†’ updates status PASSED/FAILED
+ * All checks completed? â†’ aggregate result:
+ *   All PASSED: application.status = KYB_PASSED â†’ trigger runUnderwriting()
+ *   Any FAILED: application.status = KYB_FAILED â†’ notify CSM; send merchant rejection with reason
+ */
+async runKYBChecks(applicationId: string): Promise<void>
+
+/**
+ * runUnderwriting(applicationId) â€” Automated risk scoring + optional manual review.
+ * 1. Aggregate KYB results, business type, vertical, volume estimate
+ * 2. Calculate composite risk score 0-100
+ * 3. If score <= 'mer.underwriting.auto_approve_threshold': auto-approve â†’ provisionTenant()
+ * 4. If score >= 'mer.underwriting.auto_reject_threshold': auto-reject â†’ notify merchant
+ * 5. If in between: status = UNDER_REVIEW; assign to underwriter queue; notify PaySurity OPS
+ */
+async runUnderwriting(applicationId: string): Promise<void>
+
+/**
+ * provisionTenant(applicationId) â€” Activated on approval.
+ * 1. Creates: tenants, legal_entities, brands, locations (from application data)
+ * 2. Creates: merchant_subscriptions (with selected plan; trial starts)
+ * 3. Registers merchant with FluidPay (POST /api/v1/merchant/register)
+ *    â†’ saves gateway_configurations record (API key stored in GCP Secret Manager)
+ * 4. Creates: onboarding_workspaces record (phase 1)
+ * 5. Creates: ENTERPRISE_ADMIN user account for merchant owner
+ * 6. Sends: welcome email with login link; separate email with POS terminal provisioning guide
+ * 7. Updates: merchant_applications.tenant_id, status = ACTIVE
+ */
+async provisionTenant(applicationId: string): Promise<void>
+```
+
+---
+
+#### API Endpoints
+
+| Method | Path | Auth | Description | Webhook |
+|---|---|---|---|---|
+| `POST` | `/v1/applications` | None (public) | Start merchant application | `application.started` |
+| `GET` | `/v1/applications/{id}` | Application token | Check application status | â€” |
+| `PATCH` | `/v1/applications/{id}` | Application token | Update application info | â€” |
+| `POST` | `/v1/applications/{id}/submit` | Application token | Submit for KYB | `application.submitted` |
+| `GET` | `/v1/applications/{id}/kyb-status` | Application token, PaySurity Admin | KYB check progress | â€” |
+| `POST` | `/v1/applications/{id}/underwrite` | PAYSURITY_ADMIN | Manual underwrite decision | `application.decision_made` |
+| `GET` | `/v1/admin/applications` | PAYSURITY_ADMIN | Application queue | â€” |
+| `GET` | `/v1/onboarding/progress` | ENTERPRISE_ADMIN | Current onboarding phase progress | â€” |
+| `PATCH` | `/v1/onboarding/phase/{n}` | PaySurity CSM | Mark phase complete | `onboarding.phase_complete` |
+| `POST` | `/webhooks/stripe-identity/kyb` | Stripe (verified) | KYB verification result callback | â€” |
+
+---
+
+#### UI/UX â€” Public Application Wizard (5 steps)
+
+**Step 1 â€” Business Info:** Legal name, DBA, business type, vertical, EIN, business address  
+**Step 2 â€” Owner Identity:** Owner name, SSN last 4, DOB, home address, phone, email  
+**Step 3 â€” Processing History:** Monthly volume estimate, avg ticket, % card-present, years in business  
+**Step 4 â€” Plan Selection:** Plan comparison table; billing cycle toggle (monthly/annual)  
+**Step 5 â€” Bank Account:** Routing + account number (Plaid instant verify preferred); fallback: micro-deposit 2-day verify
+
+Progress bar at top. Each step saves on "Next" â€” crash recovery via `application_id` cookie.  
+KYB screen: "We're verifying your business â€” this takes about 2 minutes" with animated progress.  
+Rejection screen: clear reason, option to re-apply after 30 days or contact support.
+
+
+## PaySurity Advantage (Superiority V2.0)
+**ADV-005 [Speed-Onboarding]:** Performance SLA Hardcoded: < 120 seconds to ,500 Provisional Access using Active Illumination telemetry. This subsumes and enhances previous 72-hour provisional escrow restrictions.
+
+**ADV-ONB-06 [CTA 2026 BOI Compliance]:**
+- **Automated BOI Verification:** The system must perform an Automated FinCEN BOI Database cross-reference strictly within the initial 120-second Speed-Onboarding window natively.
+- **UBO Mapping Execution:** The AI Underwriting Agent is mandated to structurally verify that the self-reported Ultimate Beneficial Owners (UBOs) precisely match the government's FinCEN BOI definitions.
+- **Discrepancy Reporting:** If a mismatch is found between the application and FinCEN data, the system must trigger an immediate Electronic Customer Due Diligence (eCDD) escalation for manual underwriter review before processing or settling any provisional funds.
+
+**ADV-ONB-07 [Lifecycle Escalation Sentry]:**
+- **24-Hour SLA Execution:** A BullMQ background worker strictly monitors the `created_at` timestamp of every `PROVISIONAL` merchant.
+- **Escalation Trigger:** If a merchant remains provisional exactly beyond `Date.now() - 24 * 60 * 60 * 1000`, the system automatically triggers manual eCDD escalation, severing its Provisional status dynamically.
+- **Auto-Drain Resolution:** Once successfully verified, an `AUTO_DRAIN_EXECUTION` sequence natively queues an HSM `<pacs.008>` release payload to instantly execute the Sovereign Liquidity Vault escrow.
+
+**ADV-ONB-08 [Small Merchant Waiver]:**
+- **$1,000 Monthly Volume Exemption:** The `transitionToVerified` engine dynamically applies a processing-waiver if the anticipated or actual transactional processing volume is <= `$1,000` (100000 cents). This circumvents strict manual eCDD delays entirely.
+# Canonical Requirements: POS Restaurant â€” BistroBeest
+**Vertical:** POS Restaurant (POSR) | **Version:** v2.0-dev-prompt | **Date:** 2026-03-12  
+**Standard:** `DEV_IMPLEMENTATION_STANDARD.md` â€” all values from DB, no hardcoding  
+**Test Tenant:** BistroBeest (`tenant_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)  
+**Total Requirements:** 10
+
+---
+
+## Database Schema
+
+**Migration:** `db/migrations/010_posr_restaurant.sql`
+
+```sql
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+-- RESTAURANT POS TABLES
+-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+CREATE TABLE tables (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id     UUID NOT NULL REFERENCES tenants(id),
+  location_id   UUID NOT NULL REFERENCES locations(id),
+  name          VARCHAR(50) NOT NULL,          -- "Table 12", "Bar 3", "Patio 7"
+  capacity      INTEGER NOT NULL DEFAULT 4,
+  section       VARCHAR(50),                   -- "Main", "Bar", "Patio", "Private"
+  x_coordinate  INTEGER NOT NULL DEFAULT 0,    -- GUI Floor Plan X pos
+  y_coordinate  INTEGER NOT NULL DEFAULT 0,    -- GUI Floor Plan Y pos
+  shape         VARCHAR(20) NOT NULL DEFAULT 'RECTANGLE' CHECK (shape IN ('RECTANGLE','CIRCLE','OVAL')),
+  status        VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE'
+                CHECK (status IN ('AVAILABLE','OCCUPIED','RESERVED','CLEANING')),
+  qr_code_url   TEXT,                          -- pre-generated QR for table-side ordering
+  sort_order    INTEGER NOT NULL DEFAULT 0,
+  is_active     BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(location_id, name)
+);
+ALTER TABLE tables ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON tables USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+CREATE TABLE orders (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id           UUID NOT NULL REFERENCES tenants(id),
+  location_id         UUID NOT NULL REFERENCES locations(id),
+  short_id            VARCHAR(10) NOT NULL,          -- human-readable: "BB-2341"
+  order_type          VARCHAR(20) NOT NULL
+                      CHECK (order_type IN ('DINE_IN','TAKEOUT','DELIVERY','AI_ORDER','CATERING')),
+  source_channel      VARCHAR(30) NOT NULL DEFAULT 'POS'
+                      CHECK (source_channel IN ('POS','KIOSK','WEB_ORDER','AI_ASSISTANT','DOORDASH','UBEREATS','GRUBHUB','PHONE')),
+  table_id            UUID REFERENCES tables(id),    -- set for DINE_IN
+  consumer_id         UUID REFERENCES consumers(id), -- NULL for walk-in
+  loyalty_account_id  UUID REFERENCES loyalty_accounts(id),
+  server_user_id      UUID REFERENCES users(id),     -- staff member who opened the check
+  split_from_order_id UUID REFERENCES orders(id),    -- Reference if this check was split from a master table order
+  invoice_id          UUID,                          -- B2B Invoicing (converts POS receipt to legal invoice)
+  status              VARCHAR(20) NOT NULL DEFAULT 'OPEN'
+                      CHECK (status IN ('OPEN','SENT_TO_KDS','ALL_FIRED','READY','FULFILLED','CANCELLED','REFUNDED')),
+  subtotal_cents      INTEGER NOT NULL DEFAULT 0,    -- food items only; no tax, tip, fees
+  tax_cents           INTEGER NOT NULL DEFAULT 0,
+  tip_cents           INTEGER NOT NULL DEFAULT 0,
+  delivery_fee_cents  INTEGER NOT NULL DEFAULT 0,
+  discount_cents      INTEGER NOT NULL DEFAULT 0,    -- loyalty redemption, promo codes
+  total_cents         INTEGER NOT NULL DEFAULT 0,    -- computed: subtotal + tax + tip + delivery - discount
+  notes               TEXT,
+  external_order_id   VARCHAR(255),                  -- DoorDash/UberEats reference
+  external_platform   VARCHAR(30),                   -- 'DOORDASH' | 'UBEREATS' | 'GRUBHUB'
+  kds_station_ids     UUID[],                        -- which KDS stations received this order
+  fired_at            TIMESTAMPTZ,                   -- when order was sent to kitchen
+  ready_at            TIMESTAMPTZ,                   -- when kitchen marked ready
+  fulfilled_at        TIMESTAMPTZ,
+  estimated_ready_at  TIMESTAMPTZ,                   -- communicated to consumer
+  idempotency_key     VARCHAR(255) UNIQUE,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON orders USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_orders_location_status ON orders(location_id, status, created_at DESC);
+CREATE INDEX idx_orders_external ON orders(external_order_id, external_platform);
+CREATE INDEX idx_orders_short_id ON orders(tenant_id, short_id);
+
+CREATE TABLE order_items (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         UUID NOT NULL REFERENCES tenants(id),
+  order_id          UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  menu_item_id      UUID NOT NULL REFERENCES menu_items(id),
+  item_name         VARCHAR(255) NOT NULL,           -- snapshot at order time (menu may change)
+  quantity          INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+  unit_price_cents  INTEGER NOT NULL,                -- snapshot at order time
+  total_cents       INTEGER NOT NULL,
+  modifiers         JSONB NOT NULL DEFAULT '[]',     -- [{name, price_delta_cents, quantity}]
+  notes             TEXT,                            -- customer special instructions
+  course            INTEGER NOT NULL DEFAULT 1,      -- 1: Apps, 2: Mains, 3: Desserts (for firing sequence)
+  routing_printer_id UUID,                           -- Maps to specific kitchen/bar IoT printer
+  kds_station_id    UUID REFERENCES kds_stations(id),
+  kds_status        VARCHAR(20) NOT NULL DEFAULT 'PENDING'
+                    CHECK (kds_status IN ('PENDING','SENT','FIRED','READY','VOIDED')),
+  is_comped         BOOLEAN NOT NULL DEFAULT FALSE,
+  comp_reason       VARCHAR(100),
+  void_reason       VARCHAR(100),
+  fired_at          TIMESTAMPTZ,
+  ready_at          TIMESTAMPTZ,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON order_items USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+CREATE TABLE kds_stations (
+  id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id      UUID NOT NULL REFERENCES tenants(id),
+  location_id    UUID NOT NULL REFERENCES locations(id),
+  name           VARCHAR(100) NOT NULL,             -- "Hot Line", "Cold Station", "Bar", "Expo"
+  category_ids   UUID[] NOT NULL DEFAULT '{}',      -- which menu categories route to this station
+  device_id      VARCHAR(255),                      -- paired KDS hardware device ID
+  is_active      BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE kds_stations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON kds_stations USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+CREATE TABLE payments (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id           UUID NOT NULL REFERENCES tenants(id),
+  order_id            UUID NOT NULL REFERENCES orders(id),
+  payment_method_type VARCHAR(30) NOT NULL
+                      CHECK (payment_method_type IN ('CARD_PRESENT','CARD_NP','CASH','GIFT_CARD','LOYALTY','EBT','APPLE_PAY','GOOGLE_PAY','ACH')),
+  amount_cents        INTEGER NOT NULL,
+  gateway_ref_id      VARCHAR(255),                  -- FluidPay transaction ID
+  gateway_status      VARCHAR(30) NOT NULL DEFAULT 'PENDING'
+                      CHECK (gateway_status IN ('PENDING','AUTHORIZED','CAPTURED','DECLINED','VOIDED','REFUNDED')),
+  last_four           VARCHAR(4),
+  card_brand          VARCHAR(20),
+  idempotency_key     VARCHAR(255) NOT NULL UNIQUE,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON payments USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+CREATE TABLE shift_close_reports (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id        UUID NOT NULL REFERENCES tenants(id),
+  location_id      UUID NOT NULL REFERENCES locations(id),
+  closed_by        UUID NOT NULL REFERENCES users(id),
+  shift_start      TIMESTAMPTZ NOT NULL,
+  shift_end        TIMESTAMPTZ NOT NULL,
+  total_orders     INTEGER NOT NULL DEFAULT 0,
+  total_covers     INTEGER NOT NULL DEFAULT 0,        -- guests served
+  gross_sales_cents INTEGER NOT NULL DEFAULT 0,
+  discounts_cents  INTEGER NOT NULL DEFAULT 0,
+  refunds_cents    INTEGER NOT NULL DEFAULT 0,
+  net_sales_cents  INTEGER NOT NULL DEFAULT 0,
+  taxes_cents      INTEGER NOT NULL DEFAULT 0,
+  tips_cents       INTEGER NOT NULL DEFAULT 0,
+  cash_sales_cents INTEGER NOT NULL DEFAULT 0,
+  card_sales_cents INTEGER NOT NULL DEFAULT 0,
+  gift_card_cents  INTEGER NOT NULL DEFAULT 0,
+  loyalty_discount_cents INTEGER NOT NULL DEFAULT 0,
+  report_data      JSONB,                            -- full breakdown by payment type, server, category
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE shift_close_reports ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON shift_close_reports USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**Seed:** `db/seeds/010_posr_seed.sql`
+
+```sql
+-- BistroBeest Downtown KDS Stations
+INSERT INTO kds_stations (id, tenant_id, location_id, name, category_ids, is_active)
+VALUES
+  ('kds00001-0000-0000-0000-000000000001','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','loc00001-0000-0000-0000-000000000001',
+   'Hot Line', ARRAY['cat00002-0000-0000-0000-000000000002']::UUID[], TRUE),   -- Mains
+  ('kds00002-0000-0000-0000-000000000002','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','loc00001-0000-0000-0000-000000000001',
+   'Cold Station', ARRAY['cat00001-0000-0000-0000-000000000001','cat00003-0000-0000-0000-000000000003']::UUID[], TRUE), -- Starters + Desserts
+  ('kds00003-0000-0000-0000-000000000003','aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','loc00001-0000-0000-0000-000000000001',
+   'Bar', ARRAY['cat00004-0000-0000-0000-000000000004']::UUID[], TRUE)         -- Drinks
+ON CONFLICT DO NOTHING;
+
+-- Tables for River North (12 tables + bar)
+INSERT INTO tables (tenant_id, location_id, name, capacity, section, status, sort_order)
+SELECT 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'loc00001-0000-0000-0000-000000000001',
+       'Table ' || n, CASE WHEN n <= 8 THEN 4 WHEN n <= 10 THEN 2 ELSE 6 END,
+       CASE WHEN n <= 8 THEN 'Main' WHEN n <= 10 THEN 'Patio' ELSE 'Private' END,
+       'AVAILABLE', n
+FROM generate_series(1,12) AS s(n)
+ON CONFLICT (location_id, name) DO NOTHING;
+
+INSERT INTO tables (tenant_id, location_id, name, capacity, section, status, sort_order)
+VALUES
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','loc00001-0000-0000-0000-000000000001','Bar 1',1,'Bar','AVAILABLE',13),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','loc00001-0000-0000-0000-000000000001','Bar 2',1,'Bar','AVAILABLE',14),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa','loc00001-0000-0000-0000-000000000001','Bar 3',1,'Bar','AVAILABLE',15)
+ON CONFLICT (location_id, name) DO NOTHING;
+
+-- Platform config for POSR-specific settings
+INSERT INTO platform_config (key, value, data_type, description, is_merchant_overridable, min_value, max_value)
+VALUES
+  ('posr.table_turn_target_minutes',  '60',    'integer',  'Target table turn time in minutes',       TRUE, '30', '180'),
+  ('posr.tip_suggestions_pct',        '[18,20,22]', 'json','Tip suggestion percentages on terminal',TRUE, NULL, NULL),
+  ('posr.kds_fire_delay_seconds',     '0',     'integer',  'Delay between seat and KDS fire (0=immediate)', TRUE, '0', '300'),
+  ('posr.auto_gratuity_party_size',   '6',     'integer',  'Minimum party size for auto-gratuity',    TRUE, '4', '20'),
+  ('posr.auto_gratuity_pct',          '18',    'integer',  'Auto-gratuity percentage',                TRUE, '15', '25'),
+  ('posr.receipt_logo_url',           '',      'string',   'URL to merchant logo on e-receipt',       TRUE, NULL, NULL),
+  ('posr.item_86_propagation_sec',    '60',    'integer',  'Max seconds for 86 to reach all channels',FALSE,'10', '120'),
+  ('posr.offline_queue_max_orders',   '500',   'integer',  'Max orders to queue in offline mode',     FALSE,'100','2000'),
+  -- KDS ticket age color thresholds (ambiguity #14 â€” explicit values, not invented)
+  ('posr.kds.ticket_color_yellow_minutes', '8',  'integer',  'Minutes before KDS ticket turns yellow (warning)', TRUE, '3', '30'),
+  ('posr.kds.ticket_color_red_minutes',    '15', 'integer',  'Minutes before KDS ticket turns red (urgent)', TRUE, '5', '60'),
+  ('posr.kds.ticket_color_purple_minutes', '25', 'integer',  'Minutes before KDS ticket turns purple (critical/escalate)', TRUE, '10', '90'),
+  -- Tip pool algorithm (ambiguity #4 â€” tip pool formula explicitly defined below)
+  ('posr.tip_pool_enabled',            'false', 'boolean',  'Whether tips are pooled vs. kept by individual server', TRUE, NULL, NULL),
+  ('posr.tip_pool_algorithm',          'HOURS_WEIGHTED', 'string', 'EQUAL | HOURS_WEIGHTED | POINTS_BASED', TRUE, NULL, NULL),
+  -- KDS reconnect replay order (ambiguity #8 â€” explicitly chronological)
+  ('posr.kds.offline_replay_order',    'CHRONOLOGICAL', 'string', 'Order for KDS replay on reconnect: CHRONOLOGICAL | MOST_RECENT_FIRST', FALSE, NULL, NULL),
+  ('posr.split_check_max_ways',       '8',     'integer',  'Maximum ways to split a check',           TRUE, '2', '20')
+ON CONFLICT (key) DO NOTHING;
+```
+
+---
+
+## REQ-POSR-001: Core Order Management & Table Workflow
+
+**Priority:** Must | **Actors:** Server, Cashier, Expo, Kitchen Staff
+
+---
+
+#### Context & Business Intent
+
+Build the complete order lifecycle: open a check, add items with modifiers, hold/fire courses, split checks, and close. Every screen transition must be instantaneous (< 300ms render). The table grid is the home screen for every BistroBeest POS session. All order data saved in real time â€” zero data loss on terminal crash.
+
+---
+
+#### Service Layer: `src/services/pos/order.service.ts`
+
+```typescript
+/**
+ * openOrder(params) â€” Creates an order record linked to table (dine-in) or none (takeout).
+ * Assigns server_user_id from the authenticated session.
+ * table_id status â†’ 'OCCUPIED'. Returns order ID and short_id.
+ */
+async openOrder(params: { tenantId, locationId, tableId?, orderType, serverId }): Promise<Order>
+
+/**
+ * addItem(params) â€” Appends item to an open order. Price snapshot taken from menu_items.price_cents
+ * at the moment of add (not at close). Recalculates order.subtotal_cents, tax (via TAX engine), total.
+ * Routes item to correct kds_station_id based on item's category_id.
+ */
+async addItem(params: { orderId, menuItemId, quantity, modifiers, notes }): Promise<OrderItem>
+
+/**
+ * fireToKDS(orderId, courseNumber?) â€” Sends unfired items to their KDS stations.
+ * If courseNumber specified: fires only items in that course.
+ * Sets order.status = 'SENT_TO_KDS', item.kds_status = 'SENT', order.fired_at = NOW().
+ * Publishes 'kds.order_received' event to the KDS station's real-time channel (WebSocket/SSE).
+ */
+async fireToKDS(orderId: string, courseNumber?: number): Promise<void>
+
+/**
+ * splitCheck(orderId, splits) â€” Divides an order into sub-checks.
+ * splits: [{items: OrderItemId[], consumer_name: string}] | {ways: number} (even split)
+ * Creates N new orders linked as SPLIT_CHILD to parent. Parent status = 'SPLIT'.
+ */
+async splitCheck(orderId: string, splits: SplitSpec): Promise<Order[]>
+
+/**
+ * closeOrder(orderId, payments) â€” Accepts payment array (multi-tender), calculates totals,
+ * calls ORC service for payment processing, writes shift_close_reports entry,
+ * calls LOY earning, fires webhooks. All in one DB transaction.
+ */
+async closeOrder(orderId: string, payments: PaymentSpec[]): Promise<OrderCloseResult>
+
+/**
+ * voidOrder(orderId, reason) â€” Cancels an open order.
+ * Frees table. Reverses any loyalty earnings on the order. Calls KDS to clear displays.
+ */
+async voidOrder(orderId: string, reason: string): Promise<void>
+```
+
+---
+
+#### API Endpoints
+
+| Method | Path | Auth | Description | Webhook |
+|---|---|---|---|---|
+| `POST` | `/v1/orders` | POS Session | Open new order | `order.created` |
+| `GET` | `/v1/orders/{id}` | POS Session, Merchant Admin | Get full order state | â€” |
+| `POST` | `/v1/orders/{id}/items` | POS Session | Add item | `order.item_added` |
+| `DELETE` | `/v1/orders/{id}/items/{itemId}` | POS Session | Void item | `order.item_voided` |
+| `POST` | `/v1/orders/{id}/fire` | POS Session | Fire to KDS | `kds.order_received` |
+| `POST` | `/v1/orders/{id}/split` | POS Session | Split check | â€” |
+| `POST` | `/v1/orders/{id}/close` | POS Session | Process payment + close | `order.closed`, `payment.succeeded` |
+| `POST` | `/v1/orders/{id}/void` | Manager | Void order | `order.voided` |
+| `GET` | `/v1/locations/{id}/tables` | POS Session | Table grid status | â€” |
+| `GET` | `/v1/locations/{id}/orders` | POS Session, Manager | Open orders list | â€” |
+
+---
+
+#### UI/UX
+
+**Home Screen â€” Table Grid:**  
+> 4Ã—4 grid (configurable) showing each table as colored card:  
+> - **Green** = AVAILABLE â€” tap to open new order  
+> - **Yellow** = OCCUPIED â€” shows server initials, elapsed time, party size, current check total  
+> - **Red** = OCCUPIED > target turn time (from `posr.table_turn_target_minutes` config) â€” overdue alert  
+> - **Blue** = RESERVED â€” shows reservation time and guest name  
+> Tap any occupied table â†’ opens that order in the order screen
+
+**Order Screen:**  
+> Left panel: Order items list with running total | Right panel: Menu (category tabs â†’ item grid)  
+> Item tap â†’ modifier sheet slides up (required mods with radio buttons, optional mods with checkboxes) â†’ "Add to Order"  
+> Bottom action bar: [Fire Kitchen] [Split Check] [Print] [Close Check] [Void]  
+> Fire button badge shows count of unfired items
+
+**Close Check Screen:**  
+> Subtotal | Tax | Tip (3 button suggestions from config + custom field) | Total  
+> Payment type selector: Card (tap/chip), Cash, Split  
+> If loyalty account linked: "Maria has 1,842 pts ($18.42) â€” Apply points? [Yes / No]"  
+> On successful payment: loud chime, receipt options: print / email / SMS / none
+
+**Offline Mode:**  
+> Banner: "âš ï¸ Offline â€” Orders saved locally (max `posr.offline_queue_max_orders` from config)"  
+> Orders accepted, payments queued for retry on reconnect  
+> Card: Store-and-forward via terminal HSM â€” chip card present transaction stored for later clearing  
+> On reconnect: all queued orders sync â†’ payments processed â†’ LOY earning triggered â†’ KDS replayed
+
+---
+
+#### Acceptance Tests
+
+| Test ID | Scenario | Input | Expected |
+|---|---|---|---|
+| POSR-001-T1 | Open, add items, fire, close | Table 5, 2 items, card payment | Order created â†’ KDS receives within 5s â†’ payment processed â†’ loyalty earned â†’ table freed |
+| POSR-001-T2 | Split check 2 ways | $60 order, split evenly | 2 child orders $30 each, both closeable independently |
+| POSR-001-T3 | Offline order | Network down, order taken | Order saved locally â†’ on reconnect, synced â†’ payment processed retrospectively |
+| POSR-001-T4 | Void after fire | Item fired to KDS, then voided | KDS displays VOIDED indicator; item_total reversed; loyalty not earned for voided amount |
+| POSR-001-T5 | Auto-gratuity | Party of 7 (â‰¥ config `posr.auto_gratuity_party_size`) | 18% gratuity pre-applied, labeled "Auto-Grat", still editable by manager |
+
+---
+
+## REQ-POSR-002: Kitchen Display System (KDS) Integration
+
+**Priority:** Must | **Actors:** Kitchen Staff, Expo, Line Cooks, Manager
+
+---
+
+#### Service Layer: `src/services/pos/kds.service.ts`
+
+```typescript
+/**
+ * routeItemsToStations(orderItems, locationId) â€” Reads kds_stations[].category_ids config.
+ * Maps each OrderItem to the correct KDS station based on menu_item.category_id.
+ * Returns: Map<kds_station_id, OrderItem[]>
+ */
+async routeItemsToStations(orderItems: OrderItem[], locationId: string): Promise<KDSRoutingMap>
+
+/**
+ * publishToKDS(stationId, orderItems, order) â€” Sends order to KDS hardware via:
+ * 1. WebSocket push to BistroBeest KDS app running on station device
+ * 2. Fallback: HTTP POST to station local IP if WebSocket fails
+ * 
+ * OP-RETAIL-02 [Hardware Dead-Lock Spooler]:
+ * If KDS devices are offline or Cloud_Latency > 500ms continuously, the system explicitly reverts to the ESC/POS Local Spooler.
+ * Directly routes bytecode via Local-IP Direct Print to Thermal Printers, guaranteeing 0 'Vanishing Tickets' during network anomalies.
+ * KDS ticket format: {table_name, server_name, course, items:[{name, qty, mods, notes}], time}
+ */
+async publishToKDS(stationId: string, orderItems: OrderItem[], order: Order): Promise<void>
+
+/**
+ * markItemReady(orderItemId) â€” Kitchen staff marks item done on KDS touchscreen.
+ * Sets order_item.kds_status = 'READY', order_item.ready_at = NOW().
+ * If ALL items on order = READY â†’ order.status = 'ALL_FIRED', fires 'order.ready' event.
+ * Triggers NOT engine 'order.ready' notification to consumer (if phone on file).
+ */
+async markItemReady(orderItemId: string, stationId: string): Promise<void>
+```
+
+**Config key:** `posr.kds_fire_delay_seconds` â€” read from DB at runtime; 0 = fire immediately
+
+**KDS Screen Design:**  
+> Each ticket card: colored header (color changes as age increases per DB config) | Table/Order ID | Items in large text with modifiers in smaller text  
+> Swipe right â†’ mark item READY | Swipe left â†’ bump (recall previously ready item)  
+> Sound alert on new ticket arrival (configurable per station via DB: `kds.{station_id}.alert_sound`)  
+> Ticket age alert: configurable per station â€” turns red after N minutes (read from `kds.{station_id}.red_alert_minutes`)
+
+---
+
+## REQ-POSR-003: Menu & Modifier Management
+
+**Priority:** Must | **Actors:** Merchant Admin, Brand Admin, Location Manager
+
+---
+
+#### API Endpoints
+
+| Method | Path | Auth | Description | Webhook |
+|---|---|---|---|---|
+| `GET` | `/v1/menu` | All | Full menu with categories, items, modifiers | â€” |
+| `POST` | `/v1/menu/items` | Merchant Admin, Brand Admin | Create item | `menu.item_created` |
+| `PATCH` | `/v1/menu/items/{id}` | Merchant Admin, Brand Admin | Update item (price, availability) | `menu.item_updated` |
+| `POST` | `/v1/menu/items/{id}/86` | Location Manager | Mark item out-of-stock | `menu.item_oos` |
+| `DELETE` | `/v1/menu/items/{id}/86` | Location Manager | Mark item available | `menu.item_available` |
+| `POST` | `/v1/menu/modifiers` | Merchant Admin | Create modifier group | â€” |
+
+**Item 86 effect:** Sets `menu_items.is_active = FALSE` for the location (location-scoped, not brand-scoped if LOCAL lock level). Propagates to all connected aggregator channels within `aggregation.oos_propagation_max_sec` (read from DB). Aggregation pauses the item on DoorDash/UberEats/GrubHub automatically.
+
+**UI:** Item card turns grey with "86'd" chip. Tap â†’ "Restore Item" button.
+
+---
+
+## REQ-POSR-004: Server & Staff Management
+
+**Priority:** Must | **Actors:** Manager, Server, Cashier
+
+---
+
+**Tables:**
+```sql
+CREATE TABLE shift_employees (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id     UUID NOT NULL REFERENCES tenants(id),
+  location_id   UUID NOT NULL REFERENCES locations(id),
+  user_id       UUID NOT NULL REFERENCES users(id),
+  shift_date    DATE NOT NULL,
+  clocked_in_at TIMESTAMPTZ,
+  clocked_out_at TIMESTAMPTZ,
+  role          VARCHAR(30) NOT NULL,
+  tip_pool_eligible BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(location_id, user_id, shift_date)
+);
+ALTER TABLE shift_employees ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON shift_employees USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**API:**
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| `POST` | `/v1/pos/clock-in` | Staff | Clock in to a location/shift |
+| `POST` | `/v1/pos/clock-out` | Staff | Clock out |
+| `GET` | `/v1/locations/{id}/staff/on-shift` | Manager | Currently clocked-in staff |
+| `GET` | `/v1/pos/orders/by-server/{userId}` | Server (own), Manager | Orders assigned to server |
+
+**UI â€” Manager Dashboard:**  
+> "On Shift Now" row with names, role, clock-in time, elapsed  
+> Per-server performance today: covers, avg ticket, comp %, upsell rate (if AI tracking enabled)
+
+---
+
+## REQ-POSR-005: Multi-Channel Order Aggregation (AGG Integration)
+
+**Priority:** Must | **Actors:** Kitchen Staff, Manager, 3rd-Party Delivery Platforms
+
+---
+
+See `AGG_ORDER_AGGREGATION.md` for full integration spec. POSR-specific behavior:
+
+- `source_channel` on orders: `DOORDASH | UBEREATS | GRUBHUB` â€” stored at order create
+- External orders appear in the same order queue as in-house orders â€” no separate device or screen
+- External order `short_id` prefixed: `DD-XXXX`, `UE-XXXX`, `GH-XXXX` â€” visually distinct in KDS
+- Auto-acknowledge external orders within `aggregation.{platform}.ack_timeout_sec` (read from DB)
+- External order routing: same KDS station routing as in-house based on category_id
+- External order loyalty: if consumer's DoorDash phone matches a BistroBeest loyalty account â†’ earn at channel multiplier `loyalty.channel_multiplier.doordash` (read from DB, default: 0.5Ã—)
+
+---
+
+## REQ-POSR-006: Payment Processing & Tip Management
+
+**Priority:** Must | **Actors:** Consumer, Cashier, Payment Gateway
+
+---
+
+**All payment calls delegate to ORC_PAYMENT_ORCHESTRATION service.**
+
+Config keys (all from DB):
+```
+posr.tip_suggestions_pct    â†’ [18, 20, 22] â€” rendered as 3 buttons on terminal
+posr.auto_gratuity_pct      â†’ 18 â€” applied for parties â‰¥ auto_gratuity_party_size
+posr.auto_gratuity_party_size â†’ 6 â€” minimum party count for auto-grat
+```
+
+**Terminal tip flow:**  
+1. Order total displayed on customer-facing display  
+2. "Add a tip?" â€” shows 3 tap buttons (values from config: 18%, 20%, 22%) + "Custom" + "No Tip"  
+3. Customer selects â†’ final total displayed â†’ tap/insert/swipe  
+4. Approval received â†’ receipt print/send options
+
+**Tip distribution:**  
+- Individual server: full tip to their payroll tip record  
+- Tip pool: if `posr.tip_pool_enabled = true` (merchant_config) â†’ collected tips pooled; distributed by `tip_pool_algorithm` (EQUAL | HOURS_WEIGHTED | POINTS_BASED) config
+
+---
+
+## REQ-POSR-007: Reporting & End-of-Shift Close
+
+**Priority:** Must | **Actors:** Manager, Accountant
+
+---
+
+**API:**
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| `POST` | `/v1/pos/shifts/close` | Manager | Close shift, generate report |
+| `GET` | `/v1/pos/shifts/{id}/report` | Manager, Accountant | Shift close report |
+| `GET` | `/v1/pos/locations/{id}/sales/today` | Manager | Live today's sales dashboard |
+| `GET` | `/v1/pos/locations/{id}/sales` | Manager, Accountant | Historical sales by date range |
+
+**EOD Close generates:**
+- `shift_close_reports` row (all financial totals)  
+- Webhook: `shift.closed` with full `report_data` JSON  
+- AI Ops brief entry for the day  
+- Settlement batch trigger (via ORC service)
+
+**UI â€” Live Sales Dashboard:**  
+> Today's gross sales counter (live, updates every 30s) | Covers | Avg ticket  
+> Hourly sales bar chart | Top 5 items by revenue | Loyalty redemptions today | Comps vs. target
+
+---
+
+## REQ-POSR-008: Loyalty Integration at POS
+
+**Priority:** Must | **Actors:** Consumer, Cashier, POS Terminal
+
+---
+
+See `LOY_LOYALTY_ENGINE.md` for full spec. POSR-specific behavior:
+
+- Loyalty lookup triggered at order open (not at close) â†’ proactive, not an afterthought
+- Phone entry on terminal â†’ `GET /v1/loyalty/accounts/lookup?phone={e164}` â†’ shows within 1s
+- Redemption applied before tax calculation (discount reduces the taxable subtotal)
+- Earning triggered inside `closeOrder()` DB transaction â€” same transaction as payment capture
+- If consumer not enrolled: cashier screen shows "Enroll now? [Yes]" â†’ enrollment takes < 10s
+
+---
+
+## REQ-POSR-009: Offline Resilience
+
+**Priority:** Must | **Actors:** POS Terminal, Network Infrastructure
+
+---
+
+**Offline Detection:** Terminal monitors connectivity every 5 seconds via a ping to `health.paysurity.com/ping`. If 3 consecutive pings fail â†’ enters OFFLINE mode.
+
+**Offline Queue:**  
+- Orders accepted; stored in encrypted local SQLite DB on the terminal  
+- Card payments: Store-and-forward via terminal HSM (certified by card brands for restaurant)  
+- Maximum queue depth: read from `posr.offline_queue_max_orders` (never hardcoded)
+
+**Reconnection Sync (Deprecated Sync-on-Connect):**
+OP-OFFLINE-01 [Vector Clock / CRDT Merge]:
+Legacy 'Sync-on-Connect' POST batched endpoints are strictly prohibited. The system mandates Vector Clock CRDT (Conflict-free Replicated Data Type) peer-to-peer merging. When connectivity returns, the local DB replicates natively via mathematically provable lattice aggregations, completely removing race-condition overwriting.
+
+OP-OFFLINE-02 [72-Hour Local-Enclave Auth]:
+Cloud-required Auth patterns (e.g., JWT to central server) are suspended during offline modes. The POS must natively authenticate Cashiers and Managers utilizing a 72-Hour Local-Enclave Crypto-Cache securely executing offline role validations locally.
+
+OP-OFFLINE-03 [Physical Truth Priority]:
+In the event of an inventory collision (e.g., an e-commerce sale locking inventory while the physical store sells it offline), the 'Physical Truth' Priority algorithm automatically forces the e-commerce transaction to void or backorder. Physical execution strictly overrides digital claims.
+
+OP-OFFLINE-04 [Cryptographic Intent-Spooling]:
+During offline modes, FedNow/ACH instantaneous settlements are spooled locally directly on the secure HSM as a 'Cryptographic Intent.' Once connection returns, the exact signed payloads transit the ledger, perfectly resuming the atomic window.
+
+---
+
+## REQ-POSR-010: Receipt & Guest Communication
+
+**Priority:** Must | **Actors:** Consumer, Cashier
+
+---
+
+**Config keys:**
+```
+posr.receipt_logo_url        â†’ merchant logo URL (merchant_config)
+posr.receipt_footer_text     â†’ custom footer message (merchant_config, max 140 chars)
+posr.receipt_email_enabled   â†’ true/false  (merchant_config)
+posr.receipt_sms_enabled     â†’ true/false  (merchant_config)
+```
+
+**Receipt contains (never hardcoded formatting):**  
+Logo â†’ Merchant Name â†’ Location Address + Phone  
+Order items (name, qty, unit price, modifiers, comp flag)  
+Subtotal | Tax (jurisdiction from TAX engine response) | Tip | Total  
+Payment method(s) â€” card last-4, cash tendered/change  
+Loyalty: points earned this visit | new balance | expiry date  
+Footer text from config  
+QR code linking to feedback form URL (if `posr.feedback_qr_enabled = true`)
+
+**Delivery options presented in order:** Print (default if printer connected) â†’ Email (if consumer on file) â†’ SMS (if consumer opted in) â†’ None
+
+---
+
+
+## Valor EMV L3 Restaurant Controls
+- **REQ-05**: Tip Adjustment post-auth via Valor terminal capture batches.
+- **REQ-06**: Split Check reconciliation tracking back to exact terminal receipt numbers.
+
+
+## PaySurity Advantage (Superiority V2.0)
+**ADV-002 [Zero-Button Flow]:** The standard multi-step confirmation checkout workflow is deprecated. Superiority Target: â‰¤ 3 taps from cart-finality to receipt generation.
+# Canonical Requirements: POS Grocery
+**Vertical:** POS Grocery (POSG) | **Version:** v2.0-dev-prompt | **Date:** 2026-03-12  
+**Standard:** `DEV_IMPLEMENTATION_STANDARD.md` â€” all values from DB, no hardcoding  
+**Test Tenant:** BistroBeest (`tenant_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)  
+**Key Differences from POSR:** Barcode scanning, PLU codes, scale integration, EBT/WIC, age verification, speed-optimized checkout (includes Hybrid Deli-Retail capabilities)
+
+---
+
+## Database Schema
+
+**Migration:** `db/migrations/011_posg_grocery.sql`
+
+```sql
+-- Grocery-specific item attributes extending menu_items
+CREATE TABLE grocery_item_attributes (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  menu_item_id    UUID NOT NULL REFERENCES menu_items(id) UNIQUE,
+  upc_codes       TEXT[] NOT NULL DEFAULT '{}',   -- one item can have multiple UPCs (different sizes)
+  plu_code        VARCHAR(10),                    -- IFPS standard PLU for produce (e.g., "4011" for banana)
+  embedded_barcode_type VARCHAR(20),              -- e.g. 'GS1_WEIGHT', 'GS1_PRICE' for variable measure meat/deli
+  tracking_type   VARCHAR(20) NOT NULL DEFAULT 'NONE' CHECK (tracking_type IN ('NONE', 'LOT', 'SERIAL')),
+  is_weighted     BOOLEAN NOT NULL DEFAULT FALSE, -- TRUE = sold by weight (scale integration)
+  weight_unit     VARCHAR(5),                     -- 'lb' | 'kg' | 'oz' â€” read from config
+  price_per_unit_cents INTEGER,                   -- price per lb/kg if is_weighted=TRUE
+  is_age_restricted BOOLEAN NOT NULL DEFAULT FALSE,
+  min_age_years   INTEGER DEFAULT 21,             -- 21 for alcohol/tobacco; 18 for some states
+  age_restriction_type VARCHAR(20)
+                  CHECK (age_restriction_type IN ('ALCOHOL','TOBACCO','CANNABIS','OTHER')),
+  is_ebt_eligible BOOLEAN NOT NULL DEFAULT TRUE,  -- SNAP-eligible items
+  is_wic_eligible BOOLEAN NOT NULL DEFAULT FALSE, -- WIC-authorized items
+  wic_category    VARCHAR(50),                    -- WIC food category
+  deposit_cents   INTEGER NOT NULL DEFAULT 0,     -- bottle/can deposit
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE grocery_item_attributes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON grocery_item_attributes USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_grocery_upc ON grocery_item_attributes USING GIN(upc_codes);
+CREATE INDEX idx_grocery_plu ON grocery_item_attributes(plu_code) WHERE plu_code IS NOT NULL;
+
+-- ERP Lot/Serial Number Tracking (for Perishables & High-Value Retail)
+CREATE TABLE inventory_lots (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  product_id      UUID NOT NULL REFERENCES menu_items(id),
+  lot_number      VARCHAR(100) NOT NULL,
+  expiration_date DATE,
+  quantity        DECIMAL(10,4) NOT NULL DEFAULT 0,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(tenant_id, product_id, lot_number)
+);
+ALTER TABLE inventory_lots ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON inventory_lots USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+-- Age verification log: compliance record for every restricted sale
+CREATE TABLE age_verification_log (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         UUID NOT NULL REFERENCES tenants(id),
+  order_id          UUID NOT NULL REFERENCES orders(id),
+  cashier_user_id   UUID NOT NULL REFERENCES users(id),
+  restriction_type  VARCHAR(20) NOT NULL,
+  verification_method VARCHAR(30) NOT NULL
+                    CHECK (verification_method IN ('ID_SCAN','MANUAL_BIRTHDATE','TRUSTED_REGULAR','OVER_40_VISUAL')),
+  id_birthdate      DATE,                         -- from ID scan or manual entry
+  customer_appears_over_40 BOOLEAN,               -- for OVER_40_VISUAL method
+  id_type           VARCHAR(20),                  -- 'DRIVERS_LICENSE' | 'PASSPORT' | 'STATE_ID'
+  id_state          VARCHAR(2),
+  verified_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE age_verification_log ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON age_verification_log USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+-- Scale readings: logged for auditable weight-based sales
+CREATE TABLE scale_readings (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  order_item_id   UUID NOT NULL REFERENCES order_items(id),
+  scale_device_id VARCHAR(100) NOT NULL,
+  raw_weight      DECIMAL(10,4) NOT NULL,
+  weight_unit     VARCHAR(5) NOT NULL,
+  tared_weight    DECIMAL(10,4) NOT NULL,          -- after tare subtraction
+  price_per_unit_cents INTEGER NOT NULL,           -- captured at time of scan
+  calculated_price_cents INTEGER NOT NULL,
+  read_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE scale_readings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON scale_readings USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**Seed:** `db/seeds/011_posg_seed.sql`
+
+```sql
+INSERT INTO platform_config (key, value, data_type, description, is_merchant_overridable, min_value, max_value)
+VALUES
+  ('posg.barcode.scan_timeout_ms',     '200',   'integer', 'Max ms to resolve barcode scan before showing not-found', FALSE, '50', '2000'),
+  ('posg.barcode.unknown_action',      'PROMPT_CASHIER', 'string', 'Action for unrecognized barcode: PROMPT_CASHIER | CREATE_ITEM | REJECT', TRUE, NULL, NULL),
+  ('posg.barcode.gs1_prefix_weight',   '21',    'string', 'GS1 prefix indicating embedded weight (Odoo style)', FALSE, NULL, NULL),
+  ('posg.barcode.gs1_prefix_price',    '23',    'string', 'GS1 prefix indicating embedded price (Odoo style)', FALSE, NULL, NULL),
+  ('posg.iot_box.ip_address',          '',      'string', 'IP Address for local IoT Box handling cash drawers/printers/terminals', TRUE, NULL, NULL),
+  ('posg.scale.brand',                 'METTLER_TOLEDO', 'string', 'Scale hardware brand (determines driver/protocol)', FALSE, NULL, NULL),
+  ('posg.scale.connection_type',       'USB_HID', 'string', 'Scale connection: USB_HID | RS232 | BLUETOOTH', FALSE, NULL, NULL),
+  ('posg.scale.unit',                  'lb',    'string',  'Default weight unit: lb | kg | oz', TRUE, NULL, NULL),
+  ('posg.scale.tare_prompt',           'true',  'boolean', 'Prompt cashier to tare before each weighted item', FALSE, NULL, NULL),
+  ('posg.age_verify.default_min_age',  '21',    'integer', 'Default minimum age for restricted items', FALSE, '18', '21'),
+  ('posg.age_verify.visual_cutoff_years','40',  'integer', 'If customer appears over this age, visual verification OK', TRUE, '25', '50'),
+  ('posg.age_verify.over_40_enabled',  'true',  'boolean', 'Allow visual over-40 verification (no ID required)', TRUE, NULL, NULL),
+  ('posg.ebt.provider',                'FISERV', 'string', 'EBT processing provider', FALSE, NULL, NULL),
+  ('posg.ebt.receipt_split',           'true',  'boolean', 'Print split EBT/non-EBT receipt', FALSE, NULL, NULL),
+  ('posg.checkout.auto_bag_fee_cents', '10',    'integer', 'Automatic bag fee in cents (where applicable; 0=disabled)', TRUE, '0', '25'),
+  ('posg.checkout.quick_tender_enabled','true', 'boolean', 'Enable quick tender shortcuts (exact cash, common bills)', TRUE, NULL, NULL),
+  ('posg.checkout.coupon_enabled',     'true',  'boolean', 'Enable paper coupon scanning at checkout', TRUE, NULL, NULL),
+  ('posg.loyalty.multiplier_grocery',  '0.5',   'decimal', 'Loyalty earn multiplier for grocery vs restaurant (grocery items earn at 0.5x)', TRUE, '0', '3')
+ON CONFLICT (key) DO NOTHING;
+```
+
+---
+
+## REQ-POSG-001: Barcode Scan & Item Lookup
+
+**Priority:** Must | **Actors:** Cashier, POS Terminal, Hardware Scanner
+
+---
+
+#### Context
+
+Grocery POS speed is table stakes. A slowdown at scan time is a cashier and customer experience failure. Target: barcode resolved + item added to order in < 200ms. Fallback behaviors for unknown barcodes must never block the line â€” always offer an immediate action.
+
+---
+
+#### Service Layer
+
+```typescript
+/**
+ * resolveBarcode(barcode, locationId) â€” Core scan handler.
+ * 1. Query grocery_item_attributes WHERE upc_codes @> ARRAY[barcode] (GIN index)
+ *    OR plu_code = barcode â€” within timeout from config 'posg.barcode.scan_timeout_ms'
+ * 2. If found and is_weighted=TRUE: await readScale() before returning price
+ * 3. If found and is_age_restricted=TRUE: return with flag â†’ cashier age verify prompt
+ * 4. If not found: read config 'posg.barcode.unknown_action':
+ *    PROMPT_CASHIER: return error with barcode; cashier searches/enters manually
+ *    CREATE_ITEM: create draft grocery_item; flag for manager review; add to order
+ *    REJECT: show error; item not added
+ * Returns: { menuItem, unitPriceCents, quantity:1, requiresAgeVerify, requiresScale, isEbtEligible }
+ */
+async resolveBarcode(barcode: string, locationId: string): Promise<BarcodeScanResult>
+
+/**
+ * **Superiority ADV-PRODUCE-AI (Keypad-Replacement):** 
+ * Active produce identification using computer vision module.
+ * Eliminates manual cashier PLU entry by identifying the item visually and feeding the predicted IFPS standard PLU string directly into the existing `plu_code` lookup pipeline.
+ */
+async identifyProduceByVision(imageStream: Buffer): Promise<{ resolvedPluCode: string; confidenceScore: number }>
+
+/**
+ * readScale(deviceId) â€” Reads current weight from scale hardware.
+ * Protocol: USB HID (Mettler Toledo standard) via Node.js 'node-hid' library
+ * 1. Open HID device by vendor_id/product_id (read from config, not hardcoded)
+ * 2. Send tare command if 'posg.scale.tare_prompt' = true and previous item was different
+ * 3. Read stable weight report (wait for variance < 0.002 across 3 readings)
+ * 4. Apply unit conversion based on config 'posg.scale.unit'
+ * 5. Calculate price: tared_weight Ã— price_per_unit_cents
+ * 6. Write scale_readings record
+ * Returns: { weight, unit, priceCents }
+ */
+async readScale(deviceId: string, menuItemId: string): Promise<ScaleReading>
+```
+
+---
+
+## REQ-POSG-002: EBT/SNAP & WIC Payments
+
+**Priority:** Must | **Actors:** Consumer, Cashier, EBT Network (Fiserv)
+
+---
+
+**EBT flow (SNAP â€” food items only):**
+1. After all items scanned: system auto-calculates EBT-eligible subtotal (items with `is_ebt_eligible=TRUE`) vs non-EBT subtotal
+2. Cashier screen shows: "EBT-Eligible: $32.40 | Non-EBT: $12.50 | Total: $44.90"
+3. Consumer inserts (Chip) or taps EBT card on PIN pad to comply with 2026 USDA standards (Swipe is retained strictly as the ECL Fallback mechanism if chip/tap fails)
+4. EBT network (Fiserv) processes up to available SNAP balance (ORC routes to `posg.ebt.provider`)
+5. Remaining balance (non-EBT items) prompted on same terminal: cash/card/wallet
+6. Receipt: printed split showing EBT purchases + balance, non-EBT purchases separately
+
+**WIC flow (Women, Infants, Children):**
+- WIC-eligible items identified by `is_wic_eligible=TRUE` AND `wic_category` matching consumer's WIC benefits
+- WIC card presented on PIN pad after SNAP (separate tender)
+- Items must exactly match WIC authorized food package â€” over-limit quantities rejected
+- Manager override required if any item quantity mismatch
+
+**Age verification flow:**
+1. Any `is_age_restricted=TRUE` item in order triggers pause
+2. Large screen overlay: "âš ï¸ Age Verification Required"
+3. Options (per config):
+   - "Scan ID" â†’ POS camera/slot scanner â†’ parses DOB â†’ validates age
+   - "Enter birthdate" â†’ manual MM/DD/YYYY â†’ validates
+   - "Customer appears 40+" â†’ one-tap if `posg.age_verify.over_40_enabled=true`
+4. If verification fails: item removed; cannot proceed with restricted item
+5. Every verification written to `age_verification_log` (compliance REQUIRED)
+
+---
+
+## REQ-POSG-003: Speed Checkout
+
+**Priority:** Must | **Actors:** Cashier, Consumer
+
+---
+
+Grocery checkout is high-velocity. Every extra second costs throughput.
+
+**Quick Tender buttons (configurable, from platform_config â€” never hardcoded):** 
+Rendered dynamically: "Exact ($44.90)" | "$50" | "$60" | "$100"  
+One tap â†’ cash payment registered â†’ change calculated â†’ drawer opens  
+Config: `posg.checkout.quick_tender_enabled` (boolean) controls visibility
+
+**Self-checkout mode:**  
+Configurable per terminal: `posg.terminal.mode = 'CASHIER' | 'SELF_CHECKOUT'`  
+Self-checkout: consumer scans items; weight verification on every item; cashier oversight screen monitors all self-checkout lanes; cashier approval gate for age-restricted items
+
+**Basket size tracking:**  
+`orders.cover_count` = total unique items in order (for basket analytics)  
+Average items per transaction tracked in shift_close_reports for grocery ops benchmarking
+
+---
+
+## REQ-POSG-004: Inventory Integration
+
+**Priority:** Should | **Actors:** Merchant Admin, Location Manager
+
+---
+
+**On every scan:** decrement `menu_items.stock_quantity` (if inventory tracking enabled per item)  
+Config: `posg.inventory.tracking_enabled` (boolean, merchant_config)  
+On stock = 0: item auto-86'd (same propagation as POSR 86 to aggregators)  
+Low-stock alert: when stock â‰¤ `posg.inventory.low_stock_threshold` (from config) â†’ alert Location Manager via NOT engine
+
+**API:**
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| `GET` | `/v1/grocery/inventory` | Merchant Admin, Location Mgr | Current stock levels |
+| `PATCH` | `/v1/grocery/inventory/items/{id}` | Merchant Admin | Manual stock adjustment |
+| `POST` | `/v1/grocery/inventory/import` | Merchant Admin | Bulk import via CSV |
+| `GET` | `/v1/grocery/barcodes/{upc}` | POS Terminal | Resolve UPC to menu item |
+| `GET` | `/v1/grocery/plu/{plu}` | POS Terminal | Resolve PLU code |
+
+
+## Valor EMV L3 Grocery Controls
+- **REQ-07**: EBT Eligibility marking on EMV payload.
+- **REQ-08**: Dual-Tender (EBT/SNAP fallback to Credit/Debit).
+- **REQ-09**: Scale/Weight barcode metadata synchronization with Valor hardware logic.
+
+
+## PaySurity Advantage (Superiority V2.0)
+**ADV-002 [Zero-Button Flow]:** The standard multi-step confirmation checkout workflow is deprecated. Superiority Target: â‰¤ 3 taps from cart-finality to receipt generation.
+
+---
+
+## REQ-POSG-005: Unified Deli-Retail Checkout
+
+**Priority:** Must | **Actors:** Cashier, Scale, KDS
+
+**Hybrid Deli-Retail Native Capability:**
+Allows KDS-routed deli items (e.g., custom made-to-order sandwiches) and Retail-scanned items (e.g., bottled water, packaged goods) to seamlessly coexist in a single unified checkout session.
+- Made-to-order items automatically dispatch to KDS screens upon cart insertion.
+- Pre-packaged goods interact natively with the standard barcode resolution.
+- Both item states synchronize on the final receipt to eliminate disjointed checkout experiences.
+# Canonical Requirements: Payroll & HR
+**Vertical:** Payroll (PAY) | **Version:** v2.0-dev-prompt | **Date:** 2026-03-12  
+**Standard:** `DEV_IMPLEMENTATION_STANDARD.md` â€” all values from DB, no hardcoding  
+**Test Tenant:** BistroBeest (`tenant_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)  
+**Payment Rail:** FluidPay ACH (NACHA file format) via ORC service
+
+---
+
+## Database Schema
+
+**Migration:** `db/migrations/030_payroll.sql`
+
+```sql
+-- Employees: one record per person per FEIN
+-- AMBIGUITY #18 CLOSED: One employee CAN work across 2 FEINs (e.g., River North + O'Hare,
+-- which are different legal entities). They get ONE digital wallet (linked by phone/email)
+-- but TWO employee records (one per FEIN). Payroll deposits from BOTH flow into the same wallet.
+-- A single consumer can have N employee records; wallet is the single consolidation point.
+CREATE TABLE employees (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         UUID NOT NULL REFERENCES tenants(id),
+  legal_entity_id   UUID NOT NULL REFERENCES legal_entities(id), -- FEIN scope for tax reporting
+  location_id       UUID NOT NULL REFERENCES locations(id),       -- primary work location
+  user_id           UUID NOT NULL REFERENCES users(id),
+  wallet_id         UUID REFERENCES digital_wallets(id),          -- linked wallet (may serve 2+ employee records)
+  first_name        VARCHAR(100) NOT NULL,
+  last_name         VARCHAR(100) NOT NULL,
+  ssn_last_four     VARCHAR(4) NOT NULL,                          -- last 4 only; full SSN in GCP Secret Manager
+  ssn_secret_ref    VARCHAR(255) NOT NULL,                        -- GCP secret ref for full SSN (W-2, tax filing)
+  date_of_birth     DATE NOT NULL,
+  address           JSONB NOT NULL,                               -- {street, city, state, zip}
+  phone_e164        VARCHAR(20) CHECK (phone_e164 ~ '^\+[1-9]\d{7,14}$'),
+  email             VARCHAR(255),
+  employment_type   VARCHAR(20) NOT NULL DEFAULT 'HOURLY'
+                    CHECK (employment_type IN ('HOURLY','SALARIED','TIPPED_HOURLY','CONTRACTOR_1099')),
+  pay_rate_cents    INTEGER NOT NULL,                             -- cents per hour (HOURLY) OR cents per pay period (SALARIED)
+  overtime_rate_cents INTEGER,                                    -- NULL = use federal 1.5x rule via config
+  pay_frequency     VARCHAR(20) NOT NULL DEFAULT 'BIWEEKLY'
+                    CHECK (pay_frequency IN ('WEEKLY','BIWEEKLY','SEMIMONTHLY','MONTHLY')),
+  federal_filing_status VARCHAR(20) NOT NULL DEFAULT 'SINGLE'
+                    CHECK (federal_filing_status IN ('SINGLE','MARRIED_FILING_JOINTLY','MARRIED_FILING_SEPARATELY','HEAD_OF_HOUSEHOLD')),
+  federal_allowances INTEGER NOT NULL DEFAULT 0,
+  state_filing_status VARCHAR(20),
+  state_allowances  INTEGER NOT NULL DEFAULT 0,
+  bank_account_last4 VARCHAR(4),
+  bank_routing_ref  VARCHAR(255),                                 -- GCP secret ref for routing number
+  bank_account_ref  VARCHAR(255),                                 -- GCP secret ref for account number
+  bank_account_type VARCHAR(10) NOT NULL DEFAULT 'CHECKING'
+                    CHECK (bank_account_type IN ('CHECKING','SAVINGS')),
+  tip_pool_eligible BOOLEAN NOT NULL DEFAULT TRUE,
+  status            VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'
+                    CHECK (status IN ('INVITED','ACTIVE','SUSPENDED','TERMINATED')),
+  hire_date         DATE NOT NULL,
+  termination_date  DATE,
+  termination_reason TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(legal_entity_id, user_id)                                -- one record per person per FEIN
+);
+ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON employees USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_employees_user ON employees(user_id);
+CREATE INDEX idx_employees_legal_entity ON employees(legal_entity_id);
+
+-- Pay periods: define the payroll calendar for each legal entity
+CREATE TABLE pay_periods (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  legal_entity_id UUID NOT NULL REFERENCES legal_entities(id),
+  period_start    DATE NOT NULL,
+  period_end      DATE NOT NULL,
+  pay_date        DATE NOT NULL,                -- when ACH lands in employee accounts
+  status          VARCHAR(20) NOT NULL DEFAULT 'OPEN'
+                  CHECK (status IN ('OPEN','LOCKED','PROCESSING','COMPLETED','CANCELLED')),
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(legal_entity_id, period_start)
+);
+ALTER TABLE pay_periods ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON pay_periods USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+-- Payroll runs: one per pay period per legal entity
+CREATE TABLE payroll_runs (
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id             UUID NOT NULL REFERENCES tenants(id),
+  legal_entity_id       UUID NOT NULL REFERENCES legal_entities(id),
+  pay_period_id         UUID NOT NULL REFERENCES pay_periods(id) UNIQUE,
+  status                VARCHAR(30) NOT NULL DEFAULT 'DRAFT'
+                        CHECK (status IN ('DRAFT','CALCULATED','PENDING_APPROVAL','APPROVED','REJECTED','PROCESSING','COMPLETED','CANCELLED')),
+  total_gross_cents     INTEGER NOT NULL DEFAULT 0,
+  total_tax_withheld_cents INTEGER NOT NULL DEFAULT 0,
+  total_deductions_cents   INTEGER NOT NULL DEFAULT 0,
+  total_net_cents       INTEGER NOT NULL DEFAULT 0,       -- what employees actually receive
+  employee_count        INTEGER NOT NULL DEFAULT 0,
+  calculated_at         TIMESTAMPTZ,
+  approved_by           UUID REFERENCES users(id),
+  approved_at           TIMESTAMPTZ,
+  rejection_reason      TEXT,
+  ach_batch_id          VARCHAR(255),           -- NACHA batch ID from FluidPay
+  ach_file_submitted_at TIMESTAMPTZ,
+  ach_settled_at        TIMESTAMPTZ,
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE payroll_runs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON payroll_runs USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+-- Line items: one row per earning/deduction type per employee per payroll run
+CREATE TABLE payroll_line_items (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         UUID NOT NULL REFERENCES tenants(id),
+  payroll_run_id    UUID NOT NULL REFERENCES payroll_runs(id) ON DELETE CASCADE,
+  employee_id       UUID NOT NULL REFERENCES employees(id),
+  line_type         VARCHAR(40) NOT NULL
+                    CHECK (line_type IN (
+                      'REGULAR_HOURS','OVERTIME_HOURS','SALARY',
+                      'TIP_DIRECT','TIP_POOL_DISTRIBUTION',
+                      'BONUS','COMMISSION','REIMBURSEMENT',
+                      'FEDERAL_INCOME_TAX','STATE_INCOME_TAX','LOCAL_INCOME_TAX',
+                      'SOCIAL_SECURITY_TAX','MEDICARE_TAX',
+                      'HEALTH_INSURANCE','RETIREMENT_401K','GARNISHMENT','OTHER_DEDUCTION'
+                    )),
+  hours             NUMERIC(8,2),              -- set for REGULAR_HOURS, OVERTIME_HOURS
+  rate_cents        INTEGER,                   -- rate per hour at time of payroll
+  amount_cents      INTEGER NOT NULL,          -- positive = earning; negative = deduction
+  tax_jurisdiction  VARCHAR(50),               -- 'FED' | 'IL' | 'IL-COOK' â€” from TAX engine
+  notes             TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE payroll_line_items ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON payroll_line_items USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_payroll_items_run ON payroll_line_items(payroll_run_id, employee_id);
+
+-- Pay stubs: generated PDF reference + summary (PDF stored in GCS)
+CREATE TABLE pay_stubs (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  payroll_run_id  UUID NOT NULL REFERENCES payroll_runs(id),
+  employee_id     UUID NOT NULL REFERENCES employees(id),
+  gross_cents     INTEGER NOT NULL,
+  net_cents       INTEGER NOT NULL,
+  tax_withheld_cents INTEGER NOT NULL,
+  gcs_pdf_path    TEXT NOT NULL,               -- gs://paysurity-docs/{tenant}/{employee}/{pay_period}/stub.pdf
+  gcs_signed_url  TEXT,                        -- pre-signed URL (expires 7 days); refreshed on GET
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(payroll_run_id, employee_id)
+);
+ALTER TABLE pay_stubs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON pay_stubs USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+
+-- Tax withholding records: for 1099-K / W-2 generation at year-end
+CREATE TABLE tax_withholding_ytd (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  legal_entity_id UUID NOT NULL REFERENCES legal_entities(id),
+  employee_id     UUID NOT NULL REFERENCES employees(id),
+  tax_year        SMALLINT NOT NULL,
+  federal_income_withheld_cents INTEGER NOT NULL DEFAULT 0,
+  state_income_withheld_cents   INTEGER NOT NULL DEFAULT 0,
+  local_income_withheld_cents   INTEGER NOT NULL DEFAULT 0,
+  social_security_withheld_cents INTEGER NOT NULL DEFAULT 0,
+  medicare_withheld_cents        INTEGER NOT NULL DEFAULT 0,
+  gross_wages_cents              INTEGER NOT NULL DEFAULT 0,
+  tips_reported_cents            INTEGER NOT NULL DEFAULT 0,
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(legal_entity_id, employee_id, tax_year)
+);
+ALTER TABLE tax_withholding_ytd ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON tax_withholding_ytd USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**Seed:** `db/seeds/030_payroll_seed.sql`
+
+```sql
+INSERT INTO platform_config (key, value, data_type, description, is_merchant_overridable, min_value, max_value)
+VALUES
+  ('payroll.federal.overtime_multiplier',     '1.5',   'decimal',  'Federal overtime rate multiplier (FLSA)',         FALSE, '1.5', '1.5'),
+  ('payroll.federal.overtime_threshold_hours','40',    'integer',  'Weekly hours threshold before OT kicks in',       FALSE, '40',  '40'),
+  ('payroll.federal.min_wage_cents',          '725',   'integer',  'Federal min wage in cents ($7.25)',                FALSE, NULL,  NULL),
+  ('payroll.il.min_wage_cents',               '1400',  'integer',  'Illinois min wage in cents ($14.00, Jan 2026)',    FALSE, NULL,  NULL),
+  ('payroll.il.chicago_min_wage_cents',       '1600',  'integer',  'Chicago min wage in cents ($16.00, Jan 2026)',     FALSE, NULL,  NULL),
+  ('payroll.tipped.tip_credit_cents',         '0',     'integer',  'IL has no tip credit (0). Fed tip credit = 512 but IL prohibits.', FALSE, NULL, NULL),
+  ('payroll.ach.nacha_company_id',            '',      'string',   'NACHA Company ID from FluidPay (set per tenant via merchant_config)', FALSE, NULL, NULL),
+  ('payroll.ach.sec_code',                    'PPD',   'string',   'NACHA SEC code: PPD (consumer accounts)',         FALSE, NULL,  NULL),
+  ('payroll.paystub.gcs_bucket',              'paysurity-pay-stubs', 'string', 'GCS bucket for pay stub PDFs', FALSE, NULL, NULL),
+  ('payroll.approval.mfa_required',           'true',  'boolean',  'MFA required for payroll approval (always)',      FALSE, NULL,  NULL),
+  ('payroll.tax_table.update_cron',           '0 6 1 1 *', 'string','Annual federal/state tax table update cron',    FALSE, NULL,  NULL)
+ON CONFLICT (key) DO NOTHING;
+
+-- BistroBeest: two demo employees (cross-FEIN scenario for ambiguity #18)
+DO $$ BEGIN
+  IF current_setting('app.environment', TRUE) IN ('development','staging') THEN
+    INSERT INTO employees (
+      id, tenant_id, legal_entity_id, location_id, user_id,
+      first_name, last_name, ssn_last_four, ssn_secret_ref,
+      date_of_birth, address, phone_e164, email,
+      employment_type, pay_rate_cents, pay_frequency,
+      federal_filing_status, federal_allowances, tip_pool_eligible,
+      status, hire_date
+    ) VALUES
+    -- Employee 1: works River North (FEIN: BistroBeest Restaurant Group)
+    ('emp00001-0000-0000-0000-000000000001',
+     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+     '11111111-1111-1111-1111-111111111111',
+     'loc00001-0000-0000-0000-000000000001',
+     'usr00003-0000-0000-0000-000000000003',
+     'Demo', 'LocationMgr', '9876',
+     'projects/paysurity-dev/secrets/demo-emp1-ssn/versions/latest',
+     '1988-06-15',
+     '{"street":"456 N. Wells St","city":"Chicago","state":"IL","zip":"60654"}',
+     '+13125550201', 'locationmgr@bistrobeest.com',
+     'SALARIED', 480000, 'BIWEEKLY',   -- $48,000/year = $1,846.15/biweekly
+     'SINGLE', 1, FALSE,
+     'ACTIVE', '2022-03-01'),
+    -- Employee 2: SERVER, also works O'Hare Express under SAME legal entity (same FEIN in this demo)
+    -- In production: different FEIN = different legal_entity_id, SAME wallet_id
+    ('emp00002-0000-0000-0000-000000000002',
+     'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+     '11111111-1111-1111-1111-111111111111',
+     'loc00001-0000-0000-0000-000000000001',
+     'usr00001-0000-0000-0000-000000000001',
+     'Demo', 'Server', '5432',
+     'projects/paysurity-dev/secrets/demo-emp2-ssn/versions/latest',
+     '1995-03-22',
+     '{"street":"789 W. Armitage Ave","city":"Chicago","state":"IL","zip":"60614"}',
+     '+13125550202', 'server@bistrobeest.com',
+     'TIPPED_HOURLY', 900, 'BIWEEKLY',  -- $9.00/hr + tips (above IL $14 â€” tipped minimum)
+     'SINGLE', 0, TRUE,
+     'ACTIVE', '2023-06-15')
+    ON CONFLICT DO NOTHING;
+  END IF;
+END $$;
+```
+
+---
+
+## REQ-PAY-001: Payroll Calculation Engine
+
+**Priority:** Must | **Actors:** Payroll Admin, Employees, Batch Job
+
+---
+
+#### Service Layer: `src/modules/payroll/payroll.service.ts`
+
+```typescript
+/**
+ * calculatePayroll(payPeriodId) â€” Builds the payroll run for a pay period.
+ * For each ACTIVE employee in the legal entity:
+ *
+ * 1. HOURLY/TIPPED_HOURLY employees:
+ *    a. Sum shift_employees hours: clock_in to clock_out for all shifts in pay period
+ *    b. Regular hours: MIN(total_hours, 40 per week Ã— weeks in period)
+ *       (weekly OT rule read from platform_config 'payroll.federal.overtime_threshold_hours')
+ *    c. OT hours: total_hours - regular_hours (Ã— multiplier from config 'payroll.federal.overtime_multiplier')
+ *    d. Tips: sum loyalty_transactions WHERE type='EARN' AND actor=employee is NOT applicable;
+ *       sum orders.tip_cents WHERE server_user_id = employee.user_id AND shift in period
+ *       AND tip_pool_enabled=FALSE (direct tips)
+ *       OR: tip pool distribution amount from payroll_line_items pre-calculated by tip pool batch
+ *    e. Write payroll_line_items: REGULAR_HOURS, OVERTIME_HOURS, TIP_DIRECT
+ *
+ * 2. SALARIED employees:
+ *    a. Gross = pay_rate_cents (per period; already annualized by HR)
+ *    b. Write payroll_line_items: SALARY
+ *
+ * 3. Tax withholding (for all):
+ *    a. Call TAX service: getTaxWithholding(grossCents, filingStatus, allowances, jurisdiction)
+ *    b. Jurisdiction: read from employee.address.state + city (city-level for Chicago, NYC, etc.)
+ *    c. Returns: {federal_cents, state_cents, local_cents, social_security_cents, medicare_cents}
+ *    d. Write payroll_line_items for each tax type (negative amounts = deductions)
+ *
+ * 4. Other deductions: read from employee_deduction_configs table (health, 401k, garnishments)
+ *
+ * 5. Update payroll_runs: total_gross, total_tax, total_net, employee_count, status=CALCULATED
+ */
+async calculatePayroll(payPeriodId: string): Promise<PayrollRun>
+
+/**
+ * approvePayroll(payrollRunId, approverId) â€” REQUIRES MFA (enforced by NestJS guard).
+ * Validates status=CALCULATED or PENDING_APPROVAL.
+ * Sets status=APPROVED. Enqueues ACH dispatch job.
+ * Fires 'payroll.approved' webhook. Notifies employees via NOT engine: "Your pay is on the way."
+ */
+async approvePayroll(payrollRunId: string, approverId: string): Promise<void>
+
+/**
+ * dispatchACH(payrollRunId) â€” BullMQ job handler. Runs within ACH submission window.
+ * 1. For each employee: builds NACHA PPD entry {routing, account, amount, name, trace_number}
+ * 2. Assembles full NACHA file with batch header/trailer using config values
+ * 3. Submits NACHA file to FluidPay ACH endpoint (POST /api/v1/ach/batch)
+ * 4. Stores ach_batch_id on payroll_run
+ * 5. If employee has PaySurity wallet AND bank_account_ref is NULL:
+ *    â†’ Direct wallet credit (instant; no ACH delay)
+ *    â†’ Creates wallet_transactions record instead of NACHA entry
+ * 6. Sets payroll_run.status = PROCESSING
+ * 7. Generates pay_stub PDFs: renders HTML template â†’ GCS PDF upload â†’ pay_stubs record
+ * 8. Fires webhook: 'payroll.dispatched'
+ */
+async dispatchACH(payrollRunId: string): Promise<void>
+```
+
+---
+
+#### API Endpoints
+
+| Method | Path | Auth | Description | Webhook |
+|---|---|---|---|---|
+| `GET` | `/v1/employees` | PAYROLL_ADMIN, LOCATION_MGR | List employees (scoped) | â€” |
+| `POST` | `/v1/employees` | PAYROLL_ADMIN | Add employee | `employee.created` |
+| `PATCH` | `/v1/employees/{id}` | PAYROLL_ADMIN | Update employee (rate, status, etc.) | `employee.updated` |
+| `POST` | `/v1/employees/{id}/terminate` | PAYROLL_ADMIN | Terminate employee | `employee.terminated` |
+| `GET` | `/v1/payroll/periods` | PAYROLL_ADMIN | List pay periods | â€” |
+| `GET` | `/v1/payroll/runs/{id}` | PAYROLL_ADMIN, ENTERPRISE_FINANCE | Payroll run detail | â€” |
+| `POST` | `/v1/payroll/runs/{id}/calculate` | PAYROLL_ADMIN | Trigger calculation | â€” |
+| `POST` | `/v1/payroll/runs/{id}/approve` | PAYROLL_ADMIN (MFA required) | Approve and queue dispatch | `payroll.approved` |
+| `POST` | `/v1/payroll/runs/{id}/reject` | PAYROLL_ADMIN | Reject with reason | â€” |
+| `GET` | `/v1/payroll/pay-stubs/{employeeId}` | Employee (own), PAYROLL_ADMIN | List pay stubs | â€” |
+| `GET` | `/v1/payroll/pay-stubs/{id}/download` | Employee (own), PAYROLL_ADMIN | Signed GCS URL for PDF | â€” |
+| `GET` | `/v1/clock/status` | Employee | Own current clock status | â€” |
+| `POST` | `/v1/clock/in` | Employee (Biometric/PIN) | Clock in via Fingerprint/Facial Hash | `employee.clocked_in` |
+| `POST` | `/v1/clock/out` | Employee (Biometric/PIN) | Clock out | `employee.clocked_out` |
+| `GET` | `/v1/analytics/profitability` | TENANT_ADMIN | Real-time Profitability Matrix (Revenue - COGS - Live Labor Costs) | â€” |
+
+---
+
+#### UI/UX
+
+**Payroll Dashboard (PAYROLL_ADMIN):**
+> "Current Pay Period: Mar 1â€“14, 2026 | Pay Date: Mar 21"  
+> Status pill: DRAFT â†’ [Calculate] button | CALCULATED â†’ [Review & Approve] button  
+> Summary cards: 12 Employees | $18,432 Gross | $3,201 Taxes | $15,231 Net  
+> Employee line-by-line table: Name | Hours | Tips | Gross | Taxes | Net | Stub  
+> Expand row â†’ full line item breakdown (regular, OT, tip, each tax)  
+> [Approve Payroll] â†’ MFA modal â†’ slider "I confirm this payroll is correct" â†’ TOTP code field â†’ Submit
+
+**Employee Self-Service (Mobile App):**
+> "Your next paycheck: $847.32 â€” Arriving Mar 21"  
+> "Clock In" large button (current status: CLOCKED OUT)  
+> Recent pay stubs list â†’ tap â†’ PDF viewer in-app
+
+**Multi-FEIN employee (ambiguity #18 resolved in UI):**  
+> Employee working at 2 FEINs sees TWO payroll entries in their pay history: "BistroBeest Downtown â€” $480 | BistroBeest Express â€” $210" â€” both show in one timeline, both deposit to same wallet.
+
+---
+
+#### Acceptance Tests
+
+| Test ID | Scenario | Input | Expected |
+|---|---|---|---|
+| PAY-001-T1 | Hourly employee with OT | 45h in week (40 regular, 5 OT) | Regular: 40Ã—$9=$360; OT: 5Ã—$13.50=$67.50; line items written |
+| PAY-001-T2 | Salaried employee | $48,000/yr biweekly | $1,846.15 gross per period; SALARY line item |
+| PAY-001-T3 | Tipped employee â€” direct tips | $200 in tips from orders.tip_cents | TIP_DIRECT line item $200; included in gross for tax calc |
+| PAY-001-T4 | Illinois min wage check | Employee rate $9/hr â†’ gross = $360 (40h) | $360 > IL min ($14Ã—40=$560) â€” VALIDATION ERROR: rate below IL minimum |
+| PAY-001-T5 | MFA gate on approval | Approve without valid TOTP | HTTP 403 MFA_REQUIRED |
+| PAY-001-T6 | Wallet direct credit | Employee has PaySurity wallet, no external bank | ACH not generated; wallet_transactions credit instead; instant |
+| PAY-001-T7 | Multi-FEIN employee | Employee emp00001 works 2 location records same FEIN | Two payroll_line_items streams; both deposit to same wallet_id |
+| PAY-001-T8 | YTD tax update | Payroll completed | tax_withholding_ytd incremented atomically in same transaction |
+
+---
+# Canonical Requirements: Digital Wallets & Stored Value
+**Vertical:** Digital Wallets (WAL) | **Version:** v2.0-dev-prompt | **Date:** 2026-03-12  
+**Standard:** `DEV_IMPLEMENTATION_STANDARD.md` â€” all values from DB, no hardcoding  
+**Test Tenant:** BistroBeest (`tenant_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
+
+---
+
+## Database Schema
+
+**Migration:** `db/migrations/035_digital_wallets.sql`
+
+```sql
+-- One wallet per consumer per tenant (PaySurity consumer wallet)
+-- An employee at 2 FEINs shares ONE wallet (see PAY_PAYROLL.md â€” ambiguity #18)
+CREATE TABLE digital_wallets (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id         UUID NOT NULL REFERENCES tenants(id),
+  consumer_id       UUID REFERENCES consumers(id),
+  wallet_type       VARCHAR(20) NOT NULL DEFAULT 'CONSUMER'
+                    CHECK (wallet_type IN ('CONSUMER','PAYROLL_DISBURSEMENT','GIFT_VALUE')),
+  currency          CHAR(3) NOT NULL DEFAULT 'USD',
+  balance_cents     INTEGER NOT NULL DEFAULT 0       CHECK (balance_cents >= 0),
+  reserved_cents    INTEGER NOT NULL DEFAULT 0       CHECK (reserved_cents >= 0),  -- in-flight holds
+  available_cents   INTEGER GENERATED ALWAYS AS (balance_cents - reserved_cents) STORED,
+  status            VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'
+                    CHECK (status IN ('PENDING_ACTIVATION','ACTIVE','FROZEN','CLOSED')),
+  kyc_level         VARCHAR(20) NOT NULL DEFAULT 'NONE'
+                    CHECK (kyc_level IN ('NONE','TIER1','TIER2','FULL')),
+  daily_load_limit_cents INTEGER NOT NULL DEFAULT 0,   -- read from platform_config at wallet create
+  monthly_load_limit_cents INTEGER NOT NULL DEFAULT 0,
+  daily_spend_limit_cents INTEGER NOT NULL DEFAULT 0,
+  agentic_spend_window_cents INTEGER NOT NULL DEFAULT 0, -- Agentic Delegation: Limits sub-agent autonomous ops beneath the human-defined KYC ceiling
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE digital_wallets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON digital_wallets USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_wallets_consumer ON digital_wallets(consumer_id, tenant_id);
+
+-- All wallet movements â€” double-entry ledger; every credit has a matching debit
+CREATE TABLE wallet_transactions (
+  id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id           UUID NOT NULL REFERENCES tenants(id),
+  wallet_id           UUID NOT NULL REFERENCES digital_wallets(id),
+  transaction_type    VARCHAR(30) NOT NULL
+                      CHECK (transaction_type IN (
+                        'PAYROLL_CREDIT',         -- wages / payroll deposit
+                        'TIP_CREDIT',             -- tip distribution
+                        'ORDER_PAYMENT',          -- consumer paying for order
+                        'ORDER_REFUND',           -- refund back to wallet
+                        'LOAD_ACH',               -- consumer loads from bank (ACH)
+                        'LOAD_CARD',              -- consumer loads from debit card
+                        'TRANSFER_OUT',           -- send money to another wallet or bank
+                        'TRANSFER_IN',            -- receive from another wallet
+                        'GIFT_CARD_LOAD',         -- gift card loaded into wallet
+                        'ADJUSTMENT_CREDIT',      -- manual admin credit (with reason)
+                        'ADJUSTMENT_DEBIT',       -- manual admin debit (with reason)
+                        'FEE_DEBIT'               -- platform fee (e.g., wire fee)
+                      )),
+  direction           CHAR(1) NOT NULL CHECK (direction IN ('C','D')),  -- Credit or Debit
+  amount_cents        INTEGER NOT NULL CHECK (amount_cents > 0),
+  balance_after_cents INTEGER NOT NULL,            -- snapshot; enables ledger reconciliation
+  reference_id        UUID,                        -- order_id, payroll_run_id, etc.
+  reference_type      VARCHAR(30),                 -- 'ORDER' | 'PAYROLL_RUN' | 'LOAN' | etc.
+  description         TEXT,
+  idempotency_key     VARCHAR(255) NOT NULL UNIQUE,
+  status              VARCHAR(20) NOT NULL DEFAULT 'COMPLETED'
+                      CHECK (status IN ('PENDING','COMPLETED','FAILED','REVERSED')),
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE wallet_transactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON wallet_transactions
+  USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_wallet_txn_wallet ON wallet_transactions(wallet_id, created_at DESC);
+CREATE INDEX idx_wallet_txn_ref ON wallet_transactions(reference_id, reference_type);
+
+-- KYC (Know Your Customer) verifications: required for wallets above Tier1 limits
+CREATE TABLE wallet_kyc_verifications (
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  wallet_id         UUID NOT NULL REFERENCES digital_wallets(id),
+  tenant_id         UUID NOT NULL REFERENCES tenants(id),
+  provider          VARCHAR(30) NOT NULL DEFAULT 'MANUAL'
+                    CHECK (provider IN ('MANUAL','PERSONA','JUMIO','STRIPE_IDENTITY')),
+  verification_type VARCHAR(30) NOT NULL
+                    CHECK (verification_type IN ('ID_SCAN','SELFIE','ADDRESS_CHECK','SSN_VERIFY')),
+  status            VARCHAR(20) NOT NULL DEFAULT 'PENDING'
+                    CHECK (status IN ('PENDING','APPROVED','REJECTED','EXPIRED')),
+  provider_ref_id   VARCHAR(255),
+  reviewed_at       TIMESTAMPTZ,
+  reviewed_by       UUID REFERENCES users(id),
+  rejection_reason  TEXT,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+ALTER TABLE wallet_kyc_verifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON wallet_kyc_verifications
+  USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**Seed:** `db/seeds/035_wallet_seed.sql`
+
+```sql
+INSERT INTO platform_config (key, value, data_type, description, is_merchant_overridable, min_value, max_value)
+VALUES
+  ('wallet.kyc_none.daily_load_limit_cents',    '50000',   'integer', 'Daily load limit, no KYC ($500)', FALSE, NULL, NULL),
+  ('wallet.kyc_none.monthly_load_limit_cents',  '200000',  'integer', 'Monthly load limit, no KYC ($2,000)', FALSE, NULL, NULL),
+  ('wallet.kyc_none.daily_spend_limit_cents',   '50000',   'integer', 'Daily spend limit, no KYC ($500)', FALSE, NULL, NULL),
+  ('wallet.kyc_tier1.daily_load_limit_cents',   '500000',  'integer', 'Daily load limit, Tier1 KYC ($5,000)', FALSE, NULL, NULL),
+  ('wallet.kyc_tier1.monthly_load_limit_cents', '2000000', 'integer', 'Monthly load limit, Tier1 KYC ($20,000)', FALSE, NULL, NULL),
+  ('wallet.kyc_tier2.daily_load_limit_cents',   '2500000', 'integer', 'Daily load limit, Tier2 KYC ($25,000)', FALSE, NULL, NULL),
+  ('wallet.payroll.instant_credit',             'true',    'boolean', 'Payroll credited to wallet instantly (no ACH delay)', FALSE),
+  ('wallet.transfer.external_fee_bps',          '0',       'integer', 'External bank transfer fee in bps (0 = free currently)', TRUE, '0', '200'),
+  ('wallet.transfer.external_settlement_days',  '0',       'integer', 'FedNow Atomic Settlement (0 days)', FALSE, '0', '0'),
+  ('wallet.load.ach_fee_cents',                 '0',       'integer', 'ACH load fee in cents (0 = free)', TRUE, '0', '500')
+ON CONFLICT (key) DO NOTHING;
+```
+
+---
+
+## REQ-WAL-001: Wallet Lifecycle & Double-Entry Ledger
+
+**Priority:** Must | **Actors:** Consumer, Payroll Service, ORC Service
+
+---
+
+#### Service Layer: `src/modules/wallets/wallet.service.ts`
+
+```typescript
+/**
+ * createWallet(params) â€” Creates wallet with limits from platform_config.
+ * Reads kyc_level-appropriate limits from config at create time (stores them on wallet row).
+ * Idempotent: if consumer already has wallet for this tenant, returns existing.
+ */
+async createWallet(params: { tenantId: string; consumerId?: string; walletType: WalletType }): Promise<Wallet>
+
+/**
+ * credit(params) â€” Add funds to wallet. Uses double-entry pattern.
+ * 1. Begin DB transaction
+ * 2. Validate: wallet status=ACTIVE
+ * 3. Check daily/monthly load limit (if applicable for load types)
+ *    Read from wallet.daily_load_limit_cents (set at wallet create from config)
+ * 4. UPDATE digital_wallets SET balance_cents = balance_cents + amount_cents WHERE id = wallet_id
+ * 5. INSERT wallet_transactions (direction='C', balance_after_cents = new balance)
+ * 6. Commit
+ * 7. Fire webhook: wallet.credited
+ * Idempotent via idempotency_key UNIQUE constraint
+ */
+async credit(params: {
+  walletId: string;
+  amountCents: number;
+  transactionType: WalletTransactionType;
+  referenceId?: string;
+  referenceType?: string;
+  description?: string;
+  idempotencyKey: string;
+}): Promise<WalletTransaction>
+
+/**
+ * debit(params) â€” Remove funds from wallet.
+ * 1. BEGIN transaction with SELECT FOR UPDATE on digital_wallets row (prevents race condition)
+ * 2. Validate: available_cents >= amountCents (throws INSUFFICIENT_BALANCE if not)
+ * 3. Check daily spend limit  
+ * 4. UPDATE balance_cents
+ * 5. INSERT wallet_transactions (direction='D')
+ * 6. Commit; fire webhook: wallet.debited
+ */
+async debit(params: { walletId: string; amountCents: number; /* same as credit */ }): Promise<WalletTransaction>
+
+/**
+ * reserve(walletId, amountCents, idempotencyKey) â€” Holds funds for in-flight payments.
+ * Increments reserved_cents; available_cents decreases without touching balance_cents.
+ * Used by ORC service when initiating payment from wallet before gateway confirms.
+ */
+async reserve(walletId: string, amountCents: number, idempotencyKey: string): Promise<void>
+
+/**
+ * releaseReservation(walletId, amountCents, convert: boolean) â€” Clears a reservation.
+ * convert=true: decrements both reserved_cents AND balance_cents (payment confirmed)
+ * convert=false: decrements reserved_cents only (payment failed; funds return to available)
+ */
+async releaseReservation(walletId: string, amountCents: number, convert: boolean): Promise<void>
+```
+
+---
+
+#### API Endpoints
+
+| Method | Path | Auth | Description | Webhook |
+|---|---|---|---|---|
+| `GET` | `/v1/wallets/{id}` | Consumer (own), Merchant Admin | Wallet balance + status | â€” |
+| `GET` | `/v1/wallets/{id}/transactions` | Consumer (own), Merchant Admin | Transaction history (paginated) | â€” |
+| `POST` | `/v1/wallets/{id}/load` | Consumer (own) | Load from bank/card | `wallet.credited` |
+| `POST` | `/v1/wallets/{id}/transfer` | Consumer (own, FIDO2 Passkey validation for > $500) | Transfer to bank via FedNow | `wallet.debited` |
+| `GET` | `/v1/wallets/kyc/status` | Consumer (own) | KYC level + limits | â€” |
+| `POST` | `/v1/wallets/kyc/verify` | Consumer (own) | Initiate KYC upgrade | â€” |
+
+---
+
+## REQ-WAL-002: Payroll Instant Credit
+
+**Priority:** Must | **Actors:** Payroll Service, Employee
+
+---
+
+When `payroll.payroll.instant_credit = true` AND employee has an active PaySurity wallet:
+- `wallet.credit()` called within `dispatchACH()` job BEFORE ACH file generation
+- Defined explicitly as a 'Whitelisted Trusted Source'. This status structurally bypasses the standard 72-hour anti-fraud Smart Escrow required for all other network transfers.
+- Employee receives pay immediately via internal ledger credit (no waiting)
+- No outbound ACH entry generated for that employee (wallet credit takes precedence)
+- `wallet_transactions.transaction_type = 'PAYROLL_CREDIT'`, `reference_type = 'PAYROLL_RUN'`
+- Consumer app: push notification (via NOT engine): "Your pay of $847.32 is available now ðŸŽ‰"
+
+---
+
+## REQ-WAL-003: Wallet as Payment Method at POS
+
+**Priority:** Must | **Actors:** Consumer, Cashier, ORC Service
+
+---
+
+At POS checkout, if consumer's loyalty account resolves a `wallet_id`:
+- Display: "Maria's PaySurity Wallet â€” $124.50 available"
+- Tender option: "Pay with Wallet"
+- Flow: `wallet.reserve()` â†’ ORC processes other tenders (if split) â†’ on full payment success: `wallet.releaseReservation(convert=true)`
+- On any payment failure: `wallet.releaseReservation(convert=false)` â†’ funds restored to available
+
+**Acceptance Tests:**
+
+| Test ID | Scenario | Expected |
+|---|---|---|
+| WAL-001-T1 | Payroll credit â€” wallet vs ACH | Employee has wallet: instant credit; no ACH entry | Employee without wallet: NACHA entry generated |
+| WAL-001-T2 | Concurrent debit race condition | Two requests simultaneously debit $50 from $80 balance | `SELECT FOR UPDATE` ensures only one succeeds; second gets INSUFFICIENT_BALANCE |
+| WAL-001-T3 | Load > daily limit | Load $600 when daily limit=$500 | Error: `WALLET_DAILY_LOAD_LIMIT_EXCEEDED`; no credit applied |
+| WAL-001-T4 | Wallet payment at POS | Consumer pays $28.90 from wallet | reserveâ†’captureâ†’release; balance debited; wallet_transactions row written |
+| WAL-001-T5 | Idempotent credit | Same payroll credit idempotency key twice | Second call returns existing transaction; balance credited once only |
+
+---
+## REQ-WAL-004: Peer-to-Peer Requests
+**Status:** ? Implemented
+**Priority:** Must | **Actors:** Consumer
+
+---
+
+## REQ-WAL-005: QR & Deep Link Payments
+**Status:** ? Implemented
+**Priority:** Must | **Actors:** Consumer, Merchant
+
+---
+
+## REQ-WAL-006: Sub-accounts & Micro-savings
+**Status:** ? Implemented
+**Priority:** Must | **Actors:** Consumer
+
+---
+
+## REQ-WAL-007: Automated Money Movement
+**Status:** ? Implemented
+**Priority:** Must | **Actors:** Consumer
+
+---
+
+## REQ-WAL-008: Parental Controls & Dependent Accounts
+**Status:** ? Implemented
+**Priority:** Must | **Actors:** Guardian, Dependent
+```yaml
+title: PaySurity Tenant Microsite System Canonical Requirements
+version: 1.0.0
+date: 2023-10-27
+author: PaySurity Product Team
+```
+
+# PaySurity Tenant Microsite System Canonical Requirements
+
+## 1. Introduction
+
+This document outlines the canonical requirements for the PaySurity Tenant Microsite System. The purpose of this system is to provide PaySurity tenants (e.g., restaurants, cafes) with an easily provisioned, customizable, and mobile-optimized online presence for displaying their menu, accepting orders, and engaging with customers. The system aims to integrate seamlessly with the existing PaySurity Point-of-Sale (POS) system and provide robust management capabilities for both tenants and PaySurity super administrators.
+
+## 2. Glossary
+
+*   **Microsite:** A dedicated, tenant-specific website hosted and managed by PaySurity, used for displaying menus and accepting online orders.
+*   **Tenant:** A business (e.g., restaurant) that uses PaySurity's services, including the POS and Microsite system.
+*   **POS:** Point-of-Sale system. PaySurity's core application for managing sales, inventory, and operations.
+*   **Super Admin:** A PaySurity administrator with global privileges to manage tenants, system settings, and overrides.
+*   **Tenant Admin:** An authorized user from a tenant business who manages their specific microsite and POS settings.
+*   **CRUD:** Create, Read, Update, Delete - fundamental operations for data management.
+*   **CNAME:** Canonical Name record; a type of DNS record that maps an alias name to a true or canonical domain name.
+*   **Schema.org:** A collaborative, community activity with a mission to create, maintain, and promote schemas for structured data on the Internet, on web pages, in email messages, and beyond.
+*   **Core Web Vitals:** Google's metrics for evaluating user experience, including Largest Contentful Paint (LCP), First Input Delay (FID), and Cumulative Layout Shift (CLS).
+
+## 3. Core Principles
+
+*   **Tenant Empowerment:** Provide tenants with intuitive tools to manage their online presence.
+*   **Seamless Integration:** Ensure tight coupling and real-time synchronization between the Microsite and PaySurity POS.
+*   **Scalability & Performance:** Design for high availability, rapid provisioning, and optimal user experience.
+*   **Security & Compliance:** Implement industry best practices for data protection and privacy.
+*   **Mobile-First Design:** Prioritize mobile user experience for all microsites.
+
+## 4. Detailed Requirements
+
+---
+
+### MST-001: Tenant microsite auto-provisioning on tenant signup
+
+*   **ID:** MST-001
+*   **Title:** Tenant Microsite Auto-Provisioning
+*   **Description:** Upon successful signup and onboarding of a new tenant within the PaySurity ecosystem, a dedicated microsite for that tenant must be automatically provisioned and configured with default settings.
+*   **Functional Requirements:**
+    *   The system shall automatically trigger the creation of a new microsite instance when a new tenant record is finalized.
+    *   The microsite shall be assigned a default URL (e.g., `[tenantname].paysurity.com`).
+    *   The microsite shall be pre-populated with a default template and initial configuration (e.g., placeholder menu, operating hours).
+    *   The tenant admin credentials shall be automatically linked to the newly provisioned microsite.
+*   **Non-Functional Requirements:**
+    *   **Performance:** Microsite provisioning must complete within 60 seconds of tenant signup finalization.
+    *   **Reliability:** The auto-provisioning process must have a success rate of 99.9%.
+*   **Dependencies:**
+    *   PaySurity Tenant Onboarding System.
+    *   Microsite Hosting Infrastructure.
+*   **Acceptance Criteria:**
+    *   A new tenant completes signup and their dedicated microsite is immediately accessible at its default URL.
+    *   The new tenant can log into their Tenant Admin Panel for the newly created microsite.
+    *   The microsite displays a default landing page or menu.
+*   **Stakeholders:** PaySurity Operations, Tenant Onboarding Team, Product Management, Tenants.
+
+---
+
+### MST-002: Custom domain mapping (CNAME) per tenant
+
+*   **ID:** MST-002
+*   **Title:** Custom Domain Mapping
+*   **Description:** Each tenant must have the ability to map their own custom domain name (e.g., `myrestaurant.com`) to their PaySurity microsite, replacing the default `[tenantname].paysurity.com` URL.
+*   **Functional Requirements:**
+    *   The Tenant Admin Panel shall provide an interface for tenants to input and save their desired custom domain.
+    *   The system shall provide instructions to the tenant for configuring a CNAME record with their domain registrar.
+    *   The system shall validate the existence and correct configuration of the CNAME record before activating the custom domain.
+    *   Upon successful CNAME validation, the microsite shall be accessible via the custom domain.
+    *   The system shall automatically provision and manage SSL/TLS certificates for custom domains.
+*   **Non-Functional Requirements:**
+    *   **Security:** All custom domains must be served over HTTPS with valid SSL/TLS certificates.
+    *   **Performance:** DNS resolution for custom domains should be optimized for low latency.
+*   **Dependencies:**
+    *   DNS management system.
+    *   SSL/TLS certificate provisioning service (e.g., Let's Encrypt integration).
+*   **Acceptance Criteria:**
+    *   A tenant enters `www.example.com` in their admin panel, configures the CNAME, and `www.example.com` displays their PaySurity microsite.
+    *   The microsite loaded via the custom domain uses HTTPS.
+    *   If the CNAME is incorrectly configured, the system provides a clear error message.
+*   **Stakeholders:** Tenants, PaySurity Technical Support, Product Management.
+
+---
+
+### MST-003: Menu management CRUD (categories, items, prices, images)
+
+*   **ID:** MST-003
+*   **Title:** Comprehensive Menu Management
+*   **Description:** Tenants must have a user-friendly interface within their Tenant Admin Panel to perform full CRUD operations on their menu, including categories, individual items, their prices, and associated images.
+*   **Functional Requirements:**
+    *   The Tenant Admin Panel shall provide a dedicated section for menu management.
+    *   Tenants shall be able to create, edit, and delete menu categories.
+    *   Tenants shall be able to create, edit, and delete individual menu items, including:
+        *   Item name and description.
+        *   Base price.
+        *   Category assignment.
+        *   Image upload and management (crop, resize).
+        *   Availability (e.g., active/inactive).
+        *   Dietary tags (e.g., vegetarian, gluten-free).
+        *   Customization options (e.g., toppings, spice levels).
+    *   Changes made in the admin panel shall be immediately reflected on the live microsite.
+*   **Non-Functional Requirements:**
+    *   **Usability:** The menu management interface must be intuitive and easy for non-technical users.
+    *   **Scalability:** The system must handle menus with hundreds of items and multiple categories efficiently.
+*   **Dependencies:**
+    *   Image storage service.
+    *   Database for menu data.
+*   **Acceptance Criteria:**
+    *   A tenant can log in, add a new menu item with a price and image, and see it instantly appear on their microsite.
+    *   A tenant can reorder categories and items within categories.
+    *   A tenant can update an item's price, and the change is reflected on the microsite and in the price calculation engine.
+*   **Stakeholders:** Tenants, Product Management, PaySurity Design Team.
+
+---
+
+### MST-004: Price calculation engine: displayPrice = base Ã— (1 + processingFee) Ã— (1 + marginPct)
+
+*   **ID:** MST-004
+*   **Title:** Dynamic Price Calculation Engine
+*   **Description:** The microsite must incorporate a price calculation engine that dynamically determines the final display price for each menu item based on its base price, a configurable processing fee, and PaySurity's margin percentage.
+*   **Functional Requirements:**
+    *   The system shall calculate `displayPrice` for each menu item using the formula: `displayPrice = base_price * (1 + processingFee) * (1 + marginPct)`.
+    *   `base_price` shall be configured by the tenant via MST-003.
+    *   `processingFee` shall be a system-wide or tenant-specific configurable percentage (MST-006).
+    *   `marginPct` shall be a system-wide configurable percentage (MST-005).
+    *   The calculated `displayPrice` shall be shown to customers on the microsite.
+*   **Non-Functional Requirements:**
+    *   **Accuracy:** Price calculations must be precise, adhering to standard financial rounding rules.
+    *   **Performance:** Price calculation must not introduce noticeable latency during menu display or cart updates.
+*   **Dependencies:**
+    *   MST-003 (Base Price), MST-005 (Margin), MST-006 (Processing Fee).
+*   **Acceptance Criteria:**
+    *   Given a `base_price` of $100, `processingFee` of 5%, and `marginPct` of 20%, the `displayPrice` shown on the microsite is $126.00.
+    *   Changes to `processingFee` or `marginPct` immediately reflect in all `displayPrices` on the microsite.
+*   **Stakeholders:** Product Management, Finance Team, Tenants.
+
+---
+
+### MST-005: PaySurity margin configurable by super admin (default 20%)
+
+*   **ID:** MST-005
+*   **Title:** Super Admin Configurable PaySurity Margin
+*   **Description:** PaySurity super administrators must be able to globally configure the `marginPct` component of the price calculation engine, with a default value of 20%.
+*   **Functional Requirements:**
+    *   The Super Admin Panel shall provide a dedicated interface to set the global `marginPct`.
+    *   The default `marginPct` shall be 20% if no custom value is set.
+    *   Changes made by a super admin shall immediately affect the `displayPrice` calculation across all tenants.
+*   **Non-Functional Requirements:**
+    *   **Security:** Only authenticated and authorized super admins can modify this setting.
+    *   **Auditability:** All changes to `marginPct` must be logged.
+*   **Dependencies:**
+    *   MST-004 (Price Calculation Engine).
+*   **Acceptance Criteria:**
+    *   A super admin logs in, navigates to the margin settings, and changes the margin from 20% to 25%. All tenant microsites immediately update their displayed prices according to the new margin.
+    *   The system defaults to 20% margin if no configuration is present.
+*   **Stakeholders:** PaySurity Management, Finance Team, Product Management.
+
+---
+
+### MST-006: Processing fee configurable (default 5%)
+
+*   **ID:** MST-006
+*   **Title:** Configurable Processing Fee
+*   **Description:** The `processingFee` component, used in the price calculation engine, must be configurable. This fee can be set globally by super admins or, in future phases, potentially per-tenant, with a default value of 5%.
+*   **Functional Requirements:**
+    *   The Super Admin Panel shall provide an interface to set the global `processingFee`.
+    *   The default `processingFee` shall be 5% if no custom value is set.
+    *   Changes made by an admin shall immediately affect the `displayPrice` calculation across all tenants (or specific tenants if per-tenant configuration is implemented).
+*   **Non-Functional Requirements:**
+    *   **Security:** Only authenticated and authorized super admins can modify this setting.
+    *   **Auditability:** All changes to `processingFee` must be logged.
+*   **Dependencies:**
+    *   MST-004 (Price Calculation Engine).
+*   **Acceptance Criteria:**
+    *   A super admin changes the global processing fee from 5% to 3%. All tenant microsites immediately update their displayed prices according to the new fee.
+    *   The system defaults to 5% processing fee if no configuration is present.
+*   **Stakeholders:** PaySurity Management, Finance Team, Product Management.
+
+---
+
+### MST-007: POS â†” Microsite bidirectional sync (menu changes reflect on both)
+
+*   **ID:** MST-007
+*   **Title:** Bidirectional Menu Synchronization
+*   **Description:** Menu data (categories, items, prices, availability) must be synchronized bidirectionally between the PaySurity POS system and the tenant's microsite, ensuring consistency regardless of where the change originates.
+*   **Functional Requirements:**
+    *   Changes to menu items (add, edit, delete) made in the PaySurity POS system shall be pushed to the corresponding tenant microsite in near real-time.
+    *   Changes to menu items (add, edit, delete) made in the Tenant Admin Panel shall be pushed to the corresponding PaySurity POS system in near real-time.
+    *   The synchronization process shall handle concurrent updates and conflict resolution (e.g., last write wins, or defined priority).
+    *   Availability toggles (e.g., item out of stock) in the POS shall update microsite availability.
+*   **Non-Functional Requirements:**
+    *   **Latency:** Menu synchronization should occur within 10 seconds.
+    *   **Reliability:** Synchronization must have a success rate of 99.9%.
+    *   **Data Integrity:** Ensure no data loss or corruption during sync.
+*   **Dependencies:**
+    *   PaySurity POS System API (for menu data).
+    *   MST-003 (Microsite Menu Management).
+*   **Acceptance Criteria:**
+    *   A tenant updates the price of "Coffee" in their POS. Within seconds, the microsite displays the updated price for "Coffee".
+    *   A tenant marks "Chocolate Cake" as out of stock in their Tenant Admin Panel. Within seconds, the POS reflects "Chocolate Cake" as unavailable.
+    *   No menu discrepancies are observed between POS and microsite after typical usage.
+*   **Stakeholders:** Tenants, PaySurity POS Team, Product Management.
+
+---
+
+### MST-008: Catering orders with advance notice enforcement (minimum 48h)
+
+*   **ID:** MST-008
+*   **Title:** Catering Order Management with Advance Notice
+*   **Description:** The microsite must support catering orders, requiring customers to place such orders with a minimum of 48 hours advance notice from the desired delivery/pickup time.
+*   **Functional Requirements:**
+    *   The ordering flow shall allow customers to designate an order as "Catering" (if enabled for the tenant).
+    *   For catering orders, a date and time picker shall be presented.
+    *   The date/time picker shall enforce a minimum 48-hour lead time from the current time. Customers cannot select a time within this window.
+    *   The system shall clearly communicate the advance notice requirement to the customer.
+    *   Catering orders shall be distinctly marked in the POS and Tenant Admin Panel.
+*   **Non-Functional Requirements:**
+    *   **Usability:** Clear messaging and intuitive date picker for catering orders.
+*   **Dependencies:**
+    *   MST-014 (Order Flow).
+*   **Acceptance Criteria:**
+    *   A customer attempts to place a catering order for tomorrow morning. The system prevents selection and indicates the 48-hour minimum.
+    *   A customer successfully places a catering order for 3 days from now.
+    *   The catering order appears in the Tenant Admin Panel and POS with the correct type and scheduled time.
+*   **Stakeholders:** Tenants, Customers, Product Management.
+
+---
+
+### MST-009: Special event orders (Paan 50+) with advance notice and prepayment
+
+*   **ID:** MST-009
+*   **Title:** Special Event Order Handling with Prepayment and Advance Notice
+*   **Description:** For specific menu items designated as "special event" items (e.g., Paan orders exceeding a certain quantity like 50 units), the system must enforce distinct advance notice requirements (e.g., 24 hours) and mandate full prepayment at the time of order placement.
+*   **Functional Requirements:**
+    *   Tenants shall be able to mark specific menu items as "special event" items and configure quantity thresholds for these rules (e.g., Paan > 50).
+    *   For orders containing "special event" items exceeding their threshold:
+        *   The system shall enforce a specific advance notice period (e.g., minimum 24 hours, configurable per item or globally). This notice is separate from or additive to catering notice.
+        *   The checkout process shall mandate full prepayment; cash on delivery or partial payment options will be disabled.
+        *   The system shall clearly communicate these special requirements to the customer.
+    *   Special event orders shall be distinctly marked in the POS and Tenant Admin Panel.
+*   **Non-Functional Requirements:**
+    *   **Flexibility:** Configurable rules for special event items.
+*   **Dependencies:**
+    *   MST-014 (Order Flow), Payment Gateway Integration.
+    *   MST-003 (Menu Item Configuration).
+*   **Acceptance Criteria:**
+    *   A customer adds 60 Paan units to their cart. The system automatically enforces a 24-hour advance notice window and requires online prepayment at checkout.
+    *   A customer attempts to order 60 Paan units for delivery in 12 hours. The system prevents this and explains the 24-hour minimum.
+    *   The tenant can configure "Gulab Jamun" to require a 48-hour notice for quantities over 100.
+*   **Stakeholders:** Tenants, Customers, Product Management, Finance Team.
+
+---
+
+### MST-010: Tenant Admin Panel for CRUD operations
+
+*   **ID:** MST-010
+*   **Title:** Tenant-Specific Administration Panel
+*   **Description:** Each tenant must be provided with a secure, dedicated web-based administration panel allowing them to manage their microsite's content, settings, and orders.
+*   **Functional Requirements:**
+    *   The Tenant Admin Panel shall require secure authentication and authorization.
+    *   Tenants shall be able to perform CRUD operations on their menu items, categories, and customization options (MST-003).
+    *   Tenants shall be able to configure microsite-specific settings, including:
+        *   Operating hours and special closures.
+        *   Contact information and address.
+        *   Custom domain mapping (MST-002).
+        *   SEO settings (MST-012).
+    *   Tenants shall be able to view incoming orders and their status (MST-015).
+    *   The panel shall display analytics and reports relevant to their microsite performance (future scope, but layout considerations for now).
+*   **Non-Functional Requirements:**
+    *   **Security:** Role-based access control, secure login, data encryption.
+    *   **Usability:** Intuitive UI/UX, responsive design for various devices.
+    *   **Performance:** Fast loading times for dashboard and configuration pages.
+*   **Dependencies:**
+    *   Authentication and Authorization System.
+    *   Database for tenant-specific settings.
+*   **Acceptance Criteria:**
+    *   A tenant logs into their admin panel and can successfully update their business hours.
+    *   The tenant cannot access or modify settings or data belonging to other tenants.
+    *   The admin panel is accessible and fully functional on a tablet device.
+*   **Stakeholders:** Tenants, PaySurity Design Team, Product Management.
+
+---
+
+### MST-011: Super admin override of per-tenant settings
+
+*   **ID:** MST-011
+*   **Title:** Super Admin Tenant Setting Override
+*   **Description:** PaySurity super administrators must have the capability to access, view, and override any tenant-specific setting or data point, including menu items, pricing, operating hours, and general configuration. This is crucial for support, troubleshooting, and global policy enforcement.
+*   **Functional Requirements:**
+    *   The Super Admin Panel shall include a tenant management section.
+    *   Super admins shall be able to select any tenant and view all their configurable settings and data (e.g., menu, orders, domain settings).
+    *   Super admins shall be able to modify and save changes to any tenant's settings or data.
+    *   All changes made by a super admin to tenant data shall be logged with an audit trail, indicating the super admin, tenant, setting changed, old value, and new value.
+*   **Non-Functional Requirements:**
+    *   **Security:** Strict role-based access to the override functionality, only for Super Admins.
+    *   **Auditability:** Comprehensive logging for all changes.
+    *   **Data Integrity:** Ensure overrides do not corrupt tenant data.
+*   **Dependencies:**
+    *   Super Admin Panel.
+    *   Audit logging system.
+*   **Acceptance Criteria:**
+    *   A super admin logs in, selects Tenant A, and successfully changes an item price on Tenant A's menu. Tenant A's microsite reflects this change.
+    *   The audit log shows the super admin's action, the specific change made, and the timestamp.
+    *   A super admin can temporarily disable a tenant's microsite.
+*   **Stakeholders:** PaySurity Operations, Technical Support, Product Management.
+
+---
+
+### MST-012: SEO: per-tenant meta tags, structured data (Restaurant schema.org)
+
+*   **ID:** MST-012
+*   **Title:** SEO Optimization with Per-Tenant Meta Tags and Structured Data
+*   **Description:** Each tenant's microsite must be optimized for search engines, allowing tenants to configure specific meta tags and automatically generating structured data using the Schema.org `Restaurant` type for improved search visibility.
+*   **Functional Requirements:**
+    *   The Tenant Admin Panel shall provide dedicated fields for tenants to input:
+        *   Meta Title (for the homepage and potentially other key pages).
+        *   Meta Description.
+        *   Keywords (optional, for historical/internal tracking).
+    *   The system shall automatically generate and embed JSON-LD structured data (using `https://schema.org/Restaurant`) into each microsite's HTML.
+    *   The generated `Restaurant` schema shall include essential details such as:
+        *   Restaurant Name.
+        *   Address.
+        *   Phone number.
+        *   Operating hours.
+        *   Menu items (using `https://schema.org/MenuItem` and `https://schema.org/Menu`).
+        *   (Future) Ratings/Reviews, Price Range.
+    *   The system shall ensure that URLs are clean and SEO-friendly (e.g., `mysite.com/menu/category-name/item-name`).
+*   **Non-Functional Requirements:**
+    *   **Accessibility:** Ensure generated markup doesn't hinder screen readers.
+    *   **Maintainability:** Schema generation should be flexible to updates in Schema.org standards.
+*   **Dependencies:**
+    *   MST-003 (Menu Data), MST-010 (Tenant Admin Panel).
+*   **Acceptance Criteria:**
+    *   A tenant configures a meta description in their admin panel. Inspecting the microsite's source code shows the correct meta description tag.
+    *   Using Google's Rich Results Test tool, the microsite's homepage successfully validates `Restaurant` structured data, correctly populating details like name, address, and menu items.
+    *   Changing a restaurant's address in the admin panel updates the `Restaurant` schema accordingly.
+*   **Stakeholders:** Tenants, Marketing Team, Product Management.
+
+---
+
+### MST-013: Mobile-optimized responsive design (Core Web Vitals)
+
+*   **ID:** MST-013
+*   **Title:** Mobile-Optimized Responsive Design with Core Web Vitals Adherence
+*   **Description:** All tenant microsites must be designed and developed with a mobile-first approach, ensuring a fully responsive and intuitive user experience across all devices (mobile, tablet, desktop) and optimizing performance to meet or exceed Google's Core Web Vitals thresholds.
+*   **Functional Requirements:**
+    *   The microsite's layout and content shall adapt gracefully to various screen sizes and orientations.
+    *   Interactive elements (buttons, forms) shall be easily usable on touch devices.
+    *   Images and media shall be optimized for quick loading and display on mobile.
+*   **Non-Functional Requirements:**
+    *   **Usability:** Consistent user experience across devices.
+    *   **Performance:**
+        *   **Largest Contentful Paint (LCP):** Under 2.5 seconds for 75% of users.
+        *   **First Input Delay (FID):** Under 100 milliseconds for 75% of users.
+        *   **Cumulative Layout Shift (CLS):** Under 0.1 for 75% of users.
+    *   **Compatibility:** Support for modern web browsers (Chrome, Firefox, Safari, Edge).
+*   **Dependencies:**
+    *   None specific, relies on UI/UX and Frontend Development best practices.
+*   **Acceptance Criteria:**
+    *   The microsite renders without horizontal scrolling on common mobile devices (e.g., iPhone, Android).
+    *   Google Lighthouse audit for the microsite's homepage shows "Good" for all Core Web Vitals metrics.
+    *   A user can easily navigate the menu, add items to the cart, and checkout on a smartphone.
+*   **Stakeholders:** Customers, Tenants, PaySurity Design Team, Product Management.
+
+---
+
+### MST-014: Order flow: menu â†’ cart â†’ checkout â†’ confirmation
+
+*   **ID:** MST-014
+*   **Title:** Standardized Customer Order Flow
+*   **Description:** The microsite must provide a clear, intuitive, and streamlined order placement process for customers, guiding them from menu browsing through cart management, checkout, and order confirmation.
+*   **Functional Requirements:**
+    *   **Menu Browsing:** Customers shall be able to view menu categories and items with details (name, description, calculated `displayPrice`, image).
+    *   **Add to Cart:** Customers shall be able to add single or multiple items to a shopping cart. Item customization options (if applicable) must be selectable before adding to cart.
+    *   **Cart Management:** Customers shall be able to view their cart contents, update quantities, and remove items before proceeding to checkout. The cart shall display a subtotal, estimated tax, and total.
+    *   **Checkout Process:**
+        *   Customer information input (name, contact, delivery/pickup details).
+        *   Selection of order type (delivery/pickup, standard/catering/special event).
+        *   Payment method selection (online payment, cash on delivery if allowed).
+        *   Secure integration with payment gateways for online payments.
+        *   Address validation for delivery orders.
+    *   **Order Confirmation:** Upon successful order placement, the customer shall receive an immediate on-screen confirmation with an order ID and summary. An order confirmation email shall also be sent.
+*   **Non-Functional Requirements:**
+    *   **Usability:** Low friction, clear calls to action, minimal steps.
+    *   **Security:** PCI DSS compliance for payment processing.
+    *   **Performance:** Fast loading times between steps.
+*   **Dependencies:**
+    *   MST-004 (Price Calculation), MST-008 (Catering Orders), MST-009 (Special Event Orders).
+    *   Payment Gateway API.
+*   **Acceptance Criteria:**
+    *   A customer can successfully add items to the cart, proceed through all checkout steps, make an online payment, and receive an order confirmation on-screen and via email.
+    *   The checkout process clearly displays all costs before final payment.
+    *   The system prevents checkout if mandatory fields are missing or invalid.
+*   **Stakeholders:** Customers, Tenants, Product Management, PaySurity Design Team.
+
+---
+
+### MST-015: Real-time order sync with POS when activated
+
+*   **ID:** MST-015
+*   **Title:** Real-time Order Synchronization with POS
+*   **Description:** Once an order is successfully placed and confirmed on the microsite, it must be synchronized in real-time with the respective tenant's PaySurity POS system to initiate fulfillment processes.
+*   **Functional Requirements:**
+    *   Upon successful completion of the MST-014 order flow, the system shall transmit the full order details to the tenant's PaySurity POS system.
+    *   Order details shall include: order ID, customer information, list of items and quantities, total price, payment status, order type (delivery/pickup, catering/standard), and scheduled time.
+    *   The integration shall use a robust API or webhook mechanism to ensure reliable delivery of order data.
+    *   The POS system shall acknowledge receipt of the order.
+    *   In case of transmission failure, the system shall implement retry logic and alert appropriate personnel.
+*   **Non-Functional Requirements:**
+    *   **Latency:** Orders must appear in the POS within 5 seconds of customer confirmation.
+    *   **Reliability:** Order transmission must have a success rate of 99.99%.
+    *   **Data Integrity:** Ensure complete and accurate order data is transferred.
+*   **Dependencies:**
+    *   PaySurity POS System API (for order ingestion).
+    *   MST-014 (Order Flow).
+*   **Acceptance Criteria:**
+    *   A customer places an order on a tenant's microsite. Within seconds, the order appears on the tenant's POS screen, ready for preparation.
+    *   The order details (items, quantity, total) in the POS match exactly what the customer ordered on the microsite.
+    *   If the POS is temporarily offline, the microsite system retries sending the order once the POS is back online, or notifies support.
+*   **Stakeholders:** Tenants, PaySurity POS Team, Product Management, Operations Team.
+# Canonical Requirements: Operations Management & AI Daily Brief
+**Vertical:** Operations Management (OPS) | **Version:** v2.0-dev-prompt | **Date:** 2026-03-12  
+**Standard:** `DEV_IMPLEMENTATION_STANDARD.md` â€” all values from DB, no hardcoding  
+**Test Tenant:** BistroBeest (`tenant_id: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
+
+---
+
+## Database Schema
+
+**Migration:** `db/migrations/065_ops_management.sql`
+
+```sql
+-- Automated alert rules: configurable thresholds that trigger OPS alerts
+CREATE TABLE alert_rules (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID REFERENCES tenants(id),       -- NULL = platform-wide rule
+  rule_code       VARCHAR(100) NOT NULL,             -- e.g. 'revenue_drop_pct', 'dispute_rate_pct'
+  description     TEXT NOT NULL,
+  metric_source   VARCHAR(50) NOT NULL,              -- 'orders', 'payments', 'disputes', etc.
+  threshold_config JSONB NOT NULL,                   -- {value, operator: 'GT'|'LT'|'EQ', window: 'HOUR'|'DAY'|'WEEK'}
+  severity        VARCHAR(10) NOT NULL DEFAULT 'MEDIUM'
+                  CHECK (severity IN ('LOW','MEDIUM','HIGH','CRITICAL')),
+  is_enabled      BOOLEAN NOT NULL DEFAULT TRUE,
+  notify_roles    TEXT[] NOT NULL DEFAULT '{}',      -- ['ENTERPRISE_ADMIN','LOCATION_MGR']
+  notify_channels TEXT[] NOT NULL DEFAULT '["EMAIL","PUSH"]',
+  cooldown_minutes INTEGER NOT NULL DEFAULT 60,      -- min minutes between repeat alerts
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Alert firings: every time a rule threshold is crossed
+CREATE TABLE alert_firings (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  rule_id         UUID NOT NULL REFERENCES alert_rules(id),
+  fired_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  metric_value    DECIMAL(20,4) NOT NULL,
+  threshold_value DECIMAL(20,4) NOT NULL,
+  context         JSONB,       -- {location_id, period, comparison_period}
+  status          VARCHAR(20) NOT NULL DEFAULT 'OPEN'
+                  CHECK (status IN ('OPEN','ACKNOWLEDGED','RESOLVED','FALSE_POSITIVE')),
+  acknowledged_by UUID REFERENCES users(id),
+  acknowledged_at TIMESTAMPTZ,
+  resolved_at     TIMESTAMPTZ,
+  resolution_note TEXT
+);
+ALTER TABLE alert_firings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON alert_firings USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+CREATE INDEX idx_alerts_open ON alert_firings(tenant_id, status, fired_at DESC) WHERE status = 'OPEN';
+
+-- AI ops briefs: daily AI-generated summaries per tenant
+CREATE TABLE ai_ops_briefs (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id       UUID NOT NULL REFERENCES tenants(id),
+  brief_date      DATE NOT NULL,
+  scope_level     VARCHAR(20) NOT NULL DEFAULT 'TENANT'
+                  CHECK (scope_level IN ('LOCATION','BRAND','TENANT','ENTERPRISE')),
+  scope_id        UUID,                             -- location_id or brand_id; NULL for TENANT/ENTERPRISE
+  headline        TEXT NOT NULL,                    -- single sentence summary
+  body            TEXT NOT NULL,                    -- 3-5 bullet points (LLM generated)
+  metrics_snapshot JSONB NOT NULL,                  -- the data used to generate the brief
+  llm_model       VARCHAR(50) NOT NULL,
+  llm_tokens_used INTEGER,
+  delivered_at    TIMESTAMPTZ,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(tenant_id, brief_date, scope_level, scope_id)
+);
+ALTER TABLE ai_ops_briefs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation ON ai_ops_briefs USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
+```
+
+**Seed:** `db/seeds/065_ops_seed.sql`
+
+```sql
+INSERT INTO platform_config (key, value, data_type, description, is_merchant_overridable)
+VALUES
+  ('ops.brief.generation_cron',        '0 6 * * *', 'string', 'Daily brief generation: 6 AM UTC', FALSE),
+  ('ops.brief.delivery_cron',          '0 7 * * *', 'string', 'Daily brief delivery: 7 AM UTC (after generation)', FALSE),
+  ('ops.brief.retention_days',         '90',    'integer', 'Days to retain AI ops briefs', FALSE),
+  ('ops.brief.llm_model',              'gemini-1.5-flash', 'string', 'LLM model for daily brief generation', FALSE),
+  ('ops.brief.max_bullets',            '5',     'integer', 'Max bullet points in brief body', FALSE),
+  ('ops.alert.evaluation_cron',        '*/5 * * * *', 'string', 'Alert rule evaluation interval', FALSE),
+  ('ops.alert.cooldown_default_min',   '60',    'integer', 'Default alert cooldown minutes', FALSE)
+ON CONFLICT (key) DO NOTHING;
+
+-- Platform-wide default alert rules (seeded; merchants can adjust thresholds)
+INSERT INTO alert_rules (rule_code, description, metric_source, threshold_config, severity, notify_roles, notify_channels, cooldown_minutes)
+VALUES
+  ('revenue_drop_pct_day',  'Revenue drops > 20% vs. same weekday last week',
+   'orders', '{"value":20,"operator":"GT","window":"DAY","comparison":"PRIOR_WEEK_SAME_DOW"}',
+   'HIGH', '["ENTERPRISE_ADMIN","LOCATION_MGR"]', '["EMAIL","PUSH"]', 240),
+  ('dispute_rate_pct',      'Chargeback rate exceeds 0.5% of volume for the month',
+   'disputes', '{"value":0.5,"operator":"GT","window":"MONTH","as":"PCT_OF_VOLUME"}',
+   'CRITICAL', '["ENTERPRISE_ADMIN","ENTERPRISE_FINANCE"]', '["EMAIL","PUSH","SMS"]', 1440),
+  ('gateway_error_rate',    'Payment gateway error rate > 2% in any 1-hour window',
+   'payments', '{"value":2,"operator":"GT","window":"HOUR","as":"PCT_OF_ATTEMPTS"}',
+   'CRITICAL', '["PAYSURITY_ADMIN"]', '["PAGE","EMAIL"]', 30),
+  ('kds_station_offline',   'Any KDS station offline > 5 minutes during service hours',
+   'kds', '{"value":5,"operator":"GT","window":"MINUTE","metric":"offline_duration_min"}',
+   'HIGH', '["LOCATION_MGR"]', '["PUSH"]', 10),
+  ('payroll_approval_due',  'Payroll run in CALCULATED status within 48h of pay date without approval',
+   'payroll', '{"value":48,"operator":"LT","window":"HOUR","metric":"hours_until_pay_date"}',
+   'HIGH', '["PAYROLL_ADMIN"]', '["EMAIL","PUSH"]', 120),
+  ('subscription_past_due', 'Merchant subscription payment failed',
+   'subscriptions', '{"value":0,"operator":"GT","metric":"failed_payment_count"}',
+   'HIGH', '["PAYSURITY_ADMIN"]', '["EMAIL"]', 1440)
+ON CONFLICT DO NOTHING;
+```
+
+---
+
+## REQ-OPS-001: AI Daily Operations Brief
+
+**Priority:** Must | **Actors:** ENTERPRISE_ADMIN, BRAND_ADMIN, LOCATION_MGR, AI Batch Job
+
+---
+
+#### Service Layer: `src/modules/ops/ai-brief.service.ts`
+
+```typescript
+/**
+ * generateBriefs(date) â€” Daily batch: generates briefs for all active tenants.
+ * Called by cron job at 6 AM UTC (from config 'ops.brief.generation_cron').
+ * For each tenant:
+ *   1. Compile metrics_snapshot (DB queries â€” < 48h window ending at midnight):
+ *      - total_revenue_cents (yesterday vs. same day last week â†’ % change)
+ *      - order_count (yesterday vs. prior period)
+ *      - avg_ticket_cents
+ *      - top_3_items_by_revenue
+ *      - dispute_count + dispute_rate_pct
+ *      - loyalty_accounts_created
+ *      - active_alerts_count (open OPS alerts)
+ *      - payroll_status (any runs needing approval?)
+ *   2. Build LLM prompt (stored in notification_templates, NOT hardcoded):
+ *      template_key = 'ops.brief_generation_prompt'
+ *      Rendered with metrics_snapshot
+ *   3. Call Gemini API (model from config 'ops.brief.llm_model')
+ *   4. Parse response: extract headline (first line) + bullet body (remaining)
+ *   5. Write ai_ops_briefs record
+ * Idempotent: ON CONFLICT (tenant_id, brief_date, scope_level, scope_id) DO NOTHING
+ */
+async generateBriefs(date: Date): Promise<void>
+
+/**
+ * deliverBriefs(date) â€” Sends generated briefs to ENTERPRISE_ADMIN users.
+ * Called 1 hour after generation (config 'ops.brief.delivery_cron').
+ * Uses NOT engine: template_key='ops.daily_brief', channel=EMAIL + PUSH
+ * consent_class=SERVICE (not marketing â€” operational communication)
+ */
+async deliverBriefs(date: Date): Promise<void>
+```
+
+**Brief generation prompt template (stored in DB â€” never hardcoded):**
+
+```sql
+INSERT INTO notification_templates (tenant_id, template_key, channel, consent_class, language_code, body_template, version, is_active)
+VALUES (NULL, 'ops.brief_generation_prompt', 'IN_APP', 'TRANSACTIONAL', 'en',
+'You are PaySurity, an AI operations assistant for {{merchant_name}}.
+Write a daily operations brief for {{brief_date}} using the data below.
+
+FORMAT:
+1. Headline: One sentence capturing the most important operational insight (positive or negative).
+2. Bullets: Max {{max_bullets}} concise bullet points. Focus on: revenue vs prior period, notable anomalies, urgent actions needed. End with one forward-looking recommendation.
+
+RULES:
+- Never invent numbers. Use only the provided data.
+- Flag any metric that is negative with âš ï¸
+- Flag any metric that is exceptionally positive with âœ…
+- Always express revenue changes as % vs prior period.
+- If dispute_rate_pct > 1%: call it out explicitly as HIGH RISK.
+- Tone: professional, direct, no filler.
+
+DATA:
+{{metrics_json}}', 1, TRUE) ON CONFLICT DO NOTHING;
+```
+
+---
+
+## REQ-OPS-002: Automated Alert System
+
+**Priority:** Must | **Actors:** Alert Evaluation Batch Job, ENTERPRISE_ADMIN, LOCATION_MGR
+
+---
+
+```typescript
+/**
+ * evaluateAlerts() â€” Evaluates all enabled alert rules every 5 minutes.
+ * For each active alert_rules row:
+ *   1. Execute metric query for rule.metric_source + threshold_config.window
+ *   2. Compare result against threshold using operator (GT/LT/EQ)
+ *   3. If breach:
+ *      a. Check cooldown: if alert_firings exists with fired_at > NOW() - cooldown_minutes â†’ skip (cooldown active)
+ *      b. Insert alert_firings record
+ *      c. Notify via NOT engine (roles from notify_roles, channels from notify_channels, TRANSACTIONAL)
+ *      d. For CRITICAL: also call NOT engine SMS to ENTERPRISE_ADMIN phone
+ */
+async evaluateAlerts(): Promise<void>
+```
+
+---
+
+## REQ-OPS-003: Operations Dashboard UI
+
+**Priority:** Must | **Actors:** ENTERPRISE_ADMIN, BRAND_ADMIN, LOCATION_MGR
+
+---
+
+**Central OPS Dashboard screens:**
+
+**Live overview:**  
+- Top strip: "Today's Revenue: $4,218 | Orders: 147 | Avg Ticket: $28.70 | Alerts: 2 open"
+- Revenue chart: today vs. last week (same DOW), last 30 days line chart
+- Real-time order rate gauge (last 15 minutes)
+- Open alerts sidebar: severity badges, click â†’ acknowledge
+
+**Daily Brief card:**  
+Delivered 7 AM local time; appears at top of dashboard as expandable card.  
+Headline prominent; bullets in collapsible accordion; 30-day history accessible.
+
+**Alert Center:**  
+Table: Rule | Fired At | Current Value | Threshold | Status | Acknowledge  
+Filter by severity, status, date range.  
+Acknowledge button â†’ modal: "Resolution note?" â†’ sets status=ACKNOWLEDGED.
+
+**Location Comparison:**  
+Grid of all locations: Revenue | Orders | Avg Ticket | Disputes | Loyalty signups â€” sortable by any column.  
+Color-coded: green = above brand avg, red = below brand avg (threshold from config).
+
+---
+
+#### API Endpoints
+
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| `GET` | `/v1/ops/dashboard` | ENTERPRISE_ADMIN, BRAND_ADMIN, LOCATION_MGR | Current dashboard metrics |
+| `GET` | `/v1/ops/briefs` | ENTERPRISE_ADMIN | AI briefs (paginated, last 90 days) |
+| `GET` | `/v1/ops/briefs/{date}` | ENTERPRISE_ADMIN | Specific date brief |
+| `GET` | `/v1/ops/alerts` | ENTERPRISE_ADMIN, LOCATION_MGR | Open + recent alerts |
+| `PATCH` | `/v1/ops/alerts/{id}/acknowledge` | ENTERPRISE_ADMIN, LOCATION_MGR | Acknowledge alert |
+| `PATCH` | `/v1/ops/alerts/{id}/resolve` | ENTERPRISE_ADMIN | Resolve with note |
+| `GET` | `/v1/ops/alert-rules` | ENTERPRISE_ADMIN | Alert rule configuration |
+| `PATCH` | `/v1/ops/alert-rules/{id}` | ENTERPRISE_ADMIN | Adjust threshold |
+
+---
+
+#### Batch Jobs
+
+| Job | Cron | Description |
+|---|---|---|
+| `ops.ai_ops_daily_brief` | `0 6 * * *` | Generate AI briefs for all tenants |
+| `ops.brief_delivery` | `0 7 * * *` | Deliver generated briefs via NOT engine |
+| `ops.alert_evaluation` | `*/5 * * * *` | Evaluate all alert rules; fire if threshold breached |
+| `ops.brief_cleanup` | `0 3 * * 0` | Delete briefs older than `ops.brief.retention_days` |
+# Deferred Verticals â€” Registry
+**Version:** v1.0-canonical  
+**Date:** 2026-03-12  
+**Source Docs:** 20_DEFERRED_VERTICALS.md  
+**Status:** All items below are DEFERRED to Phase 2+ unless explicitly re-scoped by Product leadership
+
+## Purpose
+This document registers all PaySurity product capabilities and verticals that have been formally deferred from Phase 1 scope. Deferral means: requirements exist, feasibility is established, but no active development sprint is allocated until a scope change is formally approved.
+
+---
+
+## Deferred Verticals
+
+### DEF-001: Dental Practice Management
+**Proposed Vertical:** DentalPay / DentalEase  
+**Deferral Reason:** Insufficient market research and dedicated QA resources for HIPAA compliance overlay.  
+**Phase Gate:** Phase 2 â€” requires HIPAA BAA framework, dental-specific claims/billing integration, and patient payment plan workflows.  
+**Dependencies:** HIPAA compliance module (not in scope), Insurance EDI 837/835 integration.
+
+---
+
+### DEF-002: Legal Practice / Law Firm Billing
+**Proposed Vertical:** LegalPay  
+**Deferral Reason:** IOLTA trust account compliance requires specialized banking partner agreements not yet in place.  
+**Phase Gate:** Phase 2+ â€” requires IOLTA-compliant trust account segregation and state bar rules integration.  
+**Dependencies:** IOLTA banking partner, trust accounting ledger (specialized double-entry rules).
+
+---
+
+### DEF-003: Chiropractic / Physical Therapy Practice
+**Proposed Vertical:** ChiroPay  
+**Deferral Reason:** Overlaps with Dental (healthcare compliance). Shared dependency on HIPAA framework.  
+**Phase Gate:** Phase 2 alongside Dental â€” shared HIPAA BAA module gates both.  
+**Dependencies:** Dental (DEF-001) HIPAA module, HSA/FSA payment rail integration.
+
+---
+
+### DEF-004: QR Loyalty Program (Standalone)
+**Proposed Feature:** Standalone QR-code loyalty program sold independently of POS vertical.  
+**Deferral Reason:** Standalone loyalty without POS integration has lower merchant value and complicates data model.  
+**Phase Gate:** Phase 2 â€” re-evaluate as an add-on module once core POS loyalty integration (POSR-009, POS-005) is live and validated.  
+**Dependencies:** Digital Wallets loyalty engine must be complete; QR attribution system from AFR-008 reused.
+
+---
+
+### DEF-005: Cash-In / Cash-Out via Retail Agents
+**Proposed Feature:** Consumer wallet funding via retail agent locations (cash deposit / cash withdrawal).  
+**Deferral Reason:** Requires money services business (MSB) regulatory filings per state, retail agent contracting, and cash reconciliation infrastructure not scoped for Phase 1.  
+**Phase Gate:** Phase 2+ â€” MSB licensing is the primary blocker. Feature-flagged in wallet (REQ-WAL-002 notes).  
+**Dependencies:** MSB license (state-by-state), retail agent network contracts, cash reconciliation ledger extension.
+
+---
+
+## Scope Change Process
+To move any deferred item into active development:
+1. Product Owner raises a formal Change Request (CR) in the project management system.
+2. CR must include: business case, estimated sprint cost, regulatory impact assessment.
+3. Super Admin (CTO/CPO level) approves CR.
+4. Item is promoted to the appropriate canonical vertical document with a Phase Gate update.
+5. This registry entry is updated to reflect the new status.

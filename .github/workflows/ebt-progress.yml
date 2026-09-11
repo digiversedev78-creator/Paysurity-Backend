@@ -1,0 +1,54 @@
+﻿name: ebt-progress
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  progress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Auto-fill progress from audit/status
+        shell: pwsh
+        run: pwsh -NoProfile -File "scripts/ci/progress_autofill.ps1"
+
+      - name: Build progress summary
+        shell: pwsh
+        run: pwsh -NoProfile -File "scripts/ci/progress_report.ps1"
+
+      - name: Upload dashboard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ebt-progress-dashboard
+          path: progress/
+
+      - name: Comment progress on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('progress/COMMENT.md', 'utf8');
+            const marker = '<!-- EBT_PROGRESS -->';
+            const full = marker + "\n" + body;
+
+            const {owner, repo} = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {owner, repo, issue_number});
+            const prev = comments.find(c => (c.body || '').includes(marker));
+
+            if (prev) {
+              await github.rest.issues.updateComment({owner, repo, comment_id: prev.id, body: full});
+            } else {
+              await github.rest.issues.createComment({owner, repo, issue_number, body: full});
+            }
+
+

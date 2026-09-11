@@ -1,0 +1,43 @@
+{
+  "project_name": "REPLACE_ME",
+  "platforms": {
+    "web": true,
+    "mobile": false,
+    "desktop_windows": false
+  },
+  "deploy": {
+    "web_provider": "vercel",
+    "api_provider": "railway",
+    "enable_staging": true,
+    "enable_production": true
+  },
+  "accessibility": {
+    "enabled": true,
+    "standard": "WCAG2.1-AA"
+  },
+  "security": {
+    "gitleaks": true,
+    "osv": true,
+    "codeql_optional": true
+  },
+  "e2e": {
+    "web_runner": "playwright",
+    "mobile_runner": "none",
+    "require_pass_for_must_flows": true,
+    "base_url": "http://localhost:3000"
+  },
+  "database": {
+    "enabled": false,
+    "migration_tool": "none",
+    "require_down_migrations": true
+  },
+  "observability": {
+    "required": false,
+    "provider": "none"
+  },
+  "budget": {
+    "enforce": false,
+    "max_cost_usd": 50,
+    "max_slices_total": 200
+  }
+}

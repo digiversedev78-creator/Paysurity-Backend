@@ -1,0 +1,17 @@
+{
+  "name": "@paysurity/architecture-tests",
+  "version": "0.0.1",
+  "private": true,
+  "description": "TDA Architectural Audit Scripts — verifies schema compliance against DETERMINISTIC_MASTER_BLUEPRINT.json",
+  "scripts": {
+    "test": "jest --testPathPattern=tests/architecture --no-coverage 2>&1",
+    "test:foundation": "jest --testPathPattern=tests/architecture/foundation --no-coverage 2>&1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^22.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.4.0"
+  }
+}

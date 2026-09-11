@@ -1,0 +1,2 @@
+﻿src/modules/gift-cards/gift-cards.service.ts(479,11): error TS1005: ',' expected.
+src/modules/gift-cards/gift-cards.service.ts(479,21): error TS1005: ',' expected.

@@ -1,0 +1,255 @@
+{
+  "version": "2.0-COGNITIVE",
+  "status": "DRAFT_REVIEW",
+  "requirements": [
+    {
+      "id": "REQ-WAL-001",
+      "description": "Wallet Lifecycle & Double-Entry Ledger",
+      "domain": "Core Finance",
+      "preconditions": [
+        "Valid KYC/KYB verified entity (User or Merchant) exists",
+        "Entity must not have an active AML hold status",
+        "Ledger engine must have a balanced initial root state (zero-sum validation)"
+      ],
+      "data_invariants": [
+        "Sum of all debits must exactly equal sum of all credits in every transaction (double-entry constraint)",
+        "Ledger entries must be immutable (append-only table schema)",
+        "Currency codes must be ISO 4217 compliant",
+        "Amounts must be stored as integers representing the lowest currency denominator (e.g., cents)"
+      ],
+      "postconditions": [
+        "Two distinct ledger entry rows created: 1 Debit, 1 Credit",
+        "Wallet available balance synchronously updated via materialized view or trigger",
+        "Transaction reference UUID generated and returned to client"
+      ],
+      "error_states": [
+        "INSUFFICIENT_FUNDS: Debit amount exceeds available balance",
+        "LEDGER_IMBALANCE_DETECTED: Transaction debit/credit arrays do not sum to 0",
+        "WALLET_FROZEN: Target wallet is locked for compliance reasons"
+      ]
+    },
+    {
+      "id": "REQ-MER-001",
+      "description": "Merchant Application & KYB Flow",
+      "domain": "Merchant Services",
+      "preconditions": [
+        "Applicant email must be verified via OTP",
+        "Applicant must provide a valid Employer Identification Number (EIN) or SSN"
+      ],
+      "data_invariants": [
+        "EIN must match the 9-digit US format XX-XXXXXXX",
+        "Beneficial Ownership information must sum to exactly 100% equity distribution",
+        "Application status must transition linearly: DRAFT -> SUBMITTED -> IN_REVIEW -> APPROVED/REJECTED"
+      ],
+      "postconditions": [
+        "KYB payload dispatched to external underwriting API (e.g., Stripe Connect / Alloy)",
+        "Merchant entity record created in `merchant_profiles` table",
+        "Default clearing bank account securely tokenized"
+      ],
+      "error_states": [
+        "KYB_VERIFICATION_FAILED: Automated identity check returned false",
+        "DUPLICATE_EIN: The provided tax ID is already registered in the system",
+        "INVALID_EQUITY_DISTRIBUTION: Ownership shares do not equal 100%"
+      ]
+    },
+    {
+      "id": "REQ-POSR-001",
+      "description": "Core Order Management & Table Workflow",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "POS Terminal must be authenticated and assigned to a valid Location ID",
+        "Shift must be strictly OPEN for the interacting server",
+        "Target table ID must exist in the active floor plan"
+      ],
+      "data_invariants": [
+        "Order state must follow: OPEN -> FIRED -> BILLED -> PAID -> CLOSED",
+        "Tax calculated must equal the sum of (Item Price * Line Item Tax Rate)",
+        "Table status must be mutually exclusive (e.g., cannot be 'AVAILABLE' if order is 'OPEN')"
+      ],
+      "postconditions": [
+        "Order lines committed to `pos_orders` and `pos_order_items` tables",
+        "KDS (Kitchen Display System) routing events triggered via WebSockets",
+        "Table status updated to 'OCCUPIED' or 'BILLED'"
+      ],
+      "error_states": [
+        "SHIFT_CLOSED: Attempted to open order outside of active shift",
+        "TABLE_CONFLICT: Attempted to seat guests at an already occupied table",
+        "MENU_ITEM_UNAVAILABLE: Item requested is marked 86'd (out of stock)"
+      ]
+    },
+    {
+      "id": "REQ-PAY-001",
+      "description": "Payroll Calculation Engine",
+      "domain": "Finance/Payroll",
+      "preconditions": [
+        "Employer must have valid state tax registration IDs",
+        "Employees must have active W-4 configuration on file",
+        "Timesheet data for the pay period must be explicitly approved by management"
+      ],
+      "data_invariants": [
+        "Gross Pay = (Regular Hours * Rate) + (Overtime Hours * OT Rate) + Tips",
+        "Net Pay = Gross Pay - PreTax Deductions - Taxes - PostTax Deductions",
+        "Net Pay must be >= 0",
+        "Overtime must strictly apply for hours > 40 per workweek (Federal FLSA)"
+      ],
+      "postconditions": [
+        "Payroll Run object transitioned to 'LOCKED' state",
+        "ACH NACHA file generated for direct deposits",
+        "Tax liability staging records created for automated remittance"
+      ],
+      "error_states": [
+        "NEGATIVE_NET_PAY: Deductions exceed gross earnings",
+        "MISSING_TIMESHEET_APPROVAL: Hours submitted but not manager approved",
+        "INVALID_TAX_JURISDICTION: Employee address unmapped to a tax engine locale"
+      ]
+    },
+    {
+      "id": "REQ-ORC-001",
+      "description": "Payment Authorization & Capture",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "Valid Payment Method Token (Network Token or PCI-compliant vault token)",
+        "Order amount > 0",
+        "Merchant processing account must be ACTIVE"
+      ],
+      "data_invariants": [
+        "Authorization amount must exactly equal requested checkout amount",
+        "Capture amount must be <= Authorization amount",
+        "Tokenization format must comply with PCI-DSS standards (no raw PAN storage)"
+      ],
+      "postconditions": [
+        "Processor gateway returns valid Authorization Code and Network Transaction ID",
+        "Ledger updated with a 'Pending Hold' entry for the auth amount",
+        "Order status advanced to 'PAID' or 'PARTIALLY_PAID'"
+      ],
+      "error_states": [
+        "DECLINED_INSUFFICIENT_FUNDS: Issuer rejected due to balance",
+        "DECLINED_FRAUD_RISK: High-risk indicators triggered gateway rejection",
+        "EXPIRED_AUTHORIZATION: Capture attempted after auth window (typically 7 days) elapsed"
+      ]
+    },
+    {
+      "id": "REQ-SEC-001",
+      "description": "Authentication & JWT Flow",
+      "domain": "Platform Security",
+      "preconditions": [
+        "Valid credentials (email/password hash match) or valid MFA token provided",
+        "User account status must be ACTIVE (not suspended or deleted)"
+      ],
+      "data_invariants": [
+        "JWT must be signed using RS256 algorithm",
+        "Access tokens must have a strict expiration <= 15 minutes",
+        "Refresh tokens must be stored in HTTP-only, secure cookies or secure enclaves",
+        "Passwords must be hashed using Argon2id or bcrypt"
+      ],
+      "postconditions": [
+        "Short-lived Access Token and long-lived Refresh Token issued",
+        "Successful login event logged in the Security Audit Trail with IP and User-Agent",
+        "Failed attempts counter reset to 0"
+      ],
+      "error_states": [
+        "INVALID_CREDENTIALS: Hash mismatch",
+        "ACCOUNT_LOCKED: Exceeded maximum retry threshold (brute force protection)",
+        "MFA_REQUIRED: Primary auth succeeded but secondary factor pending"
+      ]
+    },
+    {
+      "id": "REQ-FRN-001",
+      "description": "4-Level Hierarchy Entity Model & Role Access",
+      "domain": "Enterprise/Franchise",
+      "preconditions": [
+        "User must possess a valid RBAC role definition",
+        "Target resource must belong to a node within the user's hierarchy graph"
+      ],
+      "data_invariants": [
+        "Hierarchy levels are strictly: ROOT -> BRAND -> FRANCHISEE -> LOCATION",
+        "A Location must have exactly one parent Franchisee",
+        "Permissions flow downwards: Brand admins inherit access to Franchisees and Locations, but not vice-versa"
+      ],
+      "postconditions": [
+        "Data access scoped strictly to the authorized hierarchy depth (e.g., query adds `location_id IN (descendants)`)",
+        "Context-aware JWT minted containing `context_node_id` and `context_level`"
+      ],
+      "error_states": [
+        "HIERARCHY_VIOLATION_403: Attempt to access a node outside permitted branch",
+        "ORPHANED_NODE: Attempted to create a Location without a valid parent Franchisee",
+        "ROLE_INSUFFICIENT: Action requires a permission not granted by the current hierarchy role"
+      ]
+    },
+    {
+      "id": "REQ-SUB-001",
+      "description": "Billing Lifecycle & Dunning",
+      "domain": "SaaS Billing",
+      "preconditions": [
+        "Tenant has an active subscription tier configured",
+        "Tenant has a default payment method attached to their billing profile",
+        "Current date is >= Next Billing Date"
+      ],
+      "data_invariants": [
+        "Subscription status transitions: ACTIVE -> PAST_DUE -> UNPAID -> CANCELED",
+        "Dunning cycle spans exactly 14 days with 3 distinct retry attempts",
+        "Invoice line items must strictly map to provisioned usage or base tier fees"
+      ],
+      "postconditions": [
+        "Invoice generated in `invoices` table and marked 'PAID'",
+        "Next Billing Date incremented by exactly 1 billing period (e.g., +1 month)",
+        "Payment receipt emailed to tenant billing contacts"
+      ],
+      "error_states": [
+        "PAYMENT_FAILED: Default card declined, transition to PAST_DUE",
+        "NO_DEFAULT_PAYMENT_METHOD: Billing profile lacks a chargeable instrument",
+        "SUBSCRIPTION_SUSPENDED: Max dunning retries exhausted, service locked"
+      ]
+    },
+    {
+      "id": "REQ-ECO-001",
+      "description": "Storefront Online Ordering",
+      "domain": "Consumer E-Commerce",
+      "preconditions": [
+        "Location ID must be actively accepting online orders",
+        "Shopping cart must contain at least 1 valid, available menu item",
+        "Requested fulfillment time must fall within location's operational hours"
+      ],
+      "data_invariants": [
+        "Cart total must equal sum of items + modifiers + delivery fee + taxes + tip",
+        "Delivery polygons/radiuses strictly enforced for delivery fulfillment type",
+        "Inventory levels for 86'd items must be strictly validated immediately prior to checkout lock"
+      ],
+      "postconditions": [
+        "Order object created with source 'ONLINE'",
+        "Payment Authorized",
+        "Order immediately pushed to Location's KDS via WebSocket queue"
+      ],
+      "error_states": [
+        "LOCATION_CLOSED: Store is not accepting orders at this time",
+        "OUT_OF_DELIVERY_ZONE: Customer address unmapped to delivery boundaries",
+        "ITEM_UNAVAILABLE: A cart item became out of stock during checkout"
+      ]
+    },
+    {
+      "id": "REQ-TAX-001",
+      "description": "Real-Time Tax Quote (Order Checkout)",
+      "domain": "Compliance & Tax",
+      "preconditions": [
+        "Destination address (or Location address for pickup) is fully resolved",
+        "Cart contains categorized line items (e.g., Grocery vs. Prepared Food)"
+      ],
+      "data_invariants": [
+        "Tax calculation must apply item-level taxability rules (e.g., cold food untaxed in some states, hot food taxed)",
+        "Total tax must be the exact sum of all applicable jurisdiction taxes (State + County + City + Special)",
+        "Rounding must follow standard half-up logic to 2 decimal places per line item"
+      ],
+      "postconditions": [
+        "Tax quote object attached to the draft order payload",
+        "Detailed tax breakdown provided for the customer receipt (tax lines)",
+        "Tax nexus liability staged for month-end reporting"
+      ],
+      "error_states": [
+        "GEOCODING_FAILURE: Address could not be resolved to a specific tax jurisdiction",
+        "TAX_ENGINE_TIMEOUT: External tax provider (e.g., Avalara/TaxJar) failed to respond within 500ms",
+        "UNCATEGORIZED_ITEM: Menu item lacks necessary tax code metadata"
+      ]
+    }
+  ]
+}
+

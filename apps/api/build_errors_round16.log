@@ -1,0 +1,3 @@
+﻿src/modules/tables/tables.controller.ts(22,1): error TS1128: Declaration or statement expected.
+src/modules/tenant-admin/tenant-admin.module.ts(15,1): error TS1128: Declaration or statement expected.
+src/modules/tips/tips.controller.ts(24,1): error TS1128: Declaration or statement expected.

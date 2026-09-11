@@ -1,0 +1,67 @@
+# ─── Stage 1: Dependencies ────────────────────────────────────────────────────
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+RUN npm install -g pnpm@9.15.4
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/ ./packages/
+COPY apps/merchant-dashboard/ ./apps/merchant-dashboard/
+
+# Install all deps (required for monorepo workspace symlink resolution)
+RUN pnpm install --frozen-lockfile
+
+# ─── Stage 2: Builder ────────────────────────────────────────────────────────
+FROM deps AS builder
+WORKDIR /app
+
+# NEXT_PUBLIC_* vars are baked into the static bundle at build time.
+# Pass the GCP Cloud Run API URL via --build-arg in your CI pipeline:
+#   docker build --build-arg NEXT_PUBLIC_API_URL=https://...run.app -f Dockerfile.dashboard .
+ARG NEXT_PUBLIC_API_URL=https://paysurity-api-111328865246.us-central1.run.app
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_TELEMETRY_DISABLED=1
+# Explicitly set CI=true so next.config.js activates output:'standalone'.
+# Without this, the runner stage has no server.js to execute.
+ENV CI=true
+
+WORKDIR /app/apps/merchant-dashboard
+
+# next.config.js must have `output: 'standalone'` for Cloud Run optimized boot
+RUN pnpm run build
+
+# Hard-assert that the standalone output was produced.
+# If output:'standalone' was not active, this kills the build immediately
+# with a clear error rather than producing a silently broken image.
+RUN test -f .next/standalone/apps/merchant-dashboard/server.js || \
+    (echo "ERROR: .next/standalone not found. Ensure next.config.js has output:'standalone' active (CI=true)." && exit 1)
+
+# ─── Stage 3: Production Runner ──────────────────────────────────────────────
+# Only the standalone output (traced deps) lands in the final image.
+# ~300–500 MB saved vs copying the full node_modules tree.
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+# Cloud Run provides $PORT at runtime. Next.js standalone server reads PORT env var.
+# Expose 8080 as documentation; actual binding is $PORT.
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup -g 1001 nodejs && adduser -D -u 1001 -G nodejs nextjs
+
+# next build --standalone traces all required files into .next/standalone.
+# The standalone folder includes its own node_modules subset — no full reinstall needed.
+COPY --from=builder --chown=nextjs:nodejs /app/apps/merchant-dashboard/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/merchant-dashboard/.next/static \
+     ./apps/merchant-dashboard/.next/static
+
+# Ensure public assets (like legacy V1 demos) are available at runtime
+COPY --from=builder --chown=nextjs:nodejs /app/apps/merchant-dashboard/public \
+     ./apps/merchant-dashboard/public
+
+USER nextjs
+EXPOSE 8080
+
+# Next.js standalone server.js respects the PORT env var injected by Cloud Run.
+CMD ["node", "apps/merchant-dashboard/server.js"]

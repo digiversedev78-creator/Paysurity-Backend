@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Canonical Requirements Schema (v2)",
+  "type": "object",
+  "required": [
+    "project",
+    "generated_at_utc",
+    "requirements"
+  ],
+  "properties": {
+    "project": {
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "type": "string"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "priority",
+          "status",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 2
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "must",
+              "should",
+              "could",
+              "wont"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "todo",
+              "in_progress",
+              "blocked",
+              "done"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "flow",
+              "ui",
+              "api",
+              "integration",
+              "security",
+              "compliance",
+              "ops",
+              "data",
+              "test",
+              "deployment",
+              "other"
+            ]
+          },
+          "milestone": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "acceptance_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "e2e_test_id": {
+            "type": "string"
+          },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "web",
+                "mobile",
+                "api",
+                "backend",
+                "infra"
+              ]
+            }
+          },
+          "evidence": {
+            "type": "object",
+            "properties": {
+              "ui_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "api_endpoints": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "test_files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "workflows": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

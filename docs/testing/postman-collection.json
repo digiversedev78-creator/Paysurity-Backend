@@ -1,0 +1,842 @@
+{
+	"info": {
+		"_postman_id": "YOUR_COLLECTION_ID_HERE",
+		"name": "PaySurity API - Staging",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "{{STAGING_URL}}",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "{{authToken}}",
+			"type": "string"
+		},
+		{
+			"key": "tenantId",
+			"value": "{{tenantId}}",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login User (set token & tenantId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Login successful and token/tenantId received\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('accessToken');",
+									"    pm.expect(response).to.have.property('tenantId');",
+									"",
+									"    pm.environment.set(\"authToken\", response.accessToken);",
+									"    pm.environment.set(\"tenantId\", response.tenantId);",
+									"    console.log(\"Auth Token set: \" + pm.environment.get(\"authToken\"));",
+									"    console.log(\"Tenant ID set: \" + pm.environment.get(\"tenantId\"));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser@paysurity.com\",\n    \"password\": \"securepassword\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User (Me)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an object with user details\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('id');",
+									"    pm.expect(response).to.have.property('email');",
+									"    pm.expect(response).to.have.property('tenantId').eql(pm.environment.get('tenantId'));",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Get Application Health",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an object with health status\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('status').eql('ok');",
+									"    pm.expect(response).to.have.property('info');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Application Readiness",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is 'OK' or similar string\", function () {",
+									"    pm.expect(pm.response.text()).to.eql('OK');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health/ready",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health",
+								"ready"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Restaurant",
+			"item": [
+				{
+					"name": "Create New Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response is an object with order ID\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('id');",
+									"    pm.expect(response).to.have.property('status').eql('PENDING');",
+									"    pm.environment.set(\"orderId\", response.id); // Store order ID for other requests",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\": [\n        {\n            \"productId\": \"prod_uuid_101\",\n            \"quantity\": 1,\n            \"price\": 12.99\n        },\n        {\n            \"productId\": \"prod_uuid_102\",\n            \"quantity\": 2,\n            \"price\": 5.50\n        }\n    ],\n    \"totalAmount\": 23.99,\n    \"currency\": \"USD\",\n    \"customerId\": \"cust_uuid_001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an array of orders\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('array');",
+									"    if (response.length > 0) {",
+									"        pm.expect(response[0]).to.have.property('id');",
+									"        pm.expect(response[0]).to.have.property('totalAmount');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Menu Items",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an array of menu items\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('array');",
+									"    if (response.length > 0) {",
+									"        pm.expect(response[0]).to.have.property('id');",
+									"        pm.expect(response[0]).to.have.property('name');",
+									"        pm.expect(response[0]).to.have.property('price');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/menu",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"menu"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Wallets",
+			"item": [
+				{
+					"name": "Get Wallet Balance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response has 'balance' and 'currency' properties\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('balance').to.be.a('number');",
+									"    pm.expect(response).to.have.property('currency').to.be.a('string');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/wallets/balance",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"wallets",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Topup Wallet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response has 'newBalance' property\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('newBalance').to.be.a('number');",
+									"    pm.expect(response).to.have.property('transactionId');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 50.00,\n    \"currency\": \"USD\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/wallets/topup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"wallets",
+								"topup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payroll",
+			"item": [
+				{
+					"name": "Get Employee List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an array of employees\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('array');",
+									"    if (response.length > 0) {",
+									"        pm.expect(response[0]).to.have.property('id');",
+									"        pm.expect(response[0]).to.have.property('name');",
+									"        pm.expect(response[0]).to.have.property('salary');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/payroll/employees",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"payroll",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PayFactor",
+			"item": [
+				{
+					"name": "Apply for PayFactor Loan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 201 Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test(\"Response has application ID and status\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('id');",
+									"    pm.expect(response).to.have.property('status').eql('PENDING');",
+									"    pm.environment.set(\"payfactorApplicationId\", response.id);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"applicationType\": \"LOAN\",\n    \"requestedAmount\": 11500.00,\n    \"businessId\": \"biz_uuid_12345\",\n    \"purpose\": \"Business Expansion\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/payfactor/apply",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"payfactor",
+								"apply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get PayFactor Application Status by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response has application details and status\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('id').eql(pm.environment.get('payfactorApplicationId'));",
+									"    pm.expect(response).to.have.property('status').to.be.a('string');",
+									"    pm.expect(response).to.have.property('requestedAmount');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/payfactor/status/{{payfactorApplicationId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"payfactor",
+								"status",
+								"{{payfactorApplicationId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Loyalty",
+			"item": [
+				{
+					"name": "Get Loyalty Programs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an array of loyalty programs\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('array');",
+									"    if (response.length > 0) {",
+									"        pm.expect(response[0]).to.have.property('id');",
+									"        pm.expect(response[0]).to.have.property('name');",
+									"        pm.expect(response[0]).to.have.property('pointsExchangeRate');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/loyalty/programs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"loyalty",
+								"programs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Grocery",
+			"item": [
+				{
+					"name": "Get Grocery Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an array of grocery products\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('array');",
+									"    if (response.length > 0) {",
+									"        pm.expect(response[0]).to.have.property('id');",
+									"        pm.expect(response[0]).to.have.property('name');",
+									"        pm.expect(response[0]).to.have.property('category');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/grocery/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"grocery",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "eCom",
+			"item": [
+				{
+					"name": "Get E-commerce Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an array of e-commerce products\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('array');",
+									"    if (response.length > 0) {",
+									"        pm.expect(response[0]).to.have.property('id');",
+									"        pm.expect(response[0]).to.have.property('name');",
+									"        pm.expect(response[0]).to.have.property('description');",
+									"        pm.expect(response[0]).to.have.property('price');",
+									"    }",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/ecom/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ecom",
+								"products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get Admin Dashboard Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Response is an object with dashboard metrics\", function () {",
+									"    const response = pm.response.json();",
+									"    pm.expect(response).to.be.an('object');",
+									"    pm.expect(response).to.have.property('totalUsers').to.be.a('number');",
+									"    pm.expect(response).to.have.property('totalTenants').to.be.a('number');",
+									"    pm.expect(response).to.have.property('dailyTransactions').to.be.a('number');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "X-Tenant-ID",
+								"value": "{{tenantId}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/dashboard",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"dashboard"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

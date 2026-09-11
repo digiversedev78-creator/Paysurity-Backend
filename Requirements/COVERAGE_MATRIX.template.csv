@@ -1,0 +1,2 @@
+module,required_ui,required_api,required_tests,evidence_fields,notes
+auth,/login,POST /api/auth/login,e2e/flow_login_001.spec.ts; unit tests,ui_paths;api_endpoints;test_files,Example row

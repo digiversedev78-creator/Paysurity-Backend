@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>POS Register — Grand Tobacco Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--bg:#070d07;--surface:rgba(14,28,14,.94);--glass:rgba(255,255,255,.04);--accent:#2d6a3f;--accent-dark:#1f4e2d;--text:#e8ede8;--muted:rgba(232,237,232,.45)}</style>
+<link rel="stylesheet" href="pos.css">
+</head>
+<body>
+<div class="pos-wrap">
+  <header class="pos-header">
+    <h1>🥃 Grand Tobacco POS</h1>
+    <div class="pos-meta">
+      <span class="pos-clock" id="posClock">--:--:--</span>
+      <div class="pos-user" style="color:#fca5a5;border-color:rgba(239,68,68,.2)">🔞 21+ REQUIRED</div>
+    </div>
+  </header>
+  <div class="pos-left">
+    <div class="pos-toolbar">
+      <button class="pos-tool" onclick="POS.showScanner()">📷 Barcode Scan</button>
+      <button class="pos-tool" onclick="POS.showAgeVerify()" style="border-color:rgba(239,68,68,.2);color:#fca5a5">🔞 Age Verify</button>
+    </div>
+    <div class="pos-cats" id="posCats" role="tablist"></div>
+    <div class="pos-grid" id="posGrid"></div>
+  </div>
+  <div class="pos-right">
+    <div class="pos-stats">
+      <div class="pos-stat"><div class="pos-stat-label">Transactions</div><div class="pos-stat-val" id="statTxn">0</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Revenue</div><div class="pos-stat-val" id="statRev">$0.00</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Avg Ticket</div><div class="pos-stat-val" id="statAvg">$0.00</div></div>
+    </div>
+    <div class="pos-order-head"><h2>Current Order</h2><span class="pos-badge" id="posItemCount">0</span></div>
+    <div class="pos-cart" id="posCart"><div class="pos-empty">Scan or tap to add</div></div>
+    <div class="pos-footer">
+      <div class="pos-total-row"><span>Total</span><span class="pos-total" id="posTotal">$0.00</span></div>
+      <div class="pos-pay-methods">
+        <button class="pos-pm on" data-m="CARD_PRESENT">💳 Card</button>
+        <button class="pos-pm" data-m="CASH">💵 Cash</button>
+        <button class="pos-pm" data-m="TAP">📱 Tap</button>
+      </div>
+      <div class="pos-actions">
+        <button class="pos-clear" onclick="POS.clearCart()">Clear</button>
+        <button class="pos-pay" id="posPayBtn" disabled onclick="chargeWithAge()">💳 CHARGE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- BARCODE MODAL -->
+<div class="pos-modal" id="scanModal"><div class="pos-modal-box">
+  <h3>📷 Barcode / SKU Scanner</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Enter product name or SKU to look up</p>
+  <input id="barcodeInput" placeholder="Type product name or scan..." autofocus>
+  <button class="primary" onclick="POS.processBarcode()">🔍 Find Product</button>
+  <button class="secondary" onclick="POS.closeScanner()">Cancel</button>
+</div></div>
+<!-- AGE VERIFY MODAL -->
+<div class="pos-modal" id="ageModal"><div class="pos-modal-box">
+  <div class="age-icon">🔞</div>
+  <h3 style="text-align:center">Age Verification Required</h3>
+  <p style="text-align:center;font-size:12px;color:var(--muted);margin:8px 0 16px">Customer must present valid government ID.<br>Must be 21+ to purchase tobacco/vape products.</p>
+  <div class="age-btns">
+    <button class="age-yes" onclick="POS.confirmAge(true)">✅ ID Verified (21+)</button>
+    <button class="age-no" onclick="POS.confirmAge(false)">❌ Cannot Verify</button>
+  </div>
+</div></div>
+<!-- RECEIPT MODAL -->
+<div class="pos-modal" id="receiptModal"><div class="pos-modal-box">
+  <div id="receiptContent"></div>
+  <button class="secondary" onclick="POS.closeReceipt()">Close</button>
+</div></div>
+<div class="pos-toast" id="posToast"></div>
+<script src="pos-engine.js"></script>
+<script>
+document.querySelectorAll('.pos-pm').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.pos-pm').forEach(x=>x.classList.remove('on'));this.classList.add('on');
+}));
+let ageVerified=false;
+function chargeWithAge(){
+  if(!ageVerified){
+    POS.showAgeVerify(()=>{ageVerified=true;POS.processPayment(document.querySelector('.pos-pm.on')?.dataset.m||'CARD_PRESENT')});
+    return;
+  }
+  POS.processPayment(document.querySelector('.pos-pm.on')?.dataset.m||'CARD_PRESENT');
+}
+// Override confirmAge to trigger payment
+const origConfirm=POS.confirmAge.bind(POS);
+POS.confirmAge=function(v){
+  document.getElementById('ageModal').style.display='none';
+  if(v){ageVerified=true;if(POS._ageCallback)POS._ageCallback();POS.toast('✅ Age verified — 21+');}
+  else{POS.toast('Sale declined — ID required','error');}
+};
+POS.init({
+  storeName:'Grand Tobacco Hub',
+  email:'admin@grandtobaccohub.com', password:'Test123!',
+  locationId:'dddddddd-0002-4000-8000-000000000002',
+  orderType:'TAKEOUT', hasKDS:false,
+  items:[
+    {n:'Romeo y Julieta 1875',p:2499,e:'🥃',cat:'Cigars'},
+    {n:'Montecristo White',p:4599,e:'🥃',cat:'Cigars'},
+    {n:'Arturo Fuente Gran',p:3299,e:'🥃',cat:'Cigars'},
+    {n:'Padron 1964',p:6999,e:'🥃',cat:'Cigars'},
+    {n:'JUUL2 Starter',p:3499,e:'💨',cat:'Vapes'},
+    {n:'Vuse Alto Kit',p:1999,e:'💨',cat:'Vapes'},
+    {n:'Elf Bar BC5000',p:1499,e:'💨',cat:'Vapes'},
+    {n:'SMOK Nord 5',p:3999,e:'💨',cat:'Vapes'},
+    {n:'Khalil Mamoon',p:8999,e:'💎',cat:'Hookah'},
+    {n:'Al Fakher Mint',p:1899,e:'🌿',cat:'Hookah'},
+    {n:'Al Fakher Apple',p:1899,e:'🍎',cat:'Hookah'},
+    {n:'Fumari Blueberry',p:1599,e:'🫐',cat:'Hookah'},
+    {n:'Zippo Chrome',p:2999,e:'🔥',cat:'Accessories'},
+    {n:'Xikar Cutter',p:4499,e:'✂️',cat:'Accessories'},
+    {n:'Cedar Humidor',p:7999,e:'📦',cat:'Accessories'},
+    {n:'Coconut Charcoal',p:999,e:'♨️',cat:'Accessories'},
+  ]
+});
+</script>
+</body>
+</html>

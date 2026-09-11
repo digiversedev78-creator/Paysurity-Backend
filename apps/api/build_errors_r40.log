@@ -1,0 +1,115 @@
+﻿src/modules/cash-drawer/cash-drawer.service.ts(113,36): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(113,41): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(113,48): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(113,53): error TS1005: '(' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(113,56): error TS1127: Invalid character.
+src/modules/cash-drawer/cash-drawer.service.ts(113,99): error TS1002: Unterminated string literal.
+src/modules/cash-drawer/cash-drawer.service.ts(116,16): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(116,33): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(116,36): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(116,40): error TS1144: '{' or ';' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(117,7): error TS1003: Identifier expected.
+src/modules/cash-drawer/cash-drawer.service.ts(117,27): error TS1138: Parameter declaration expected.
+src/modules/cash-drawer/cash-drawer.service.ts(118,7): error TS1003: Identifier expected.
+src/modules/cash-drawer/cash-drawer.service.ts(118,19): error TS1138: Parameter declaration expected.
+src/modules/cash-drawer/cash-drawer.service.ts(123,36): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(123,69): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(123,104): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(124,35): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(124,67): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(124,101): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(125,30): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(125,35): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(126,7): error TS1109: Expression expected.
+src/modules/cash-drawer/cash-drawer.service.ts(126,8): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(127,5): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(130,3): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(132,3): error TS1434: Unexpected keyword or identifier.
+src/modules/cash-drawer/cash-drawer.service.ts(133,13): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(134,11): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(135,7): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(136,25): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(137,4): error TS1005: ';' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(138,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(138,44): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(139,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(139,52): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(141,15): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(141,59): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(141,61): error TS1136: Property assignment expected.
+src/modules/cash-drawer/cash-drawer.service.ts(187,3): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(189,3): error TS1434: Unexpected keyword or identifier.
+src/modules/cash-drawer/cash-drawer.service.ts(190,13): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(191,11): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(192,7): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(193,25): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(194,4): error TS1005: ';' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(195,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(195,44): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(196,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(196,52): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(198,15): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(198,59): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(198,61): error TS1136: Property assignment expected.
+src/modules/cash-drawer/cash-drawer.service.ts(248,3): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(250,3): error TS1434: Unexpected keyword or identifier.
+src/modules/cash-drawer/cash-drawer.service.ts(251,13): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(252,11): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(253,7): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(254,23): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(255,4): error TS1005: ';' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(256,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(256,58): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(257,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(257,52): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(259,15): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(259,59): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(259,61): error TS1136: Property assignment expected.
+src/modules/cash-drawer/cash-drawer.service.ts(277,36): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(277,41): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(277,48): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(277,56): error TS1127: Invalid character.
+src/modules/cash-drawer/cash-drawer.service.ts(277,57): error TS1134: Variable declaration expected.
+src/modules/cash-drawer/cash-drawer.service.ts(277,98): error TS1002: Unterminated string literal.
+src/modules/cash-drawer/cash-drawer.service.ts(278,5): error TS1109: Expression expected.
+src/modules/cash-drawer/cash-drawer.service.ts(296,3): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(298,3): error TS1434: Unexpected keyword or identifier.
+src/modules/cash-drawer/cash-drawer.service.ts(299,13): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(300,11): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(301,7): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(302,4): error TS1005: ';' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(303,11): error TS1005: ':' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(303,52): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(305,15): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(305,57): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(305,59): error TS1136: Property assignment expected.
+src/modules/cash-drawer/cash-drawer.service.ts(318,36): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(318,41): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(318,48): error TS1005: ',' expected.
+src/modules/cash-drawer/cash-drawer.service.ts(318,56): error TS1127: Invalid character.
+src/modules/cash-drawer/cash-drawer.service.ts(318,57): error TS1134: Variable declaration expected.
+src/modules/cash-drawer/cash-drawer.service.ts(318,97): error TS1002: Unterminated string literal.
+src/modules/cash-drawer/cash-drawer.service.ts(319,5): error TS1109: Expression expected.
+src/modules/cash-drawer/cash-drawer.service.ts(334,3): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(335,1): error TS1128: Declaration or statement expected.
+src/modules/returns/returns.service.ts(116,38): error TS1005: ',' expected.
+src/modules/returns/returns.service.ts(116,45): error TS1005: ',' expected.
+src/modules/returns/returns.service.ts(116,50): error TS1005: '(' expected.
+src/modules/returns/returns.service.ts(116,53): error TS1005: ')' expected.
+src/modules/returns/returns.service.ts(116,59): error TS1434: Unexpected keyword or identifier.
+src/modules/returns/returns.service.ts(116,69): error TS1003: Identifier expected.
+src/modules/returns/returns.service.ts(188,38): error TS1005: ',' expected.
+src/modules/returns/returns.service.ts(188,45): error TS1005: ',' expected.
+src/modules/returns/returns.service.ts(188,50): error TS1005: '(' expected.
+src/modules/returns/returns.service.ts(188,53): error TS1005: ')' expected.
+src/modules/returns/returns.service.ts(188,59): error TS1434: Unexpected keyword or identifier.
+src/modules/returns/returns.service.ts(188,63): error TS1434: Unexpected keyword or identifier.
+src/modules/returns/returns.service.ts(188,69): error TS1434: Unexpected keyword or identifier.
+src/modules/returns/returns.service.ts(188,72): error TS1434: Unexpected keyword or identifier.
+src/modules/returns/returns.service.ts(188,88): error TS1003: Identifier expected.
+src/modules/returns/returns.service.ts(198,26): error TS1435: Unknown keyword or identifier. Did you mean 'return'?
+src/modules/returns/returns.service.ts(198,38): error TS1005: '(' expected.
+src/modules/returns/returns.service.ts(198,41): error TS1005: ')' expected.
+src/modules/returns/returns.service.ts(198,47): error TS1434: Unexpected keyword or identifier.
+src/modules/returns/returns.service.ts(198,68): error TS1003: Identifier expected.
+src/modules/returns/returns.service.ts(218,1): error TS1160: Unterminated template literal.

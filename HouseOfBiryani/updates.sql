@@ -1,0 +1,77 @@
+-- No image for Chicken Curry
+-- No image for Chicken Masala
+-- No image for Chicken Kadai
+-- No image for Chicken Hyderabadi
+-- No image for Chicken Mughlai
+-- No image for Chicken Handi
+-- No image for Chicken Achari
+-- No image for Chicken Do Pyaza
+-- No image for Chicken Palak
+-- No image for Chicken Vindaloo
+-- No image for Chicken Rogan Josh
+-- No image for Chicken Jalfrezi
+-- No image for Chicken Tawa
+-- No image for Chicken Bhuna
+-- No image for Chicken Korma
+-- No image for Chicken Tikka Masala
+-- No image for Butter Chicken
+-- No image for Chicken Makhni
+-- No image for Chicken Karahi
+-- No image for Chicken Haleem
+-- No image for Mutton Curry
+-- No image for Mutton Masala
+-- No image for Mutton Kadai
+-- No image for Mutton Hyderabadi
+-- No image for Mutton Mughlai
+-- No image for Mutton Handi
+-- No image for Mutton Achari
+-- No image for Mutton Do Pyaza
+-- No image for Mutton Palak
+-- No image for Mutton Vindaloo
+-- No image for Mutton Rogan Josh
+-- No image for Mutton Jalfrezi
+-- No image for Mutton Tawa
+-- No image for Mutton Bhuna
+-- No image for Mutton Korma
+-- No image for Chicken Tikka
+-- No image for Mutton Seekh Kabab
+UPDATE microsite_menu_items SET image_url = 'https://storage.googleapis.com/paysurity-assets/HouseOfBiryani/chicken_dum_biryani.jpg', base_price = 28.37, display_price = 28.37 WHERE name = 'Chicken Dum Biryani' AND tenant_id = '0f33e7e1-5474-4738-8de8-c687009f5e09';
+-- No image for Mutton Biryani
+-- No image for Plain Basmati Rice
+-- No image for Jeera Rice
+-- No image for Chicken Boneless Biryani
+-- No image for Veg Dum Biryani
+-- No image for Plain Naan
+-- No image for Butter Naan
+-- No image for Garlic Naan
+-- No image for 12 oz. Canned Soda
+-- No image for Bottled Water
+-- No image for Mango Lassi
+-- No image for Tea / Chai
+-- No image for Chicken 65
+-- No image for Chicken Manchurian
+-- No image for Chilli Chicken
+-- No image for Ginger Chicken
+-- No image for Chilli Garlic Chicken
+-- No image for Chilli Fish
+-- No image for Fish Fry
+-- No image for Chicken Fried Rice
+-- No image for Veg Fried Rice
+-- No image for Shrimp Fried Rice
+-- No image for Chicken Fried Rice (with Egg)
+-- No image for Egg Fried Rice
+-- No image for Chicken Noodles
+-- No image for Veg Noodles
+-- No image for Shrimp Noodles
+-- No image for Chicken Noodles (with Egg)
+-- No image for Egg Noodles
+-- No image for Daal Fry
+-- No image for Mix Veg Curry
+-- No image for Paneer Tikka Masala
+-- No image for Paneer Makhni (Butter)
+-- No image for Mutton Mandi (Available only on Tuesday)
+-- No image for Chicken Mandi (Available only on Wednesday)
+-- No image for Double ka Meetha
+-- No image for Kaddu Kheer
+-- No image for Gulab Jamun
+-- No image for Goat Haleem

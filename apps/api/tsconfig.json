@@ -1,0 +1,67 @@
+﻿{
+    "extends":  "../../tsconfig.base.json",
+    "compilerOptions":  {
+                            "module":  "CommonJS",
+                            "moduleResolution":  "node",
+                            "target":  "ES2022",
+                            "outDir":  "./dist",
+                            "types":  [
+                                          "jest",
+                                          "node"
+                                      ],
+                            "skipLibCheck":  true,
+                            "composite":  false,
+                            "declaration":  true,
+                            "emitDecoratorMetadata":  true,
+                            "experimentalDecorators":  true,
+                            "strictNullChecks":  false,
+                            "noImplicitAny":  false,
+                            "strictPropertyInitialization":  false,
+                            "strictBindCallApply":  false,
+                            "strict":  false,
+                            "exactOptionalPropertyTypes":  false,
+                            "noUncheckedIndexedAccess":  false,
+                            "forceConsistentCasingInFileNames":  true,
+                            "noFallthroughCasesInSwitch":  true,
+                            "incremental":  false,
+                            "noEmit":  false,
+                            "baseUrl":  "..",
+                            "paths": {}
+                        },
+    "include":  ["src/**/*", "test/**/*", "src/**/*.ts"],
+    "exclude":  [
+                    "node_modules",
+                    "dist",
+                    "test",
+                    "src/domains",
+                    "src/src",
+                    "src/database",
+                    "src/audit-log",
+                    "src/common/audit",
+                    "src/db/schema.ts",
+                    "src/config/configuration.ts",
+                    "src/config/env.validation.ts",
+                    "src/config/logger.config.ts",
+                    "src/guards/aels-hmac.guard.ts",
+                    "src/request-context",
+                    "src/audit",
+                    "src/common/audit-log",
+                    "src/shared/decorators/roles.decorator.ts",
+                    "src/users/users.module.ts",
+                    "src/auth",
+                    "src/scripts",
+                    "src/price-sync-test.ts",
+                    "src/rls-breach-test.ts",
+                    "src/security-wall-test.ts",
+                    "src/hob-e2e-audit.ts",
+                    "src/test_admin.js",
+                    "src/**/*.spec.ts",
+                    "src/**/*.e2e-spec.ts"
+                ],
+    "references":  [
+                       {
+                           "path":  "../../packages/database"
+                       }
+                   ]
+}
+

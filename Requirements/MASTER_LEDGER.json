@@ -1,0 +1,2178 @@
+{
+  "version": "4.0.0",
+  "platform_health": {
+    "total_requirements": 206,
+    "implementation_fidelity": "30.10%",
+    "linked_count": 62
+  },
+  "last_audit": "2026-05-22T05:09:43.584Z",
+  "ledger": [
+    {
+      "vertical_id": "00",
+      "name": "Cross-Cutting / Shared",
+      "requirement_count": 118,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "ACT-T-001",
+          "title": "Restaurant Owner / Multi-Location Operator",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-002",
+          "title": "District / Area Manager",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-003",
+          "title": "General Manager (Location Level)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-004",
+          "title": "Server / Waiter",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-005",
+          "title": "Bartender",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-006",
+          "title": "Cook / Kitchen Staff",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-007",
+          "title": "Cashier",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-008",
+          "title": "In-House Delivery Driver",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-009",
+          "title": "Grocery Store Owner / Chain Operator",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-010",
+          "title": "Retail Store Owner / Chain Operator",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-011",
+          "title": "Payroll Admin",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-012",
+          "title": "Employee (Non-Management)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-T-013",
+          "title": "Merchant Accountant / Bookkeeper",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-C-001",
+          "title": "Dine-In Restaurant Customer",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-C-002",
+          "title": "Online / AI-Ordering Consumer",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-C-003",
+          "title": "Grocery Shopper",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-C-004",
+          "title": "Retail / E-Commerce Shopper",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-P-001",
+          "title": "Affiliate Partner",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-P-002",
+          "title": "Reseller Partner",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-I-001",
+          "title": "PaySurity AI Operations Manager (Autonomous Agent)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-I-002",
+          "title": "PaySurity Support Engineer",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-I-003",
+          "title": "PaySurity Underwriter",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-I-004",
+          "title": "PaySurity Compliance Officer",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "ACT-I-005",
+          "title": "PaySurity Finance Admin",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ACT_ACTOR_LIBRARY.md"
+        },
+        {
+          "id": "REQ-AGG-001",
+          "title": "[SYSTEM-CORE] Inbound Order Webhook Reception",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\AGG_ORDER_AGGREGATION.md"
+        },
+        {
+          "id": "REQ-AGG-002",
+          "title": "Menu Parity Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\AGG_ORDER_AGGREGATION.md"
+        },
+        {
+          "id": "REQ-AGG-003",
+          "title": "Delivery Lifecycle Tracking",
+          "priority": "Should",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\AGG_ORDER_AGGREGATION.md"
+        },
+        {
+          "id": "REQ-AGG-004",
+          "title": "[SYSTEM-CORE] Revenue Analytics by Channel",
+          "priority": "Should",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\AGG_ORDER_AGGREGATION.md"
+        },
+        {
+          "id": "REQ-AI-001",
+          "title": "Multilingual AI Session & Identity Resolution",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\AI_EXPERIENCE.md"
+        },
+        {
+          "id": "REQ-AI-002",
+          "title": "AI-to-Sale Pipeline (Closes Ambiguity #6)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\AI_EXPERIENCE.md"
+        },
+        {
+          "id": "REQ-AI-003",
+          "title": "Escalation to Human",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\AI_EXPERIENCE.md"
+        },
+        {
+          "id": "REQ-API-001",
+          "title": "[SYSTEM-CORE] API Key Lifecycle Management",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\API_PLATFORM.md"
+        },
+        {
+          "id": "REQ-API-002",
+          "title": "Webhook Delivery Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\API_PLATFORM.md"
+        },
+        {
+          "id": "REQ-API-003",
+          "title": "[SYSTEM-CORE] API Rate Limiting",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\API_PLATFORM.md"
+        },
+        {
+          "id": "REQ-API-004",
+          "title": "[SYSTEM-CORE] API Versioning",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\API_PLATFORM.md"
+        },
+        {
+          "id": "REQ-COM-001",
+          "title": "[SYSTEM-CORE] CCPA Consumer Rights Fulfillment",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\COM_COMPLIANCE_LEGAL.md"
+        },
+        {
+          "id": "REQ-COM-002",
+          "title": "[SYSTEM-CORE] ADA/WCAG 2.1 AA Compliance",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\COM_COMPLIANCE_LEGAL.md"
+        },
+        {
+          "id": "DEF-001",
+          "title": "[FLAGGED FOR DELETION] Dental Practice Management",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\DEFERRED_VERTICALS.md",
+          "status": "OBSOLETE"
+        },
+        {
+          "id": "DEF-002",
+          "title": "[FLAGGED FOR DELETION] Legal Practice / Law Firm Billing",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\DEFERRED_VERTICALS.md",
+          "status": "OBSOLETE"
+        },
+        {
+          "id": "DEF-003",
+          "title": "[FLAGGED FOR DELETION] Chiropractic / Physical Therapy Practice",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\DEFERRED_VERTICALS.md",
+          "status": "OBSOLETE"
+        },
+        {
+          "id": "DEF-004",
+          "title": "[FLAGGED FOR DELETION] QR Loyalty Program (Standalone)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\DEFERRED_VERTICALS.md",
+          "status": "OBSOLETE"
+        },
+        {
+          "id": "DEF-005",
+          "title": "[FLAGGED FOR DELETION] Cash-In / Cash-Out via Retail Agents",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\DEFERRED_VERTICALS.md",
+          "status": "OBSOLETE"
+        },
+        {
+          "id": "REQ-ECO-001",
+          "title": "Storefront Online Ordering",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ECO_ECOMMERCE.md"
+        },
+        {
+          "id": "REQ-ECO-002",
+          "title": "[SYSTEM-CORE] Cart Abandonment Recovery",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ECO_ECOMMERCE.md"
+        },
+        {
+          "id": "REQ-ERP-001",
+          "title": "Automated POS to Journal Entry Orchestration",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ERP_ACCOUNTING_INVENTORY.md"
+        },
+        {
+          "id": "REQ-ERP-002",
+          "title": "Multi-Warehouse Stock Transfers",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ERP_ACCOUNTING_INVENTORY.md"
+        },
+        {
+          "id": "REQ-ERP-003",
+          "title": "[SYSTEM-CORE] Supply Chain — EDI Automated Ingestion",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\ERP_ACCOUNTING_INVENTORY.md"
+        },
+        {
+          "id": "REQ-ERP-004",
+          "title": "Expiry Sentry — Batch-Level Expiry Management",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ERP_ACCOUNTING_INVENTORY.md"
+        },
+        {
+          "id": "REQ-FRN-001",
+          "title": "4-Level Hierarchy Entity Model & Role Access",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-002",
+          "title": "[SYSTEM-CORE] Menu Governance Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-003",
+          "title": "Consolidated Financial Reporting (P&L)",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-004",
+          "title": "[SYSTEM-CORE] Royalty Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-005",
+          "title": "Cross-Location Financial Consolidation & Brand Intelligence",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-006",
+          "title": "[SYSTEM-CORE] Cross-Location Workforce Management",
+          "priority": "Should",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-007",
+          "title": "[SYSTEM-CORE] Unified Loyalty Across Brands",
+          "priority": "Should",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-008",
+          "title": "Franchise Tax Compliance (1099-K, Payroll, Sales Tax by FEIN)",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-009",
+          "title": "[SYSTEM-CORE] External Franchisee Data Rights & Delink Procedure (Closes Ambiguity #11)",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-010",
+          "title": "[SYSTEM-CORE] Enterprise Onboarding Phases",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-FRN-011",
+          "title": "Franchise Audit Trail",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\FRN_FRANCHISE_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-POSR-011",
+          "title": "Tip Management",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-ORC-013",
+          "title": "Void vs Refund Auto-Determination",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-POS-011",
+          "title": "Receipt — Print, Email, SMS, Gift, Return",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-POSR-013",
+          "title": "Z-Report & Shift Close",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-POS-012",
+          "title": "[SYSTEM-CORE] Cash Drawer Operations",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-ORC-014",
+          "title": "Multi-Tender Payment",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-NFR-009",
+          "title": "Offline POS Operation",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-MER-012",
+          "title": "Accounting Integration",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-COM-013",
+          "title": "Merchant Data Export",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-ORC-015",
+          "title": "Gateway Error Taxonomy",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-ORC-016",
+          "title": "[SYSTEM-CORE] Payment Gateway Resilience",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-COM-014",
+          "title": "[SYSTEM-CORE] PCI DSS SAQ-A Compliance",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-POSG-015",
+          "title": "[SYSTEM-CORE] Age-Restricted Product Compliance",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-POSR-012",
+          "title": "Table & Seating Management",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-NFR-010",
+          "title": "[SYSTEM-CORE] Internationalization Infrastructure",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-WAL-004",
+          "title": "[SYSTEM-CORE] Peer-to-Peer Requests",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-WAL-005",
+          "title": "QR & Deep Link Payments",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-WAL-006",
+          "title": "[SYSTEM-CORE] Sub-accounts & Micro-savings",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-WAL-007",
+          "title": "Automated Money Movement",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-WAL-008",
+          "title": "[SYSTEM-CORE] Parental Controls & Dependent Accounts",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\GAP_FILL_ADDENDUM.md"
+        },
+        {
+          "id": "REQ-LOY-001",
+          "title": "Points Earning Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-LOY-002",
+          "title": "[SYSTEM-CORE] Redemption Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-LOY-003",
+          "title": "[SYSTEM-CORE] Customer Tier Program",
+          "priority": "Should",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-LOY-004",
+          "title": "Loyalty Account Management & Identity",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-LOY-005",
+          "title": "[SYSTEM-CORE] Points Expiry & Breakage Management",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-LOY-006",
+          "title": "[SYSTEM-CORE] Loyalty Fraud Prevention",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-LOY-007",
+          "title": "[SYSTEM-CORE] Merchant Configuration & Loyalty Analytics",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\LOY_LOYALTY_ENGINE.md"
+        },
+        {
+          "id": "REQ-MOB-001",
+          "title": "Consumer Wallet Mobile App (iOS/Android/PWA)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-MOB-002",
+          "title": "[SYSTEM-CORE] Tap-to-Phone Payment (Merchant NFC Acceptance)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-MOB-003",
+          "title": "Merchant Mobile Dashboard",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-MOB-004",
+          "title": "AI-Driven Personalized Push Notifications",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-MOB-005",
+          "title": "[SYSTEM-CORE] AI Budgeting & Spend Insights",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-MOB-006",
+          "title": "[SYSTEM-CORE] Offline Capability & Data Sync",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-SAV-001",
+          "title": "[SYSTEM-CORE] Statement Upload & AI-Powered OCR Extraction",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-SAV-002",
+          "title": "[SYSTEM-CORE] Savings Calculation Engine",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-SAV-003",
+          "title": "[SYSTEM-CORE] Results Gating & Lead Capture",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-SAV-004",
+          "title": "[SYSTEM-CORE] Embeddable Widget for Partner/Reseller Sites",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-SAV-005",
+          "title": "[SYSTEM-CORE] Analytics & Conversion Funnel Reporting",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\MOB_MOBILE_AND_SAV_ESTIMATOR.md"
+        },
+        {
+          "id": "REQ-NFR-001",
+          "title": "[SYSTEM-CORE] Availability Architecture",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\NFR_PLATFORM_NONFUNCTIONAL.md"
+        },
+        {
+          "id": "REQ-NFR-002",
+          "title": "[SYSTEM-CORE] Performance Design Requirements",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\NFR_PLATFORM_NONFUNCTIONAL.md"
+        },
+        {
+          "id": "REQ-NFR-003",
+          "title": "[SYSTEM-CORE] Backup & Disaster Recovery",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\NFR_PLATFORM_NONFUNCTIONAL.md"
+        },
+        {
+          "id": "REQ-NFR-004",
+          "title": "[SYSTEM-CORE] Observability Stack",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\NFR_PLATFORM_NONFUNCTIONAL.md"
+        },
+        {
+          "id": "REQ-NOT-001",
+          "title": "Multi-Channel Notification Dispatch with Channel Fallback",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\NOT_NOTIFICATION_ENGINE.md"
+        },
+        {
+          "id": "REQ-ORC-001",
+          "title": "Payment Authorization & Capture",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ORC_PAYMENT_ORCHESTRATION.md"
+        },
+        {
+          "id": "REQ-ORC-002",
+          "title": "Dispute (Chargeback) Lifecycle Management",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ORC_PAYMENT_ORCHESTRATION.md"
+        },
+        {
+          "id": "REQ-ORC-003",
+          "title": "Daily Settlement Processing",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ORC_PAYMENT_ORCHESTRATION.md"
+        },
+        {
+          "id": "REQ-ORC-004",
+          "title": "Multi-Tender & Split Payments",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\ORC_PAYMENT_ORCHESTRATION.md"
+        },
+        {
+          "id": "REQ-POSR2-001",
+          "title": "[SYSTEM-CORE] Returns & Exchanges",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\POS_RETAIL.md"
+        },
+        {
+          "id": "REQ-POSR2-002",
+          "title": "[SYSTEM-CORE] Gift Cards",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\POS_RETAIL.md"
+        },
+        {
+          "id": "REQ-SEC-001",
+          "title": "Authentication & JWT Flow",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": "apps\\api\\src\\modules\\auth\\auth.service.ts",
+            "comment": "Exact ID found."
+          },
+          "source_file": "00_shared\\SEC_SECURITY_PRIVACY.md"
+        },
+        {
+          "id": "REQ-SEC-002",
+          "title": "[SYSTEM-CORE] Secrets Management",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\SEC_SECURITY_PRIVACY.md"
+        },
+        {
+          "id": "REQ-SEC-003",
+          "title": "[SYSTEM-CORE] PAN (Payment Card) Zero-Tolerance",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\SEC_SECURITY_PRIVACY.md"
+        },
+        {
+          "id": "REQ-SEC-004",
+          "title": "[SYSTEM-CORE] Security Headers & Network Controls",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\SEC_SECURITY_PRIVACY.md"
+        },
+        {
+          "id": "REQ-SUB-001",
+          "title": "[SYSTEM-CORE] Billing Lifecycle & Dunning",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\SUB_SUBSCRIPTION_BILLING.md"
+        },
+        {
+          "id": "REQ-TAX-001",
+          "title": "Real-Time Tax Quote (Order Checkout)",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\TAX_ENGINE.md"
+        },
+        {
+          "id": "REQ-WEB-001",
+          "title": "[SYSTEM-CORE] Public Marketing Site",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\WEB_MOB_WEBSITE_MOBILE.md"
+        },
+        {
+          "id": "REQ-MOB-001",
+          "title": "Consumer Mobile App Screens",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\WEB_MOB_WEBSITE_MOBILE.md"
+        },
+        {
+          "id": "REQ-MOB-002",
+          "title": "[SYSTEM-CORE] Merchant Mobile App",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "00_shared\\WEB_MOB_WEBSITE_MOBILE.md"
+        },
+        {
+          "id": "REQ-MOB-003",
+          "title": "Push Notifications",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "00_shared\\WEB_MOB_WEBSITE_MOBILE.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "01",
+      "name": "Public Core",
+      "requirement_count": 9,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-WEB-001",
+          "title": "[SYSTEM-CORE] Core Site Structure & SEO Baseline",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-002",
+          "title": "[SYSTEM-CORE] Vertical-Specific Landing Pages",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-003",
+          "title": "[SYSTEM-CORE] Lead Capture & CRM Integration",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-004",
+          "title": "[SYSTEM-CORE] AI Blog & Content Engine",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-005",
+          "title": "Referral QR & UTM Attribution Tracking",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-006",
+          "title": "[SYSTEM-CORE] Savings Calculator Widget (Lead Capture)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-007",
+          "title": "[SYSTEM-CORE] AI Hero Assistant (Public Site)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-008",
+          "title": "[SYSTEM-CORE] Social Media Content Automation",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        },
+        {
+          "id": "REQ-WEB-009",
+          "title": "[SYSTEM-CORE] Analytics & Conversion Tracking",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "01_core\\WEB_PUBLIC_WEBSITE.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "02",
+      "name": "Merchant Services",
+      "requirement_count": 1,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-MER-001",
+          "title": "Merchant Application & KYB Flow",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "02_merchant\\MER_MERCHANT_SERVICES_ONBOARDING.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "03",
+      "name": "Restaurant POS",
+      "requirement_count": 10,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-POSR-001",
+          "title": "Core Order Management & Table Workflow",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-002",
+          "title": "Kitchen Display System (KDS) Integration",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-003",
+          "title": "Menu & Modifier Management",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-004",
+          "title": "[SYSTEM-CORE] Server & Staff Management",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-005",
+          "title": "Multi-Channel Order Aggregation (AGG Integration)",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-006",
+          "title": "[SYSTEM-CORE] Payment Processing & Tip Management",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-007",
+          "title": "[SYSTEM-CORE] Reporting & End-of-Shift Close",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-008",
+          "title": "[SYSTEM-CORE] Loyalty Integration at POS",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-009",
+          "title": "Offline Resilience",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        },
+        {
+          "id": "REQ-POSR-010",
+          "title": "[SYSTEM-CORE] Receipt & Guest Communication",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "03_restaurant\\POSR_POS_RESTAURANT.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "04",
+      "name": "Grocery POS",
+      "requirement_count": 5,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-POSG-001",
+          "title": "Barcode Scan & Item Lookup",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "04_grocery\\POSG_POS_GROCERY.md"
+        },
+        {
+          "id": "REQ-POSG-002",
+          "title": "EBT/SNAP & WIC Payments",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "04_grocery\\POSG_POS_GROCERY.md"
+        },
+        {
+          "id": "REQ-POSG-003",
+          "title": "Speed Checkout",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "04_grocery\\POSG_POS_GROCERY.md"
+        },
+        {
+          "id": "REQ-POSG-004",
+          "title": "Inventory Integration",
+          "priority": "Should",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "04_grocery\\POSG_POS_GROCERY.md"
+        },
+        {
+          "id": "REQ-POSG-005",
+          "title": "[SYSTEM-CORE] Unified Deli-Retail Checkout",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "04_grocery\\POSG_POS_GROCERY.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "05",
+      "name": "Finance: Payroll",
+      "requirement_count": 1,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-PAY-001",
+          "title": "Payroll Calculation Engine",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "05_payroll\\PAY_PAYROLL.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "06",
+      "name": "Finance: Digital Wallets",
+      "requirement_count": 8,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-WAL-001",
+          "title": "Wallet Lifecycle & Double-Entry Ledger",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-002",
+          "title": "Payroll Instant Credit",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-003",
+          "title": "[SYSTEM-CORE] Wallet as Payment Method at POS",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-004",
+          "title": "[SYSTEM-CORE] Peer-to-Peer Requests",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-005",
+          "title": "QR & Deep Link Payments",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-006",
+          "title": "[SYSTEM-CORE] Sub-accounts & Micro-savings",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-007",
+          "title": "Automated Money Movement",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        },
+        {
+          "id": "REQ-WAL-008",
+          "title": "[SYSTEM-CORE] Parental Controls & Dependent Accounts",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "06_wallets\\WAL_DIGITAL_WALLETS.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "07",
+      "name": "Legal Tech",
+      "requirement_count": 0,
+      "status": "DEFERRED",
+      "requirements": []
+    },
+    {
+      "vertical_id": "08",
+      "name": "Healthcare: Dental",
+      "requirement_count": 0,
+      "status": "DEFERRED",
+      "requirements": []
+    },
+    {
+      "vertical_id": "09",
+      "name": "Healthcare: Chiro",
+      "requirement_count": 0,
+      "status": "DEFERRED",
+      "requirements": []
+    },
+    {
+      "vertical_id": "10",
+      "name": "AI Microsites",
+      "requirement_count": 17,
+      "status": "PROD-LIVE",
+      "requirements": [
+        {
+          "id": "MST-001",
+          "title": "[SYSTEM-CORE] Tenant microsite auto-provisioning on tenant signup",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-002",
+          "title": "[SYSTEM-CORE] Custom domain mapping (CNAME) per tenant",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-003",
+          "title": "[SYSTEM-CORE] Menu management CRUD (categories, items, prices, images)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "PROD-LIVE",
+            "path": "apps/api/src/modules/inventory/inventory.service.ts"
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-004",
+          "title": "[SYSTEM-CORE] Price calculation engine: displayPrice = base × (1 + processingFee) × (1 + marginPct)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-005",
+          "title": "[SYSTEM-CORE] PaySurity margin configurable by super admin (default 20%)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-006",
+          "title": "[SYSTEM-CORE] Processing fee configurable (default 5%)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-007",
+          "title": "[SYSTEM-CORE] POS ↔ Microsite bidirectional sync (menu changes reflect on both)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-008",
+          "title": "[SYSTEM-CORE] Catering orders with advance notice enforcement (minimum 48h)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-009",
+          "title": "[SYSTEM-CORE] Special event orders (Paan 50+) with advance notice and prepayment",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-010",
+          "title": "[SYSTEM-CORE] Tenant Admin Panel for CRUD operations",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-011",
+          "title": "[SYSTEM-CORE] Super admin override of per-tenant settings",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-012",
+          "title": "[SYSTEM-CORE] SEO: per-tenant meta tags, structured data (Restaurant schema.org)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-013",
+          "title": "[SYSTEM-CORE] Mobile-optimized responsive design (Core Web Vitals)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-014",
+          "title": "Order flow: menu → cart → checkout → confirmation",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-015",
+          "title": "Real-time order sync with POS when activated",
+          "priority": "Unknown",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-016",
+          "title": "[SYSTEM-CORE] CFO Billing Tiers (Foundation, Growth, Elite)",
+          "priority": "Unknown",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        },
+        {
+          "id": "MST-017",
+          "title": "[SYSTEM-CORE] Elite Tier Segment (Vibrant Spice / Minimalist Artisanal Templates)",
+          "priority": "Elite",
+          "trace": {
+            "status": "PROD-LIVE",
+            "path": "apps/public-website/src/app/restaurant/tawakkul-restaurant/page.tsx"
+          },
+          "source_file": "10_microsites\\MST_TENANT_MICROSITE.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "11",
+      "name": "Internal Ops",
+      "requirement_count": 4,
+      "status": "PROD-LIVE",
+      "requirements": [
+        {
+          "id": "REQ-OPS-001",
+          "title": "AI Daily Operations Brief",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "11_internal\\OPS_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-OPS-002",
+          "title": "Automated Alert System",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": null
+          },
+          "source_file": "11_internal\\OPS_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-OPS-003",
+          "title": "[SYSTEM-CORE] Operations Dashboard UI",
+          "priority": "Must",
+          "trace": {
+            "status": "UNLINKED",
+            "path": null
+          },
+          "source_file": "11_internal\\OPS_MANAGEMENT.md"
+        },
+        {
+          "id": "REQ-OPS-004",
+          "title": "Human-in-the-Loop (HITL) Triggers",
+          "priority": "Must",
+          "trace": {
+            "status": "LINKED_TO_JOURNEY",
+            "path": "apps/api/src/modules/audit-log/audit-log.service.ts"
+          },
+          "source_file": "11_internal\\OPS_MANAGEMENT.md"
+        }
+      ]
+    },
+    {
+      "vertical_id": "99",
+      "name": "Recovered Advantage & Gap Fills",
+      "requirement_count": 33,
+      "status": "ACTIVE",
+      "requirements": [
+        {
+          "id": "REQ-ECO-005",
+          "title": "BOPIS Configuration & Routing",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-POS-013",
+          "title": "Override Wait Prevention & Customer Comms",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-AGG-005",
+          "title": "Mobile Driver Confirmation Code (Chain of Custody)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-AFR-011",
+          "title": "Affiliate Onboarding & W-9 Collection",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-AFR-012",
+          "title": "Reseller White-Label Dashboard Config",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-AFR-013",
+          "title": "Sub-Merchant Custom Rate Configuration",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-AFR-014",
+          "title": "Sub-Merchant White-Label Portal",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-DEV-003",
+          "title": "Remote Terminal Diagnostics & Reboot",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-DEV-004",
+          "title": "Over-The-Air (OTA) Patch Deployment",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-MER-003",
+          "title": "Automated & Manual Underwriting Queue",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-MER-014",
+          "title": "Underwriter Fast-Track Manual Approval",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-COM-003",
+          "title": "AML Monitoring & Velocity Detection",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-COM-015",
+          "title": "Compliance AML Case Queue",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-ORC-017",
+          "title": "Ledger Reconciliation Variance Sign-Off",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-ORC-018",
+          "title": "Automated Settlement Suspension (Fraud Lockout)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-COM-016",
+          "title": "Automated SAR Pre-Filing Generation",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-005",
+          "title": "Speed-Onboarding (< 120s to Provisional Access)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-ONB-06",
+          "title": "CTA 2026 BOI Compliance (Automated UBO Mapping)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-ONB-07",
+          "title": "Lifecycle Escalation Sentry (Auto-Drain Resolution)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-ONB-08",
+          "title": "Small Merchant Waiver ($1k Vol Exemption)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-002",
+          "title": "Zero-Button Flow (≤ 3 Taps to Receipt)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-CRM-01",
+          "title": "Zero-Knowledge Personas (Ingestion-time Hashing)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "ADV-PRODUCE-AI",
+          "title": "Produce AI Keypad-Replacement (Computer Vision)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "OP-OFFLINE-01",
+          "title": "Vector Clock / CRDT Merge for Offline Sync",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "OP-OFFLINE-02",
+          "title": "72-Hour Local-Enclave Crypto-Cache Auth",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "OP-OFFLINE-03",
+          "title": "Physical Truth Priority in Inventory Collisions",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "OP-OFFLINE-04",
+          "title": "Cryptographic Intent-Spooling (HSM local settle)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "OP-RETAIL-02",
+          "title": "Hardware Dead-Lock Spooler for Offline KDS",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-05",
+          "title": "Valor EMV L3: Tip Adjustment post-auth",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-06",
+          "title": "Valor EMV L3: Split Check reconciliation tracking",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-07",
+          "title": "Valor EMV L3: EBT Eligibility marking on payload",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-08",
+          "title": "Valor EMV L3: Dual-Tender (EBT/SNAP fallback)",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        },
+        {
+          "id": "REQ-09",
+          "title": "Valor EMV L3: Scale/Weight barcode sync",
+          "priority": "Must",
+          "trace": {
+            "status": "NEW_FROM_V4_SPRINT",
+            "path": null
+          },
+          "source_file": "00_shared\\RECOVERED_GAPS.md"
+        }
+      ]
+    }
+  ]
+}

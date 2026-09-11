@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySurity Demo - House of Biryani (KDS & Dispatch)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #050505; color: white; display: flex; height: 100vh; overflow: hidden; margin: 0; flex-direction: column; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .phone { width: 340px; height: 700px; background: #000; border-radius: 40px; border: 8px solid #1a1a1a; position: relative; overflow: hidden; margin: auto; }
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1a1a1a; border-radius: 0 0 12px 12px; z-index: 10; }
+        .screen { background: white; height: 100%; padding-top: 40px; color: #111; display:flex; flex-direction:column; }
+        .pulse-btn { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4); } 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+        @keyframes slideIn { from{ opacity:0; transform: translateX(20px); } to{ opacity:1; transform: translateX(0); } }
+        .slide { animation: slideIn 0.3s forwards; }
+    </style>
+</head>
+<body>
+    <header class="h-14 bg-[#111] border-b border-gray-800 flex items-center justify-between px-6 shrink-0 z-10">
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-orange-400">PAYSURITY RESTAURANT ENGINE</span>
+            <span class="text-xs text-gray-500">SCENARIO: OMNICHANNEL KDS & DRIVER DISPATCH</span>
+        </div>
+        <div class="text-xs font-mono text-orange-400 border border-orange-500/30 px-3 py-1 rounded bg-orange-500/10">TENANT: HOUSE OF BIRYANI (CHICAGO)</div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden">
+        <!-- LEFT: KDS View -->
+        <div class="flex-1 bg-[#111] border-r border-gray-800 p-6 flex flex-col">
+            <div class="text-xs tracking-widest text-gray-400 mb-6">LEFT: TENANT KDS (RESTAURANT BACKOFHOUSE)</div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-900 border-2 border-orange-500/50 rounded-xl p-4 flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-orange-500"></div>
+                    <div class="flex justify-between font-bold text-lg mb-2"><span>Order #9042</span><span class="text-orange-400">12m 40s</span></div>
+                    <div class="text-xs text-gray-400 mb-4 border-b border-gray-800 pb-2">Customer: Zainab A. • Delivery</div>
+                    <div class="font-bold text-white text-lg mb-1">2x Hyderabadi Chicken Biryani</div>
+                    <div class="text-gray-400 text-sm mb-4">- Extra Raita, No Spice</div>
+                    <div class="font-bold text-white text-lg mb-1">1x Garlic Naan</div>
+                    
+                    <button id="dispatch-btn" onclick="triggerDispatch()" class="mt-auto bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 rounded pulse-btn transition-colors">
+                        Mark Ready & Dispatch Driver
+                    </button>
+                    <div id="dispatch-success" class="hidden mt-auto text-emerald-400 font-bold text-center py-3 bg-emerald-900/30 border border-emerald-500/50 rounded">✓ Dispatch Broadcast Active</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MIDDLE: Telemetry -->
+        <div class="w-[35%] bg-black font-mono text-[11px] p-4 overflow-y-auto" id="terminal">
+            <div class="text-orange-500 mb-4 tracking-widest border-b border-gray-800 pb-2">MIDDLE: LOGISTICS ENGINE TELEMETRY</div>
+            <div class="text-gray-500">> Waiting for KDS events...</div>
+        </div>
+
+        <!-- RIGHT: Customer Tracking App -->
+        <div class="w-[400px] bg-[#0a0a0a] flex flex-col items-center justify-center p-4">
+            <div class="text-xs tracking-widest text-gray-400 mb-6 w-full text-center border-b border-gray-800 pb-2">RIGHT: END USER ORDER TRACKING</div>
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="screen px-6">
+                    <div class="font-bold text-xl text-orange-600 mb-6 tracking-tighter">House Of Biryani</div>
+                    <div class="bg-orange-50 rounded-2xl p-4 mb-4 border border-orange-100 shadow-sm relative overflow-hidden">
+                        <div class="text-xs font-bold text-orange-800 uppercase mb-1">Order #9042</div>
+                        <div class="text-2xl font-black text-gray-900" id="tracker-status">In Kitchen</div>
+                        <div class="w-full bg-orange-200 h-1.5 mt-3 rounded-full overflow-hidden"><div id="tracker-bar" class="w-1/3 bg-orange-600 h-full transition-all duration-1000"></div></div>
+                    </div>
+                    
+                    <div id="driver-card" class="hidden mt-4 bg-white border border-gray-100 rounded-xl p-4 shadow-xl slide">
+                        <div class="flex items-center justify-between mb-3 border-b border-gray-50 pb-2">
+                            <div class="text-xs font-bold text-gray-500">YOUR DRIVER</div>
+                            <div class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Arriving in 12 min</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 text-xl flex items-center justify-center">🚗</div>
+                            <div><div class="font-bold text-gray-900 leading-tight">Omar F.</div><div class="text-xs text-gray-500">Black Honda Civic • 4.9 ★</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        function appendLog(html) { const div = document.createElement('div'); div.innerHTML = html; div.className="mb-1 slide"; terminal.appendChild(div); terminal.scrollTop = terminal.scrollHeight; }
+
+        let active = false;
+        async function triggerDispatch() {
+            if(active) return; active = true;
+            document.getElementById('dispatch-btn').classList.add('hidden');
+            document.getElementById('dispatch-success').classList.remove('hidden');
+
+            appendLog("<span class='text-orange-400'>[KDS_SYNC] Order #9042 updated to PREPARED.</span>");
+            await delay(800);
+            document.getElementById('tracker-status').innerText = "Order Ready!";
+            document.getElementById('tracker-bar').style.width = "66%";
+            
+            appendLog("<span class='text-blue-400'>[LOGISTICS] Generating geometric radius polygon (3.5 miles) for active drivers...</span>");
+            await delay(1200);
+            appendLog("<span class='text-emerald-400'>[DISPATCH] Broadcasting Firebase payload to 4 active drivers.</span>");
+            await delay(1500);
+            appendLog("<span class='text-purple-400'>[DRIVER_APP] Driver UUID: Omar-F accepted payload. Locking assignment.</span>");
+            
+            document.getElementById('tracker-status').innerText = "Driver Assigned";
+            document.getElementById('tracker-bar').style.width = "100%";
+            document.getElementById('driver-card').classList.remove('hidden');
+            
+            await delay(800);
+            appendLog("<span class='text-white bg-green-900 border border-green-500 px-1'>[LEDGER] Held Escrow funds ($42.50) marked for Driver Commission split.</span>");
+        }
+    </script>
+</body>
+</html>

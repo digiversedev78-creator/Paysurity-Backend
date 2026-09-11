@@ -1,0 +1,354 @@
+{
+  "version": "6.0-Unified-Truth",
+  "project": "paysurity-platform-2026",
+  "generated_at": "2026-04-11T19:07:33.090Z",
+  "total_requirements": 42,
+  "workers": {
+    "MASTER_POOL": {
+      "name": "Unified Platform Execution Core",
+      "requirements": [
+        {
+          "id": "REQ-001",
+          "title": "00 CANONICAL INDEX",
+          "file": "Requirements/Canonical/00_CANONICAL_INDEX.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 14268
+        },
+        {
+          "id": "REQ-002",
+          "title": "ACT ACTOR LIBRARY",
+          "file": "Requirements/Canonical/ACT_ACTOR_LIBRARY.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 34398
+        },
+        {
+          "id": "REQ-003",
+          "title": "ADM SUPER ADMIN PORTAL",
+          "file": "Requirements/Canonical/ADM_SUPER_ADMIN_PORTAL.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 3602
+        },
+        {
+          "id": "REQ-004",
+          "title": "AFR AFFILIATES RESELLERS",
+          "file": "Requirements/Canonical/AFR_AFFILIATES_RESELLERS.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 6271
+        },
+        {
+          "id": "REQ-005",
+          "title": "AGG ORDER AGGREGATION",
+          "file": "Requirements/Canonical/AGG_ORDER_AGGREGATION.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 26596
+        },
+        {
+          "id": "REQ-006",
+          "title": "AI EXPERIENCE",
+          "file": "Requirements/Canonical/AI_EXPERIENCE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 21095
+        },
+        {
+          "id": "REQ-007",
+          "title": "ANA ANALYTICS DASHBOARD",
+          "file": "Requirements/Canonical/ANA_ANALYTICS_DASHBOARD.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 5738
+        },
+        {
+          "id": "REQ-008",
+          "title": "API ERROR CODES",
+          "file": "Requirements/Canonical/API_ERROR_CODES.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 12618
+        },
+        {
+          "id": "REQ-009",
+          "title": "API PLATFORM",
+          "file": "Requirements/Canonical/API_PLATFORM.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 15273
+        },
+        {
+          "id": "REQ-010",
+          "title": "ARC MULTITENANT EDGE ROUTING",
+          "file": "Requirements/Canonical/ARC_MULTITENANT_EDGE_ROUTING.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 3876
+        },
+        {
+          "id": "REQ-011",
+          "title": "COM COMPLIANCE LEGAL",
+          "file": "Requirements/Canonical/COM_COMPLIANCE_LEGAL.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 10419
+        },
+        {
+          "id": "REQ-012",
+          "title": "DEFERRED VERTICALS",
+          "file": "Requirements/Canonical/DEFERRED_VERTICALS.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 3320
+        },
+        {
+          "id": "REQ-013",
+          "title": "DEV IMPLEMENTATION STANDARD",
+          "file": "Requirements/Canonical/DEV_IMPLEMENTATION_STANDARD.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 15396
+        },
+        {
+          "id": "REQ-014",
+          "title": "ECO ECOMMERCE",
+          "file": "Requirements/Canonical/ECO_ECOMMERCE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 10435
+        },
+        {
+          "id": "REQ-015",
+          "title": "ERP ACCOUNTING INVENTORY",
+          "file": "Requirements/Canonical/ERP_ACCOUNTING_INVENTORY.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 11234
+        },
+        {
+          "id": "REQ-016",
+          "title": "FAC FREIGHT LOAD FACTORING",
+          "file": "Requirements/Canonical/FAC_FREIGHT_LOAD_FACTORING.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 18070
+        },
+        {
+          "id": "REQ-017",
+          "title": "FRN FRANCHISE MANAGEMENT",
+          "file": "Requirements/Canonical/FRN_FRANCHISE_MANAGEMENT.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 31547
+        },
+        {
+          "id": "REQ-018",
+          "title": "GAP FILL ADDENDUM",
+          "file": "Requirements/Canonical/GAP_FILL_ADDENDUM.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 15068
+        },
+        {
+          "id": "REQ-019",
+          "title": "IMPL GAP ANALYSIS",
+          "file": "Requirements/Canonical/IMPL_GAP_ANALYSIS.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 15192
+        },
+        {
+          "id": "REQ-020",
+          "title": "LOY LOYALTY ENGINE",
+          "file": "Requirements/Canonical/LOY_LOYALTY_ENGINE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 38351
+        },
+        {
+          "id": "REQ-021",
+          "title": "MER MERCHANT SERVICES ONBOARDING",
+          "file": "Requirements/Canonical/MER_MERCHANT_SERVICES_ONBOARDING.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 17073
+        },
+        {
+          "id": "REQ-022",
+          "title": "MOB MOBILE AND SAV ESTIMATOR",
+          "file": "Requirements/Canonical/MOB_MOBILE_AND_SAV_ESTIMATOR.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 27203
+        },
+        {
+          "id": "REQ-023",
+          "title": "MST TENANT MICROSITE",
+          "file": "Requirements/Canonical/MST_TENANT_MICROSITE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 29020
+        },
+        {
+          "id": "REQ-024",
+          "title": "NFR PLATFORM NONFUNCTIONAL",
+          "file": "Requirements/Canonical/NFR_PLATFORM_NONFUNCTIONAL.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 9672
+        },
+        {
+          "id": "REQ-025",
+          "title": "NOT NOTIFICATION ENGINE",
+          "file": "Requirements/Canonical/NOT_NOTIFICATION_ENGINE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 19092
+        },
+        {
+          "id": "REQ-026",
+          "title": "OPS MANAGEMENT",
+          "file": "Requirements/Canonical/OPS_MANAGEMENT.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 12166
+        },
+        {
+          "id": "REQ-027",
+          "title": "ORC PAYMENT ORCHESTRATION",
+          "file": "Requirements/Canonical/ORC_PAYMENT_ORCHESTRATION.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 26726
+        },
+        {
+          "id": "REQ-028",
+          "title": "PAY PAYROLL",
+          "file": "Requirements/Canonical/PAY_PAYROLL.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 20642
+        },
+        {
+          "id": "REQ-029",
+          "title": "POSG POS GROCERY",
+          "file": "Requirements/Canonical/POSG_POS_GROCERY.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 14872
+        },
+        {
+          "id": "REQ-030",
+          "title": "POSR POS RESTAURANT",
+          "file": "Requirements/Canonical/POSR_POS_RESTAURANT.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 31733
+        },
+        {
+          "id": "REQ-031",
+          "title": "POS RETAIL",
+          "file": "Requirements/Canonical/POS_RETAIL.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 12608
+        },
+        {
+          "id": "REQ-032",
+          "title": "RBAC PERMISSION MATRIX",
+          "file": "Requirements/Canonical/RBAC_PERMISSION_MATRIX.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 10827
+        },
+        {
+          "id": "REQ-033",
+          "title": "READINESS GAP ANALYSIS",
+          "file": "Requirements/Canonical/READINESS_GAP_ANALYSIS.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 7741
+        },
+        {
+          "id": "REQ-034",
+          "title": "SEC SECURITY PRIVACY",
+          "file": "Requirements/Canonical/SEC_SECURITY_PRIVACY.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 15028
+        },
+        {
+          "id": "REQ-035",
+          "title": "SEED BISTROBEEST TEST TENANT",
+          "file": "Requirements/Canonical/SEED_BISTROBEEST_TEST_TENANT.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 28952
+        },
+        {
+          "id": "REQ-036",
+          "title": "STATE MACHINES",
+          "file": "Requirements/Canonical/STATE_MACHINES.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 15041
+        },
+        {
+          "id": "REQ-037",
+          "title": "SUB SUBSCRIPTION BILLING",
+          "file": "Requirements/Canonical/SUB_SUBSCRIPTION_BILLING.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 12086
+        },
+        {
+          "id": "REQ-038",
+          "title": "TAX ENGINE",
+          "file": "Requirements/Canonical/TAX_ENGINE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 16594
+        },
+        {
+          "id": "REQ-039",
+          "title": "TECH STACK",
+          "file": "Requirements/Canonical/TECH_STACK.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 13940
+        },
+        {
+          "id": "REQ-040",
+          "title": "WAL DIGITAL WALLETS",
+          "file": "Requirements/Canonical/WAL_DIGITAL_WALLETS.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 13521
+        },
+        {
+          "id": "REQ-041",
+          "title": "WEB MOB WEBSITE MOBILE",
+          "file": "Requirements/Canonical/WEB_MOB_WEBSITE_MOBILE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 10382
+        },
+        {
+          "id": "REQ-042",
+          "title": "WEB PUBLIC WEBSITE",
+          "file": "Requirements/Canonical/WEB_PUBLIC_WEBSITE.md",
+          "status": "TRACKED",
+          "priority": "P0",
+          "byte_count": 20333
+        },
+        {
+          "file": "Requirements/Canonical/CRM_CUSTOMER_SERVICE.md",
+          "status": "LOCKED",
+          "byte_count": 3608
+        }
+      ]
+    }
+  }
+}

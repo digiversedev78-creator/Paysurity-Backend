@@ -1,0 +1,32 @@
+
+> @paysurity/merchant-dashboard@0.0.1 lint C:\Projects\PaySurity\apps\merchant-dashboard
+> next lint
+
+`next lint` is deprecated and will be removed in Next.js 16.
+For new projects, use create-next-app to choose your preferred linter.
+For existing projects, migrate to the ESLint CLI:
+npx @next/codemod@canary next-lint-to-eslint-cli .
+
+
+./src/app/dashboard/ai/page.tsx
+124:42  Warning: React Hook useEffect has a missing dependency: 'scrollToBottom'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/dashboard/api/page.tsx
+133:8  Warning: React Hook useCallback has an unnecessary dependency: 'newKeyDescription'. Either exclude it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/dashboard/payroll/run/page.tsx
+240:6  Warning: React Hook useCallback has a missing dependency: 'employeeHours'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/grocery-pos/page.tsx
+92:6  Warning: React Hook useCallback has a missing dependency: 'processAddition'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/layout.tsx
+18:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+./src/app/retail-pos/page.tsx
+127:6  Warning: React Hook useEffect has a missing dependency: 'addToCart'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/layout/Sidebar.tsx
+102:6  Warning: React Hook useEffect has a missing dependency: 'isOpen'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

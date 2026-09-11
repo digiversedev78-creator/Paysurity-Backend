@@ -1,0 +1,54 @@
+﻿src/modules/employees/dto/employee-schedule.dto.ts(63,3): error TS1005: ',' expected.
+src/modules/employees/dto/employee-schedule.dto.ts(63,12): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(64,14): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(67,18): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(68,13): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(71,18): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(72,11): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(75,21): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(76,13): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(79,26): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(80,18): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(86,12): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(87,9): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(92,10): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(93,10): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(97,87): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(98,13): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(102,25): error TS1146: Declaration expected.
+src/modules/employees/dto/employee-schedule.dto.ts(103,13): error TS1109: Expression expected.
+src/modules/employees/dto/employee-schedule.dto.ts(103,30): error TS1005: ';' expected.
+src/modules/employees/dto/employee-schedule.dto.ts(104,1): error TS1128: Declaration or statement expected.
+src/modules/gift-cards/gift-cards.service.ts(479,11): error TS1005: ',' expected.
+src/modules/gift-cards/gift-cards.service.ts(479,21): error TS1005: ',' expected.
+src/modules/returns/returns.dto.ts(54,3): error TS1005: ',' expected.
+src/modules/returns/returns.dto.ts(54,16): error TS1146: Declaration expected.
+src/modules/returns/returns.dto.ts(55,10): error TS1109: Expression expected.
+src/modules/returns/returns.dto.ts(58,16): error TS1146: Declaration expected.
+src/modules/returns/returns.dto.ts(59,16): error TS1109: Expression expected.
+src/modules/returns/returns.dto.ts(63,16): error TS1146: Declaration expected.
+src/modules/returns/returns.dto.ts(64,10): error TS1109: Expression expected.
+src/modules/returns/returns.dto.ts(69,1): error TS1128: Declaration or statement expected.
+src/modules/settlement/settlement.dto.ts(68,3): error TS1005: ',' expected.
+src/modules/settlement/settlement.dto.ts(68,16): error TS1146: Declaration expected.
+src/modules/settlement/settlement.dto.ts(70,1): error TS1128: Declaration or statement expected.
+src/modules/tables/dto/table.dto.ts(88,3): error TS1005: ',' expected.
+src/modules/tables/dto/table.dto.ts(90,12): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(91,9): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(95,10): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(96,10): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(100,18): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(101,10): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(104,106): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(105,10): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(108,103): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(109,9): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(114,10): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(115,15): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(120,11): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(121,15): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(125,17): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(126,12): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(129,12): error TS1146: Declaration expected.
+src/modules/tables/dto/table.dto.ts(130,16): error TS1109: Expression expected.
+src/modules/tables/dto/table.dto.ts(131,1): error TS1128: Declaration or statement expected.

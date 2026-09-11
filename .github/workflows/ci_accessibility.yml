@@ -1,0 +1,77 @@
+name: enterprise-ci-accessibility (Americans with Disabilities Act (ADA) + Web 
+  Content Accessibility Guidelines (WCAG) AA)
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+concurrency:
+  group: a11y-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  a11y:
+    name: a11y (accessibility) smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # Skip noisy/expensive accessibility scans on bot Pull Requests (PRs)
+    if: ${{ (${{ github.actor != 'dependabot[bot]' }}) && (!(((github.event_name
+      == 'push' && github.ref != 'refs/heads/main' && 
+      (contains(github.event.head_commit.message, '[skip ci]') || 
+      contains(github.event.head_commit.message, '[ci skip]')))) || 
+      ((github.event_name == 'pull_request' && 
+      (contains(github.event.pull_request.title, '[skip ci]') || 
+      contains(github.event.pull_request.title, '[ci skip]'))))))) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Node.js)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Detect accessibility tests
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Look for any common a11y test locations + common test naming
+          if find . -type f \( \
+            -path "./tests/a11y/*" -o -path "./test/a11y/*" -o -path "./e2e/a11y/*" -o -path "./a11y/*" \
+          \) \( -name "*.spec.*" -o -name "*.test.*" \) | head -n 1 | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "A11Y_TESTS_FOUND=$([[ '${{ steps.detect.outputs.found }}' == 'true' ]] && echo yes || echo no)"
+
+      - name: Skip (no accessibility tests)
+        if: ${{ steps.detect.outputs.found != 'true' }}
+        run: echo "No accessibility tests found. Skipping (success)."
+
+      - name: Install dependencies
+        if: ${{ steps.detect.outputs.found == 'true' }}
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        if: ${{ steps.detect.outputs.found == 'true' }}
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ 
+            hashFiles('**/package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: ${{ steps.detect.outputs.found == 'true' }}
+        run: npx playwright install --with-deps
+
+      - name: Run accessibility smoke (web only)
+        if: ${{ steps.detect.outputs.found == 'true' }}
+        run: npx playwright test --pass-with-no-tests

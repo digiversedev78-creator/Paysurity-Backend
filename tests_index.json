@@ -1,0 +1,48 @@
+{
+  "generated_at": "2025-10-29T04:18:08.123Z",
+  "central_suite_root": "C:/Users/Detaimfc/Downloads/PS-Platform/Tests",
+  "central_tests_count": 10,
+  "central_tests": [
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/config/ConfigVersionManager.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/integration/example.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/integration/platform-integration.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/qr/QRPaymentService.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/src/pos-offline.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/suites/integration/payments/fluidpay.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/suites/unit/shared/config.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/telemetry/TelemetryTracingService.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/tests/critical/payment-processing.test.ts",
+    "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/unit/example.test.ts"
+  ],
+  "local_by_service": {
+    "Device-Drivers": [
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Device-Drivers/tests/DeviceManager.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Device-Drivers/tests/ErrorHandling.test.ts"
+    ],
+    "Loyalty-Rewards": [
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Loyalty-Rewards/src/tests/LoyaltyService.test.ts"
+    ],
+    "POS-Restaurant": [
+      "C:/Users/Detaimfc/Downloads/PS-Platform/POS-Restaurant/e2e/admin.spec.js",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/POS-Restaurant/e2e/admin.spec.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/POS-Restaurant/e2e/auth.spec.js",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/POS-Restaurant/e2e/auth.spec.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/POS-Restaurant/tests/POSRestaurant.test.ts"
+    ],
+    "QR-Code-Service": [
+      "C:/Users/Detaimfc/Downloads/PS-Platform/QR-Code-Service/src/tests/QRCodeService.test.ts"
+    ],
+    "Tests": [
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/config/ConfigVersionManager.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/integration/example.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/integration/platform-integration.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/qr/QRPaymentService.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/src/pos-offline.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/suites/integration/payments/fluidpay.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/suites/unit/shared/config.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/telemetry/TelemetryTracingService.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/tests/critical/payment-processing.test.ts",
+      "C:/Users/Detaimfc/Downloads/PS-Platform/Tests/unit/example.test.ts"
+    ]
+  }
+}

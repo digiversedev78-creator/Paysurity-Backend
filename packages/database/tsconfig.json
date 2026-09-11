@@ -1,0 +1,14 @@
+{
+    "compilerOptions":  {
+                            "module":  "commonjs",
+                            "declaration":  true,
+                            "declarationMap":  true,
+                            "outDir":  "./dist",
+                            "target":  "es2020",
+                            "composite":  true,
+                            "skipLibCheck":  true
+                        },
+    "include":  [
+                    "**/*.ts"
+                ]
+}

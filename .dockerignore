@@ -1,0 +1,36 @@
+# Docker build exclusions for PaySurity API production build
+
+# Exclude test files (not needed in production Docker image)
+**/*.spec.ts
+**/*.e2e-spec.ts
+**/*.test.ts
+**/test/**
+**/tests/**
+**/__tests__/**
+**/jest-e2e.json
+
+# Exclude large unnecessary directories
+node_modules/
+
+# Exclude development/build artifacts
+dist/
+.turbo/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+
+# Exclude other apps
+# (Removed to allow building any app from the monorepo root)
+
+# Exclude dev files
+.vscode/
+.idea/
+*.swp
+*.DS_Store
+*.log
+
+# Scripts (commented out to allow Swarm builder access)
+# scripts/
+
+# Documentation
+*.md

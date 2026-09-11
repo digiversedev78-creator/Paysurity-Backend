@@ -1,0 +1,40 @@
+
+> @paysurity/api@0.0.1 build C:\Projects\PaySurity\apps\api
+> nest build
+
+[96msrc/modules/cash-drawer/cash-drawer.edge-cases.spec.ts[0m:[93m535[0m:[93m29[0m - [91merror[0m[90m TS2341: [0mProperty 'usersWithPermissions' is private and only accessible within class 'MockCashDrawerService'.
+
+[7m535[0m       mockCashDrawerService.usersWithPermissions.clear();
+[7m   [0m [91m                            ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/modules/cash-drawer/cash-drawer.service.ts[0m:[93m48[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'log' does not exist on type 'AuditLogService'.
+
+[7m48[0m     await this.auditLogService.log(
+[7m  [0m [91m                               ~~~[0m
+[96msrc/modules/cash-drawer/cash-drawer.service.ts[0m:[93m128[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'log' does not exist on type 'AuditLogService'.
+
+[7m128[0m     await this.auditLogService.log(
+[7m   [0m [91m                               ~~~[0m
+[96msrc/modules/cash-drawer/cash-drawer.service.ts[0m:[93m175[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'log' does not exist on type 'AuditLogService'.
+
+[7m175[0m     await this.auditLogService.log(
+[7m   [0m [91m                               ~~~[0m
+[96msrc/modules/cash-drawer/cash-drawer.service.ts[0m:[93m209[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'log' does not exist on type 'AuditLogService'.
+
+[7m209[0m     await this.auditLogService.log(
+[7m   [0m [91m                               ~~~[0m
+[96msrc/modules/cash-drawer/cash-drawer.service.ts[0m:[93m244[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'log' does not exist on type 'AuditLogService'.
+
+[7m244[0m     await this.auditLogService.log(
+[7m   [0m [91m                               ~~~[0m
+[96msrc/modules/loyalty/loyalty.module.ts[0m:[93m5[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../../drizzle/database.module"' has no exported member 'DatabaseModule'.
+
+[7m5[0m import { DatabaseModule } from '../../drizzle/database.module'; // REQ-LOY-001: DATABASE token for loyalty persistence
+[7m [0m [91m         ~~~~~~~~~~~~~~[0m
+[96msrc/modules/products/products.module.ts[0m:[93m18[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"../../drizzle/database.module"' has no exported member 'DatabaseModule'.
+
+[7m18[0m import { DatabaseModule } from '../../drizzle/database.module';
+[7m  [0m [91m         ~~~~~~~~~~~~~~[0m
+
+Found 8 error(s).
+
+ ELIFECYCLE  Command failed with exit code 1.

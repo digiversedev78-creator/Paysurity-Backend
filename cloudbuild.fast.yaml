@@ -1,0 +1,36 @@
+steps:
+  - id: 'configure-docker'
+    name: 'gcr.io/cloud-builders/gcloud'
+    args: ['auth', 'configure-docker', 'us-central1-docker.pkg.dev', '--quiet']
+
+  - id: 'build-public-website'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['configure-docker']
+    args:
+      - build
+      - --file=apps/public-website/Dockerfile
+      - --build-arg=NEXT_PUBLIC_API_URL=https://paysurity-api-44gyeebm6a-uc.a.run.app
+      - --build-arg=NEXT_PUBLIC_DASHBOARD_URL=https://paysurity-dashboard-44gyeebm6a-uc.a.run.app
+      - --build-arg=NEXT_PUBLIC_SUPER_ADMIN_URL=https://paysurity-admin-portal-44gyeebm6a-uc.a.run.app
+      - --build-arg=NEXT_PUBLIC_ENV=production
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:latest
+      - .
+
+  - id: 'push-public-website'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['build-public-website']
+    args: ['push', 'us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:latest']
+
+  - id: 'deploy-public-website'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['push-public-website']
+    args:
+      - run
+      - deploy
+      - paysurity-public-website
+      - --image=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:latest
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --set-env-vars=NODE_ENV=production

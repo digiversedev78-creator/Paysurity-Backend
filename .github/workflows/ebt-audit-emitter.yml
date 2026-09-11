@@ -1,0 +1,50 @@
+﻿name: ebt-audit-emitter
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  emit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # NOTE: This is a "snapshot emitter". It does NOT need to be perfect on day 1.
+      # It just guarantees a stable JSON exists for progress_autofill.
+      - name: Create stable audit input JSON
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "progress/_inputs" | Out-Null
+
+          $out = "progress/_inputs/requirements_status.json"
+
+          # Minimal stable shape (can be upgraded later by plugging in real audit output)
+          $obj = [pscustomobject]@{
+            generatedAt = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss K")
+            source = "placeholder"
+            isPlaceholder = $true
+            buckets = @(
+              @{ key="AESTH"; complete=0; total=1 },
+              @{ key="FOUND"; complete=0; total=1 },
+              @{ key="PUBLIC"; complete=0; total=1 },
+              @{ key="MERCHANT"; complete=0; total=1 },
+              @{ key="POS"; complete=0; total=1 },
+              @{ key="WALLET"; complete=0; total=1 },
+              @{ key="PAYROLL"; complete=0; total=1 }
+            )
+          }
+
+          ($obj | ConvertTo-Json -Depth 6) | Set-Content -Encoding UTF8 $out
+          Write-Host "Wrote $out"
+
+      - name: Upload audit inputs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ebt-audit-inputs
+          path: progress/_inputs/
+

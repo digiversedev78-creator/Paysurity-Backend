@@ -1,0 +1,6 @@
+﻿src/modules/affiliates/drizzle.service.ts(38,25): error TS1003: Identifier expected.
+src/modules/affiliates/drizzle.service.ts(39,28): error TS1003: Identifier expected.
+src/modules/inventory/purchase-orders.service.ts(13,29): error TS1003: Identifier expected.
+src/modules/inventory/purchase-orders.service.ts(14,32): error TS1003: Identifier expected.
+src/modules/inventory/purchase-orders.service.ts(17,33): error TS1003: Identifier expected.
+src/modules/inventory/purchase-orders.service.ts(18,36): error TS1003: Identifier expected.

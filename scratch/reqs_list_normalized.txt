@@ -1,0 +1,197 @@
+
+=== Cross-Cutting / Shared ===
+ACT-T-001: Restaurant Owner / Multi-Location Operator
+ACT-T-002: District / Area Manager
+ACT-T-003: General Manager (Location Level)
+ACT-T-004: Server / Waiter
+ACT-T-005: Bartender
+ACT-T-006: Cook / Kitchen Staff
+ACT-T-007: Cashier
+ACT-T-008: In-House Delivery Driver
+ACT-T-009: Grocery Store Owner / Chain Operator
+ACT-T-010: Retail Store Owner / Chain Operator
+ACT-T-011: Payroll Admin
+ACT-T-012: Employee (Non-Management)
+ACT-T-013: Merchant Accountant / Bookkeeper
+ACT-C-001: Dine-In Restaurant Customer
+ACT-C-002: Online / AI-Ordering Consumer
+ACT-C-003: Grocery Shopper
+ACT-C-004: Retail / E-Commerce Shopper
+ACT-P-001: Affiliate Partner
+ACT-P-002: Reseller Partner
+ACT-I-001: PaySurity AI Operations Manager (Autonomous Agent)
+ACT-I-002: PaySurity Support Engineer
+ACT-I-003: PaySurity Underwriter
+ACT-I-004: PaySurity Compliance Officer
+ACT-I-005: PaySurity Finance Admin
+REQ-AGG-001: Inbound Order Webhook Reception
+REQ-AGG-002: Menu Parity Engine
+REQ-AGG-003: Delivery Lifecycle Tracking
+REQ-AGG-004: Revenue Analytics by Channel
+REQ-AI-001: Multilingual AI Session & Identity Resolution
+REQ-AI-002: AI-to-Sale Pipeline (Closes Ambiguity #6)
+REQ-AI-003: Escalation to Human
+REQ-API-001: API Key Lifecycle Management
+REQ-API-002: Webhook Delivery Engine
+REQ-API-003: API Rate Limiting
+REQ-API-004: API Versioning
+REQ-COM-001: CCPA Consumer Rights Fulfillment
+REQ-COM-002: ADA/WCAG 2.1 AA Compliance
+DEF-001: Dental Practice Management
+DEF-002: Legal Practice / Law Firm Billing
+DEF-003: Chiropractic / Physical Therapy Practice
+DEF-004: QR Loyalty Program (Standalone)
+DEF-005: Cash-In / Cash-Out via Retail Agents
+REQ-ECO-001: Storefront Online Ordering
+REQ-ECO-002: Cart Abandonment Recovery
+REQ-ERP-001: Automated POS to Journal Entry Orchestration
+REQ-ERP-002: Multi-Warehouse Stock Transfers
+REQ-ERP-003: Supply Chain — EDI Automated Ingestion
+REQ-ERP-004: Expiry Sentry — Batch-Level Expiry Management
+REQ-FRN-001: 4-Level Hierarchy Entity Model & Role Access
+REQ-FRN-002: Menu Governance Engine
+REQ-FRN-003: Consolidated Financial Reporting (P&L)
+REQ-FRN-004: Royalty Engine
+REQ-FRN-005: Cross-Location Financial Consolidation & Brand Intelligence
+REQ-FRN-006: Cross-Location Workforce Management
+REQ-FRN-007: Unified Loyalty Across Brands
+REQ-FRN-008: Franchise Tax Compliance (1099-K, Payroll, Sales Tax by FEIN)
+REQ-FRN-009: External Franchisee Data Rights & Delink Procedure (Closes Ambiguity #11)
+REQ-FRN-010: Enterprise Onboarding Phases
+REQ-FRN-011: Franchise Audit Trail
+REQ-POSR-011: Tip Management
+REQ-ORC-013: Void vs Refund Auto-Determination
+REQ-POS-011: Receipt — Print, Email, SMS, Gift, Return
+REQ-POSR-013: Z-Report & Shift Close
+REQ-POS-012: Cash Drawer Operations
+REQ-ORC-014: Multi-Tender Payment
+REQ-NFR-009: Offline POS Operation
+REQ-MER-012: Accounting Integration
+REQ-COM-013: Merchant Data Export
+REQ-ORC-015: Gateway Error Taxonomy
+REQ-ORC-016: Payment Gateway Resilience
+REQ-COM-014: PCI DSS SAQ-A Compliance
+REQ-POSG-015: Age-Restricted Product Compliance
+REQ-POSR-012: Table & Seating Management
+REQ-NFR-010: Internationalization Infrastructure
+REQ-WAL-004: Peer-to-Peer Requests
+REQ-WAL-005: QR & Deep Link Payments
+REQ-WAL-006: Sub-accounts & Micro-savings
+REQ-WAL-007: Automated Money Movement
+REQ-WAL-008: Parental Controls & Dependent Accounts
+REQ-LOY-001: Points Earning Engine
+REQ-LOY-002: Redemption Engine
+REQ-LOY-003: Customer Tier Program
+REQ-LOY-004: Loyalty Account Management & Identity
+REQ-LOY-005: Points Expiry & Breakage Management
+REQ-LOY-006: Loyalty Fraud Prevention
+REQ-LOY-007: Merchant Configuration & Loyalty Analytics
+REQ-MOB-001: Consumer Wallet Mobile App (iOS/Android/PWA)
+REQ-MOB-002: Tap-to-Phone Payment (Merchant NFC Acceptance)
+REQ-MOB-003: Merchant Mobile Dashboard
+REQ-MOB-004: AI-Driven Personalized Push Notifications
+REQ-MOB-005: AI Budgeting & Spend Insights
+REQ-MOB-006: Offline Capability & Data Sync
+REQ-SAV-001: Statement Upload & AI-Powered OCR Extraction
+REQ-SAV-002: Savings Calculation Engine
+REQ-SAV-003: Results Gating & Lead Capture
+REQ-SAV-004: Embeddable Widget for Partner/Reseller Sites
+REQ-SAV-005: Analytics & Conversion Funnel Reporting
+REQ-NFR-001: Availability Architecture
+REQ-NFR-002: Performance Design Requirements
+REQ-NFR-003: Backup & Disaster Recovery
+REQ-NFR-004: Observability Stack
+REQ-NOT-001: Multi-Channel Notification Dispatch with Channel Fallback
+REQ-ORC-001: Payment Authorization & Capture
+REQ-ORC-002: Dispute (Chargeback) Lifecycle Management
+REQ-ORC-003: Daily Settlement Processing
+REQ-ORC-004: Multi-Tender & Split Payments
+REQ-POSR2-001: Returns & Exchanges
+REQ-POSR2-002: Gift Cards
+REQ-SEC-001: Authentication & JWT Flow
+REQ-SEC-002: Secrets Management
+REQ-SEC-003: PAN (Payment Card) Zero-Tolerance
+REQ-SEC-004: Security Headers & Network Controls
+REQ-SUB-001: Billing Lifecycle & Dunning
+REQ-TAX-001: Real-Time Tax Quote (Order Checkout)
+REQ-WEB-001: Public Marketing Site
+REQ-MOB-001C: Consumer Mobile App Screens
+REQ-MOB-002C: Merchant Mobile App
+REQ-MOB-003C: Push Notifications
+
+=== Public Core ===
+REQ-WEB-001C: Core Site Structure & SEO Baseline
+REQ-WEB-002: Vertical-Specific Landing Pages
+REQ-WEB-003: Lead Capture & CRM Integration
+REQ-WEB-004: AI Blog & Content Engine
+REQ-WEB-005: Referral QR & UTM Attribution Tracking
+REQ-WEB-006: Savings Calculator Widget (Lead Capture)
+REQ-WEB-007: AI Hero Assistant (Public Site)
+REQ-WEB-008: Social Media Content Automation
+REQ-WEB-009: Analytics & Conversion Tracking
+
+=== Merchant Services ===
+REQ-MER-001: Merchant Application & KYB Flow
+
+=== Restaurant POS ===
+REQ-POSR-001: Core Order Management & Table Workflow
+REQ-POSR-002: Kitchen Display System (KDS) Integration
+REQ-POSR-003: Menu & Modifier Management
+REQ-POSR-004: Server & Staff Management
+REQ-POSR-005: Multi-Channel Order Aggregation (AGG Integration)
+REQ-POSR-006: Payment Processing & Tip Management
+REQ-POSR-007: Reporting & End-of-Shift Close
+REQ-POSR-008: Loyalty Integration at POS
+REQ-POSR-009: Offline Resilience
+REQ-POSR-010: Receipt & Guest Communication
+
+=== Grocery POS ===
+REQ-POSG-001: Barcode Scan & Item Lookup
+REQ-POSG-002: EBT/SNAP & WIC Payments
+REQ-POSG-003: Speed Checkout
+REQ-POSG-004: Inventory Integration
+REQ-POSG-005: Unified Deli-Retail Checkout
+
+=== Finance: Payroll ===
+REQ-PAY-001: Payroll Calculation Engine
+
+=== Finance: Digital Wallets ===
+REQ-WAL-001: Wallet Lifecycle & Double-Entry Ledger
+REQ-WAL-002: Payroll Instant Credit
+REQ-WAL-003: Wallet as Payment Method at POS
+REQ-WAL-004C: Peer-to-Peer Requests
+REQ-WAL-005C: QR & Deep Link Payments
+REQ-WAL-006C: Sub-accounts & Micro-savings
+REQ-WAL-007C: Automated Money Movement
+REQ-WAL-008C: Parental Controls & Dependent Accounts
+
+=== Legal Tech ===
+
+=== Healthcare: Dental ===
+
+=== Healthcare: Chiro ===
+
+=== AI Microsites ===
+MST-001: Tenant microsite auto-provisioning on tenant signup
+MST-002: Custom domain mapping (CNAME) per tenant
+MST-003: Menu management CRUD (categories, items, prices, images)
+MST-004: Price calculation engine: displayPrice = base × (1 + processingFee) × (1 + marginPct)
+MST-005: PaySurity margin configurable by super admin (default 20%)
+MST-006: Processing fee configurable (default 5%)
+MST-007: POS ↔ Microsite bidirectional sync (menu changes reflect on both)
+MST-008: Catering orders with advance notice enforcement (minimum 48h)
+MST-009: Special event orders (Paan 50+) with advance notice and prepayment
+MST-010: Tenant Admin Panel for CRUD operations
+MST-011: Super admin override of per-tenant settings
+MST-012: SEO: per-tenant meta tags, structured data (Restaurant schema.org)
+MST-013: Mobile-optimized responsive design (Core Web Vitals)
+MST-014: Order flow: menu → cart → checkout → confirmation
+MST-015: Real-time order sync with POS when activated
+MST-016: CFO Billing Tiers (Foundation, Growth, Elite)
+MST-017: Elite Tier Segment (Vibrant Spice / Minimalist Artisanal Templates)
+
+=== Internal Ops ===
+REQ-OPS-001: AI Daily Operations Brief
+REQ-OPS-002: Automated Alert System
+REQ-OPS-003: Operations Dashboard UI
+REQ-OPS-004: Human-in-the-Loop (HITL) Triggers

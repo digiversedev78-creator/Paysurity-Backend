@@ -1,0 +1,15 @@
+﻿src/modules/aggregator/aggregator.controller.ts(12,1): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.controller.ts(33,1): error TS1128: Declaration or statement expected.
+src/modules/catering/catering.module.ts(211,1): error TS1128: Declaration or statement expected.
+src/modules/ecom/checkout.controller.ts(20,1): error TS1128: Declaration or statement expected.
+src/modules/gift-cards/gift-cards.controller.ts(29,1): error TS1128: Declaration or statement expected.
+src/modules/merchant/merchant-onboarding.controller.ts(178,1): error TS1128: Declaration or statement expected.
+src/modules/microsite/microsite.controller.ts(391,1): error TS1128: Declaration or statement expected.
+src/modules/microsite/microsite.module.ts(313,1): error TS1128: Declaration or statement expected.
+src/modules/pos-sync/pos-sync.controller.ts(388,1): error TS1128: Declaration or statement expected.
+src/modules/price-engine/price-engine.controller.ts(19,1): error TS1128: Declaration or statement expected.
+src/modules/price-engine/price-engine.module.ts(243,1): error TS1128: Declaration or statement expected.
+src/modules/price-engine/price-engine.service.ts(204,1): error TS1128: Declaration or statement expected.
+src/modules/returns/returns.service.ts(95,34): error TS1003: Identifier expected.
+src/modules/security/security-events.controller.ts(25,65): error TS1136: Property assignment expected.
+src/modules/security/security-events.controller.ts(26,63): error TS1136: Property assignment expected.

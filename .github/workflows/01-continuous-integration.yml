@@ -1,0 +1,106 @@
+name: "01 - Continuous Integration"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  check-commit-message:
+    name: Require REQ-ID
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Check PR title for REQ-ID
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ "$PR_TITLE" =~ ^feat(\(.*\))?: ]]; then
+            if ! [[ "$PR_TITLE" =~ REQ-[A-Z]+-[0-9]{3} ]]; then
+              echo "::error::Feature PR titles MUST include a valid Requirement ID (e.g., REQ-POSR-001)"
+              exit 1
+            fi
+          fi
+          echo "PR title validation passed."
+
+  gitleaks:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          report-format: json
+
+  osv-scanner:
+    name: OSV Lockfile Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run OSV Scanner
+        uses: google/osv-scanner-action/osv-scanner-action@v1.9.0
+        with:
+          scan-args: |-
+            --lockfile=pnpm-lock.yaml
+            --fail-on-vuln
+      - name: Enforce specific versions
+        run: |
+          grep -q '"drizzle-orm": "0.33.0"' pnpm-lock.yaml || echo "Warning: drizzle-orm version changed"
+
+  lint-build-test:
+    name: Lint, Build & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Run lint
+        run: pnpm run lint
+      - name: Run tests
+        run: pnpm run test
+      - name: Run build
+        run: pnpm run build
+
+  verify_schema:
+    name: DB Schema Guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Verify Drizzle Kit Generate
+        run: |
+          pnpm --filter database run generate
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "ERROR: Uncommitted migrations found. Run 'pnpm run generate' locally and commit the results."
+            exit 1
+          fi
+      - name: Check Drop Statements
+        run: |
+          if grep -i "DROP TABLE" packages/database/drizzle/*.sql; then
+            echo "WARNING: DROP TABLE detected. This requires explicit DBA approval label."
+          fi

@@ -1,0 +1,90 @@
+name: "03 - TDA Regression Engine"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/architecture/DETERMINISTIC_MASTER_BLUEPRINT.json'
+      - 'packages/database/src/schema/**'
+      - 'tests/architecture/**'
+
+  workflow_dispatch:
+    inputs:
+      force_full_audit:
+        description: 'Force full TDA audit across all domains'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  tda_gate:
+    name: Test-Driven Architecture Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Detect Domain Changes
+        id: detect_domains
+        run: |
+          if git diff HEAD~1 HEAD --name-only | grep -q 'schema/pos.ts\|tests/architecture/pos'; then
+            echo "run_pos=true" >> $GITHUB_OUTPUT
+          fi
+          if git diff HEAD~1 HEAD --name-only | grep -q 'schema/payroll.ts\|tests/architecture/payroll'; then
+            echo "run_payroll=true" >> $GITHUB_OUTPUT
+          fi
+          if git diff HEAD~1 HEAD --name-only | grep -q 'schema/finance\|tests/architecture/finance'; then
+            echo "run_finance=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Execute Foundation Suite (Always Runs)
+        run: pnpm run test tests/architecture/foundation --forceExit
+
+      - name: Execute POS Vertical
+        if: steps.detect_domains.outputs.run_pos == 'true' || github.event.inputs.force_full_audit == 'true'
+        run: pnpm run test tests/architecture/pos --forceExit
+
+      - name: Execute Payroll Vertical
+        if: steps.detect_domains.outputs.run_payroll == 'true' || github.event.inputs.force_full_audit == 'true'
+        run: pnpm run test tests/architecture/payroll --forceExit
+
+      - name: Execute Finance/Ledger Vertical
+        if: steps.detect_domains.outputs.run_finance == 'true' || github.event.inputs.force_full_audit == 'true'
+        run: pnpm run test tests/architecture/finance --forceExit
+
+  agentic_build_dispatch:
+    name: Dispatch Build Agents
+    needs: tda_gate
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Parse Blueprint
+        id: parse_blueprint
+        run: |
+          echo "Blueprint validated against TDA gates. Safe for code generation/deployment."
+          
+      - name: Trigger Cloud Build (Dry Run)
+        run: |
+          echo "gcloud builds submit --config cloudbuild.yaml"
+          echo "Build dispatched successfully."

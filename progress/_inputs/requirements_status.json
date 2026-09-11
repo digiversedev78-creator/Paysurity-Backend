@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "public_site": {
+      "done": 1,
+      "total": 100,
+      "notes": [
+        "Smoke scaffold. Real agent overwrites with audit-driven progress."
+      ],
+      "pct": 1
+    },
+    "foundational": {
+      "done": 1,
+      "total": 100,
+      "notes": [
+        "Smoke scaffold. Real agent overwrites with audit-driven progress."
+      ],
+      "pct": 1
+    },
+    "aesthetics": {
+      "done": 1,
+      "total": 100,
+      "notes": [
+        "Smoke scaffold. Real agent overwrites with audit-driven progress."
+      ],
+      "pct": 1
+    }
+  },
+  "runNote": "smoke: first 3 sections",
+  "isPlaceholder": false,
+  "generatedAt": "2026-02-15T08:33:25.4372833+00:00",
+  "schemaVersion": 1,
+  "source": "ebt-agentic-build-dispatch",
+  "dryRun": "true"
+}

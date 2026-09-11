@@ -1,0 +1,52 @@
+{
+  "enterprise_hub": {
+    "lead_business_analyst": "Global SSOT Authority & RBAC Mapping",
+    "lead_qa_agent": "Global DoD Gatekeeper (PoW & E2E Validation)",
+    "lead_database_agent": "Global Schema & Immutable Ledger Authority",
+    "security_architect": "Global Cryptographic & AI Sandboxing Authority"
+  },
+  "vertical_spokes": {
+    "pos_swarm": {
+      "focus": "Retail, Restaurant, Grocery",
+      "agents": [
+        "Vertical_BA (Localized Transactional Integrity)",
+        "Vertical_QA (Multi-Site Hardware E2E)",
+        "UX_Graphics_Creator (Touch Interface Optimization)",
+        "Full_Stack_Dev (POS Offline/Online Sync)"
+      ]
+    },
+    "wallets_swarm": {
+      "focus": "Digital Wallets",
+      "agents": [
+        "Vertical_BA (KYC/AML Bindings & Cross-Border Liquidity)",
+        "Vertical_QA (Ledger Reconciliation & Fraud E2E)",
+        "Security_Analyst (Cryptographic Key Management)",
+        "Full_Stack_Dev (Ledger API & Plaid Integration)"
+      ]
+    },
+    "payroll_swarm": {
+      "focus": "Payroll & HR Hub",
+      "agents": [
+        "Vertical_BA (Tax Compliance & Disbursement Scheduling)",
+        "Vertical_QA (Wage Calculation & ACH E2E)",
+        "Full_Stack_Dev (Disbursement Engine)",
+        "UX_Graphics_Creator (Employee Portal)"
+      ]
+    },
+    "ecommerce_swarm": {
+      "focus": "Merchant Services & E-Commerce",
+      "agents": [
+        "Vertical_BA (Digital Onboarding & Gateway Integration)",
+        "Vertical_QA (High-Throughput Load Testing)",
+        "SEO_Content_Writer (Inbound Marketing)",
+        "UX_Graphics_Creator (Checkout Funnel Optimization)",
+        "Full_Stack_Dev (API Gateway & Webhooks)"
+      ]
+    }
+  },
+  "guardrails": {
+    "skeptical_verification": "Every vertical specialist is tethered to an Extremely Skeptical Verifier.",
+    "pow_gateway": "No agent can declare completion without Exit Code 0 compiler proof.",
+    "ai_data_sandboxing": "AI agents MUST inherit and be cryptographically bound to the strict RBAC permissions and identity of the invoking user. Tenant-level scope is strictly prohibited to prevent intra-tenant privilege escalation."
+  }
+}

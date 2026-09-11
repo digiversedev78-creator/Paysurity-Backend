@@ -1,0 +1,7 @@
+steps:
+- name: 'us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/menu-scraper:latest'
+  env:
+  - 'SOURCE_CSV=gs://paysurity-data/HouseOfBiryani/category-item-77.csv'
+  - 'TARGET_BUCKET=paysurity-assets'
+  - 'RESTAURANT_URL=https://www.grubhub.com/restaurant/house-of-biryani-2306-w-devon-ave-chicago/2122054'
+  - 'SKIP_EXISTING=false'

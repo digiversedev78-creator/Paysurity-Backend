@@ -1,0 +1,1686 @@
+openapi: 3.0.0
+info:
+  title: PaySurity API
+  version: 2026.1.0
+  description: Multi-tenant payment & verticals platform
+servers:
+  - url: https://paysurity-api.us-central1.run.app
+  - url: http://localhost:3000
+security:
+  - BearerAuth: []
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate user and get tokens
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: supersecretpassword123
+      responses:
+        '200':
+          description: User successfully authenticated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: JWT access token
+                  refreshToken:
+                    type: string
+                    description: Token to refresh the access token
+                  expiresIn:
+                    type: integer
+                    description: Access token expiration time in seconds
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /auth/register:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+                - tenantName
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: newuser@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securepassword123
+                firstName:
+                  type: string
+                  example: John
+                lastName:
+                  type: string
+                  example: Doe
+                tenantName:
+                  type: string
+                  description: Name of the tenant to create or associate with
+                  example: My Awesome Company
+      responses:
+        '201':
+          description: User successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    format: uuid
+                    example: a1b2c3d4-e5f6-7890-1234-567890abcdef
+                  tenantId:
+                    type: string
+                    format: uuid
+                    example: f0e9d8c7-b6a5-4321-fedc-ba9876543210
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Conflict, e.g., email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /auth/refresh:
+    post:
+      summary: Refresh an access token
+      operationId: refreshAccessToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  description: The refresh token obtained during login
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+      responses:
+        '200':
+          description: Access token successfully refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: New JWT access token
+                  expiresIn:
+                    type: integer
+                    description: New access token expiration time in seconds
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /health:
+    get:
+      summary: Check API health status
+      operationId: getHealthStatus
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+                  timestamp:
+                    type: string
+                    format: date-time
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /restaurant/orders:
+    post:
+      summary: Create a new restaurant order
+      operationId: createRestaurantOrder
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tableId
+                - items
+              properties:
+                tableId:
+                  type: string
+                  format: uuid
+                  example: d1e2f3g4-h5i6-7890-1234-567890abcdef
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - productId
+                      - quantity
+                    properties:
+                      productId:
+                        type: string
+                        format: uuid
+                        example: aabbccdd-eeff-1122-3344-556677889900
+                      quantity:
+                        type: integer
+                        minimum: 1
+                        example: 2
+                notes:
+                  type: string
+                  nullable: true
+                  example: Extra sauce on the side
+      responses:
+        '201':
+          description: Order successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                    format: uuid
+                    example: f1e2d3c4-b5a6-9876-5432-10fedcba9876
+                  status:
+                    type: string
+                    example: PENDING
+                  totalAmount:
+                    type: number
+                    format: float
+                    example: 45.75
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /restaurant/menus/{menuId}:
+    get:
+      summary: Get restaurant menu details by ID
+      operationId: getRestaurantMenu
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: menuId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: aabbccdd-eeff-1122-3344-556677889900
+      responses:
+        '200':
+          description: Menu details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menuId:
+                    type: string
+                    format: uuid
+                    example: aabbccdd-eeff-1122-3344-556677889900
+                  name:
+                    type: string
+                    example: Dinner Menu
+                  description:
+                    type: string
+                    nullable: true
+                    example: Our exquisite dinner offerings.
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                          format: uuid
+                          example: 12345678-abcd-efab-cdef-1234567890ab
+                        name:
+                          type: string
+                          example: Grilled Salmon
+                        description:
+                          type: string
+                          example: Fresh salmon with asparagus
+                        price:
+                          type: number
+                          format: float
+                          example: 24.99
+                        category:
+                          type: string
+                          example: Main Course
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /wallets/{walletId}/balance:
+    get:
+      summary: Get a wallet's current balance
+      operationId: getWalletBalance
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: walletId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      responses:
+        '200':
+          description: Wallet balance retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  walletId:
+                    type: string
+                    format: uuid
+                    example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                  balance:
+                    type: number
+                    format: float
+                    example: 1500.75
+                  currency:
+                    type: string
+                    example: USD
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /wallets/{walletId}/deposit:
+    post:
+      summary: Deposit funds into a wallet
+      operationId: depositToWallet
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: walletId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  minimum: 0.01
+                  example: 100.00
+                currency:
+                  type: string
+                  example: USD
+                sourceTransactionId:
+                  type: string
+                  example: external_txn_12345
+      responses:
+        '200':
+          description: Funds deposited successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    format: uuid
+                    example: fee1a2b3-c4d5-e6f7-8a9b-c0d1e2f3a4b5
+                  newBalance:
+                    type: number
+                    format: float
+                    example: 1600.75
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /wallets/{walletId}/transfer:
+    post:
+      summary: Transfer funds between wallets
+      operationId: transferFunds
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: walletId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+                - recipientWalletId
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  minimum: 0.01
+                  example: 50.00
+                currency:
+                  type: string
+                  example: USD
+                recipientWalletId:
+                  type: string
+                  format: uuid
+                  example: 9z8y7x6w-5v4u-3t2s-1r0q-9p8o7n6m5l4k
+                description:
+                  type: string
+                  nullable: true
+                  example: Monthly allowance
+      responses:
+        '200':
+          description: Funds transferred successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  senderTransactionId:
+                    type: string
+                    format: uuid
+                    example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                  recipientTransactionId:
+                    type: string
+                    format: uuid
+                    example: f0e9d8c7-b6a5-4321-fedc-ba9876543210
+                  senderNewBalance:
+                    type: number
+                    format: float
+                    example: 1550.75
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /payroll/run:
+    post:
+      summary: Initiate a payroll run for a specific period
+      operationId: runPayroll
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - payPeriodStart
+                - payPeriodEnd
+              properties:
+                payPeriodStart:
+                  type: string
+                  format: date
+                  example: '2024-03-01'
+                payPeriodEnd:
+                  type: string
+                  format: date
+                  example: '2024-03-15'
+                employeeIds:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  nullable: true
+                  description: Optional list of specific employee IDs to run payroll for. If omitted, runs for all active employees.
+      responses:
+        '202':
+          description: Payroll run initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payrollRunId:
+                    type: string
+                    format: uuid
+                    example: p1a2y3r4-o5l6-l7u8-n9i0-t1s2e3p4a5r6
+                  status:
+                    type: string
+                    example: IN_PROGRESS
+                  message:
+                    type: string
+                    example: Payroll run started successfully. Check status for updates.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /payroll/employees/{employeeId}/paystubs:
+    get:
+      summary: Retrieve an employee's paystubs
+      operationId: getEmployeePaystubs
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: e1m2p3l4-o5y6-e7e8-9e0a-b1c2d3e4f5g6
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 2024
+          description: Filter paystubs by year
+      responses:
+        '200':
+          description: List of employee paystubs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    paystubId:
+                      type: string
+                      format: uuid
+                      example: ps1a2b3c-d4e5-f6g7-h8i9-j0k1l2m3n4o5
+                    payPeriodStart:
+                      type: string
+                      format: date
+                      example: '2024-03-01'
+                    payPeriodEnd:
+                      type: string
+                      format: date
+                      example: '2024-03-15'
+                    payDate:
+                      type: string
+                      format: date
+                      example: '2024-03-20'
+                    grossPay:
+                      type: number
+                      format: float
+                      example: 2500.00
+                    netPay:
+                      type: number
+                      format: float
+                      example: 1800.00
+                    deductions:
+                      type: object
+                      additionalProperties:
+                        type: number
+                        format: float
+                      example:
+                        federalTax: 300.00
+                        stateTax: 150.00
+                        healthInsurance: 100.00
+                    earnings:
+                      type: object
+                      additionalProperties:
+                        type: number
+                        format: float
+                      example:
+                        regularHours: 2000.00
+                        overtime: 500.00
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /payroll/employees/{employeeId}:
+    put:
+      summary: Update employee details
+      operationId: updateEmployeeDetails
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: employeeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: e1m2p3l4-o5y6-e7e8-9e0a-b1c2d3e4f5g6
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: Jane
+                lastName:
+                  type: string
+                  example: Doe
+                email:
+                  type: string
+                  format: email
+                  example: jane.doe@example.com
+                salary:
+                  type: number
+                  format: float
+                  minimum: 0
+                  example: 60000.00
+                isActive:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: Employee details updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  employeeId:
+                    type: string
+                    format: uuid
+                    example: e1m2p3l4-o5y6-e7e8-9e0a-b1c2d3e4f5g6
+                  firstName:
+                    type: string
+                    example: Jane
+                  lastName:
+                    type: string
+                    example: Doe
+                  email:
+                    type: string
+                    format: email
+                    example: jane.doe@example.com
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/payfactor/calculate:
+    post:
+      summary: Calculate a payment factor or score based on input criteria
+      operationId: calculatePayFactor
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerId
+                - transactionAmount
+                - transactionHistory
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                  example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                transactionAmount:
+                  type: number
+                  format: float
+                  example: 120.50
+                transactionHistory:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        format: date
+                      amount:
+                        type: number
+                        format: float
+                      status:
+                        type: string
+                  example:
+                    - date: '2023-01-15'
+                      amount: 50.00
+                      status: COMPLETED
+                    - date: '2023-02-01'
+                      amount: 75.25
+                      status: COMPLETED
+                merchantCategoryCode:
+                  type: string
+                  example: '5812'
+                  description: Optional MCC for risk assessment
+      responses:
+        '200':
+          description: Pay factor calculated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payFactor:
+                    type: number
+                    format: float
+                    example: 0.85
+                    description: A score between 0 and 1 indicating payment reliability/risk
+                  details:
+                    type: object
+                    additionalProperties:
+                      type: string
+                    example:
+                      riskLevel: MEDIUM
+                      recommendation: Proceed with caution
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /v1/payfactor/config:
+    get:
+      summary: Retrieve current pay factor configuration
+      operationId: getPayFactorConfig
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Pay factor configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  minimumScoreThreshold:
+                    type: number
+                    format: float
+                    example: 0.5
+                  riskCategories:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        minScore:
+                          type: number
+                          format: float
+                        maxScore:
+                          type: number
+                          format: float
+                    example:
+                      LOW:
+                        minScore: 0.8
+                        maxScore: 1.0
+                      MEDIUM:
+                        minScore: 0.5
+                        maxScore: 0.79
+                      HIGH:
+                        minScore: 0.0
+                        maxScore: 0.49
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /loyalty/points/earn:
+    post:
+      summary: Award loyalty points to a customer
+      operationId: earnLoyaltyPoints
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerId
+                - points
+                - sourceTransactionId
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                  example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                points:
+                  type: integer
+                  minimum: 1
+                  example: 100
+                sourceTransactionId:
+                  type: string
+                  format: uuid
+                  example: t1r2a3n4-s5a6-c7t8-9i0o-n1d2e3f4g5h6
+                description:
+                  type: string
+                  nullable: true
+                  example: Purchase at Store A
+      responses:
+        '200':
+          description: Loyalty points awarded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  loyaltyTransactionId:
+                    type: string
+                    format: uuid
+                    example: l1o2y3a4-l5t6-y7p8-9o0i-n1t2s3t4r5a6
+                  customerId:
+                    type: string
+                    format: uuid
+                    example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                  currentPointsBalance:
+                    type: integer
+                    example: 1200
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /loyalty/points/redeem:
+    post:
+      summary: Redeem loyalty points for a customer
+      operationId: redeemLoyaltyPoints
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerId
+                - points
+                - redemptionProductId
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                  example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                points:
+                  type: integer
+                  minimum: 1
+                  example: 500
+                redemptionProductId:
+                  type: string
+                  format: uuid
+                  example: r1e2d3e4-m5p6-t7i8-9o0n-p1r2o3d4u5c6
+                description:
+                  type: string
+                  nullable: true
+                  example: Redeem for a free coffee
+      responses:
+        '200':
+          description: Loyalty points redeemed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  loyaltyTransactionId:
+                    type: string
+                    format: uuid
+                    example: l1o2y3a4-l5t6-y7p8-9o0i-n1t2s3t4r5a6
+                  customerId:
+                    type: string
+                    format: uuid
+                    example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                  currentPointsBalance:
+                    type: integer
+                    example: 700
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /grocery/orders:
+    post:
+      summary: Create a new grocery order
+      operationId: createGroceryOrder
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerId
+                - items
+                - deliveryAddress
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                  example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - productId
+                      - quantity
+                    properties:
+                      productId:
+                        type: string
+                        format: uuid
+                        example: p1r2o3d4-u5c6-t7i8-9d0e-a1b2c3d4e5f6
+                      quantity:
+                        type: number
+                        format: float
+                        minimum: 0.01
+                        example: 2.5
+                      unit:
+                        type: string
+                        example: kg
+                deliveryAddress:
+                  type: object
+                  required:
+                    - street
+                    - city
+                    - state
+                    - zipCode
+                  properties:
+                    street:
+                      type: string
+                      example: 123 Main St
+                    city:
+                      type: string
+                      example: Anytown
+                    state:
+                      type: string
+                      example: CA
+                    zipCode:
+                      type: string
+                      example: '90210'
+                deliveryTimePreference:
+                  type: string
+                  nullable: true
+                  example: '2024-04-20T14:00:00Z'
+      responses:
+        '201':
+          description: Grocery order successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                    format: uuid
+                    example: g1r2o3c4-e5r6-y7o8-9d0e-r1a2b3c4d5e6
+                  totalAmount:
+                    type: number
+                    format: float
+                    example: 75.80
+                  status:
+                    type: string
+                    example: PENDING
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /grocery/products:
+    get:
+      summary: Get a list of available grocery products
+      operationId: getGroceryProducts
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+          example: DAIRY
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of grocery products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                          format: uuid
+                          example: p1r2o3d4-u5c6-t7i8-9d0e-a1b2c3d4e5f6
+                        name:
+                          type: string
+                          example: Organic Milk
+                        description:
+                          type: string
+                          nullable: true
+                          example: 1 Gallon, whole milk
+                        price:
+                          type: number
+                          format: float
+                          example: 5.99
+                        unit:
+                          type: string
+                          example: GAL
+                        category:
+                          type: string
+                          example: DAIRY
+                        inStock:
+                          type: boolean
+                          example: true
+                  total:
+                    type: integer
+                    example: 500
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /ecom/orders:
+    post:
+      summary: Create a new e-commerce order
+      operationId: createEcomOrder
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerId
+                - items
+                - shippingAddress
+                - paymentMethodId
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                  example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - productId
+                      - quantity
+                    properties:
+                      productId:
+                        type: string
+                        format: uuid
+                        example: p1r2o3d4-u5c6-t7i8-9d0e-a1b2c3d4e5f6
+                      quantity:
+                        type: integer
+                        minimum: 1
+                        example: 1
+                shippingAddress:
+                  type: object
+                  required:
+                    - street
+                    - city
+                    - state
+                    - zipCode
+                  properties:
+                    street:
+                      type: string
+                      example: 456 Oak Ave
+                    city:
+                      type: string
+                      example: Othertown
+                    state:
+                      type: string
+                      example: NY
+                    zipCode:
+                      type: string
+                      example: '10001'
+                paymentMethodId:
+                  type: string
+                  format: uuid
+                  example: pm1e2n3t4-m5e6-t7h8-9d0i-a1b2c3d4e5f6
+                couponCode:
+                  type: string
+                  nullable: true
+                  example: FREESHIP
+      responses:
+        '201':
+          description: E-commerce order successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  orderId:
+                    type: string
+                    format: uuid
+                    example: e1c2o3m4-o5r6-d7e8-r9d0-i1s2p3q4e5f6
+                  totalAmount:
+                    type: number
+                    format: float
+                    example: 120.99
+                  status:
+                    type: string
+                    example: PENDING_PAYMENT
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /ecom/products/{productId}:
+    get:
+      summary: Get e-commerce product details by ID
+      operationId: getEcomProductDetails
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: p1r2o3d4-u5c6-t7i8-9d0e-a1b2c3d4e5f6
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  productId:
+                    type: string
+                    format: uuid
+                    example: p1r2o3d4-u5c6-t7i8-9d0e-a1b2c3d4e5f6
+                  name:
+                    type: string
+                    example: Wireless Headphones
+                  description:
+                    type: string
+                    nullable: true
+                    example: Noise-cancelling, Bluetooth 5.0
+                  price:
+                    type: number
+                    format: float
+                    example: 99.99
+                  currency:
+                    type: string
+                    example: USD
+                  category:
+                    type: string
+                    example: Electronics
+                  inStock:
+                    type: boolean
+                    example: true
+                  availableQuantity:
+                    type: integer
+                    example: 50
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /ecom/payments/process:
+    post:
+      summary: Process an e-commerce payment for an existing order
+      operationId: processEcomPayment
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+                - paymentMethodId
+                - amount
+                - currency
+              properties:
+                orderId:
+                  type: string
+                  format: uuid
+                  example: e1c2o3m4-o5r6-d7e8-r9d0-i1s2p3q4e5f6
+                paymentMethodId:
+                  type: string
+                  format: uuid
+                  example: pm1e2n3t4-m5e6-t7h8-9d0i-a1b2c3d4e5f6
+                amount:
+                  type: number
+                  format: float
+                  example: 120.99
+                currency:
+                  type: string
+                  example: USD
+                captureImmediately:
+                  type: boolean
+                  default: true
+                  description: Whether to capture funds immediately or just authorize
+      responses:
+        '200':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  paymentId:
+                    type: string
+                    format: uuid
+                    example: py1a2m3e4n5t-t6x7n8-9i0d-a1b2c3d4e5f6
+                  status:
+                    type: string
+                    example: CAPTURED
+                  orderStatus:
+                    type: string
+                    example: PAID
+                  amountProcessed:
+                    type: number
+                    format: float
+                    example: 120.99
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '402':
+          description: Payment Required - e.g., insufficient funds, card declined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/sales-report:
+    get:
+      summary: Get a sales report for a specified period
+      operationId: getSalesReport
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: '2024-01-01'
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: '2024-03-31'
+        - name: groupBy
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [DAY, MONTH, YEAR]
+            default: MONTH
+      responses:
+        '200':
+          description: Sales report data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalSales:
+                    type: number
+                    format: float
+                    example: 150000.75
+                  totalOrders:
+                    type: integer
+                    example: 1250
+                  averageOrderValue:
+                    type: number
+                    format: float
+                    example: 120.00
+                  salesByPeriod:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        period:
+                          type: string
+                          example: '2024-01'
+                        sales:
+                          type: number
+                          format: float
+                          example: 50000.25
+                        orders:
+                          type: integer
+                          example: 400
+                  topProducts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        productId:
+                          type: string
+                          format: uuid
+                          example: p1r2o3d4-u5c6-t7i8-9d0e-a1b2c3d4e5f6
+                        productName:
+                          type: string
+                          example: Wireless Headphones
+                        totalSales:
+                          type: number
+                          format: float
+                          example: 25000.00
+                  currency:
+                    type: string
+                    example: USD
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /analytics/transactions/volume:
+    get:
+      summary: Get transaction volume analytics
+      operationId: getTransactionVolume
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: '2024-01-01'
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          example: '2024-03-31'
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PAYMENT, DEPOSIT, WITHDRAWAL, TRANSFER]
+            description: Filter by transaction type
+      responses:
+        '200':
+          description: Transaction volume report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalTransactionCount:
+                    type: integer
+                    example: 5000
+                  totalTransactionAmount:
+                    type: number
+                    format: float
+                    example: 500000.00
+                  currency:
+                    type: string
+                    example: USD
+                  transactionsByStatus:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    example:
+                      COMPLETED: 4800
+                      FAILED: 150
+                      PENDING: 50
+                  transactionsByType:
+                    type: object
+                    additionalProperties:
+                      type: integer
+                    example:
+                      PAYMENT: 3000
+                      DEPOSIT: 1000
+                      TRANSFER: 1000
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions:
+    post:
+      summary: Create a new subscription
+      operationId: createSubscription
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerId
+                - planId
+                - startDate
+              properties:
+                customerId:
+                  type: string
+                  format: uuid
+                  example: c1u2s3t4-o5m6-e7r8-9i0d-a1b2c3d4e5f6
+                planId:
+                  type: string
+                  format: uuid
+                  example: p1l2a3n4-i5d6-7e8a-9b0c-d1e2f3a4b5c6
+                startDate:
+                  type: string
+                  format: date
+                  example: '2024-04-01'
+                paymentMethodId:
+                  type: string
+                  format: uuid
+                  description: Optional, if not provided default payment method will be used
+                  nullable: true
+      responses:
+        '201':
+          description: Subscription created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptionId:
+                    type: string
+                    format: uuid
+                    example: s1u2b3s4-c5r6-i7p8-9i0o-n1d2e3f4a5g6
+                  status:
+                    type: string
+                    example: ACTIVE
+                  nextBillingDate:
+                    type: string
+                    format: date
+                    example: '2024-05-01'
+                  planDetails:
+                    type: object
+                    properties:
+                      planName:
+                        type: string
+                        example: Premium Monthly
+                      amount:
+                        type: number
+                        format: float
+                        example: 29.99
+                      currency:
+                        type: string
+                        example: USD
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /subscriptions/{subscriptionId}/cancel:
+    post:
+      summary: Cancel an active subscription
+      operationId: cancelSubscription
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: subscriptionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: s1u2b3s4-c5r6-i7p8-9i0o-n1d2e3f4a5g6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  nullable: true
+                  example: No longer need the service
+      responses:
+        '200':
+          description: Subscription cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subscriptionId:
+                    type: string
+                    format: uuid
+                    example: s1u2b3s4-c5r6-i7p8-9i0o-n1d2e3f4a5g6
+                  status:
+                    type: string
+                    example: CANCELLED
+                  cancellationDate:
+                    type: string
+                    format: date
+                    example: '2024-04-15'
+                  effectiveEndDate:
+                    type: string
+                    format: date
+                    example: '2024-04-30'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - statusCode
+        - message
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Bad Request
+        details:
+          type: array
+          items:
+            type: string
+          nullable: true
+          example: ["Validation failed: email must be an email"]
+  responses:
+    BadRequest:
+      description: Bad Request - Invalid input data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              statusCode: 400
+              message: "Invalid input"
+              details: ["Field 'amount' is required."]
+    Unauthorized:
+      description: Unauthorized - Authentication required or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              statusCode: 401
+              message: "Unauthorized"
+              details: ["Invalid or expired access token."]
+    Forbidden:
+      description: Forbidden - User does not have necessary permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              statusCode: 403
+              message: "Forbidden"
+              details: ["User does not have access to this resource."]
+    NotFound:
+      description: Not Found - The requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              statusCode: 404
+              message: "Resource not found"
+              details: ["Wallet with ID '...' not found."]
+    InternalServerError:
+      description: Internal Server Error - Something went wrong on the server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+            example:
+              statusCode: 500
+              message: "Internal Server Error"
+              details: ["An unexpected error occurred. Please try again later."]

@@ -1,0 +1,83 @@
+{
+  "version": "1.0.0",
+  "last_audit": "2026-05-04",
+  "verticals": [
+    {
+      "id": "V01",
+      "name": "Public Core",
+      "brand": "PaySurity.com",
+      "doc_path": "requirements/01_core/WEB_PUBLIC_WEBSITE.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V02",
+      "name": "Merchant Services",
+      "brand": "Onboarding/KYC/AML",
+      "doc_path": "requirements/02_merchant/MER_MERCHANT_SERVICES_ONBOARDING.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V03",
+      "name": "Restaurant POS",
+      "brand": "BistroBeast",
+      "doc_path": "requirements/03_restaurant/POSR_POS_RESTAURANT.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V04",
+      "name": "Grocery POS",
+      "brand": "GrocerEase",
+      "doc_path": "requirements/04_grocery/POSG_POS_GROCERY.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V05",
+      "name": "Finance: Payroll",
+      "brand": "PayPayroll",
+      "doc_path": "requirements/05_payroll/PAY_PAYROLL.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V06",
+      "name": "Finance: Digital Wallets",
+      "brand": "PayWallet",
+      "doc_path": "requirements/06_wallets/WAL_DIGITAL_WALLETS.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V07",
+      "name": "Legal Tech",
+      "brand": "LegalEdge",
+      "doc_path": null,
+      "status": "Documentation Gap"
+    },
+    {
+      "id": "V08",
+      "name": "Healthcare: Dental",
+      "brand": "Dental PMS",
+      "doc_path": null,
+      "status": "Documentation Gap"
+    },
+    {
+      "id": "V09",
+      "name": "Healthcare: Chiro",
+      "brand": "Chiro PMS",
+      "doc_path": null,
+      "status": "Documentation Gap"
+    },
+    {
+      "id": "V10",
+      "name": "AI Microsites",
+      "brand": "Industry Templates",
+      "doc_path": "requirements/10_microsites/MST_TENANT_MICROSITE.md",
+      "status": "Verified"
+    },
+    {
+      "id": "V11",
+      "name": "Internal Ops",
+      "brand": "Super-Admin",
+      "doc_path": "requirements/11_internal/ADM_ADMIN_OPERATIONS.md",
+      "status": "Verified"
+    }
+  ]
+}

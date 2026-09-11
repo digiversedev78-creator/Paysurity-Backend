@@ -1,0 +1,53 @@
+# PaySurity-2026 — Local Development Infrastructure
+# Container names are globally unique to avoid collisions with other projects
+# Ports: PostgreSQL=5436, Redis=6381 (avoids 3000/3001/5433 conflicts)
+
+services:
+  db:
+    container_name: paysurity_2026_postgres
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: paysurity_dev
+      POSTGRES_USER: paysurity
+      POSTGRES_PASSWORD: paysurity_local_2026
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=en_US.utf8 --lc-ctype=en_US.utf8"
+    ports:
+      - "5436:5432"
+    volumes:
+      - paysurity_2026_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paysurity -d paysurity_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paysurity_2026_net
+
+  redis:
+    container_name: paysurity_2026_redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6381:6379"
+    volumes:
+      - paysurity_2026_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paysurity_2026_net
+
+volumes:
+  paysurity_2026_pgdata:
+    name: paysurity_2026_pgdata
+  paysurity_2026_redis:
+    name: paysurity_2026_redis
+
+networks:
+  paysurity_2026_net:
+    name: paysurity_2026_net
+    driver: bridge

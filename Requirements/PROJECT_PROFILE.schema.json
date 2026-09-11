@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Project Profile Schema (v2)",
+  "type": "object",
+  "required": [
+    "project_name",
+    "platforms",
+    "accessibility",
+    "security",
+    "budget",
+    "e2e"
+  ],
+  "properties": {
+    "project_name": {
+      "type": "string"
+    },
+    "platforms": {
+      "type": "object",
+      "required": [
+        "web",
+        "mobile"
+      ],
+      "properties": {
+        "web": {
+          "type": "boolean"
+        },
+        "mobile": {
+          "type": "boolean"
+        },
+        "desktop_windows": {
+          "type": "boolean"
+        }
+      }
+    },
+    "deploy": {
+      "type": "object",
+      "properties": {
+        "web_provider": {
+          "type": "string",
+          "enum": [
+            "vercel",
+            "railway",
+            "gcp",
+            "none"
+          ]
+        },
+        "api_provider": {
+          "type": "string",
+          "enum": [
+            "railway",
+            "gcp",
+            "none"
+          ]
+        },
+        "enable_staging": {
+          "type": "boolean"
+        },
+        "enable_production": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "accessibility": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "standard"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "standard": {
+          "type": "string"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": [
+        "gitleaks",
+        "osv",
+        "codeql_optional"
+      ],
+      "properties": {
+        "gitleaks": {
+          "type": "boolean"
+        },
+        "osv": {
+          "type": "boolean"
+        },
+        "codeql_optional": {
+          "type": "boolean"
+        }
+      }
+    },
+    "e2e": {
+      "type": "object",
+      "required": [
+        "web_runner",
+        "mobile_runner",
+        "require_pass_for_must_flows"
+      ],
+      "properties": {
+        "web_runner": {
+          "type": "string",
+          "enum": [
+            "playwright",
+            "none"
+          ]
+        },
+        "mobile_runner": {
+          "type": "string",
+          "enum": [
+            "maestro",
+            "detox",
+            "none"
+          ]
+        },
+        "require_pass_for_must_flows": {
+          "type": "boolean"
+        },
+        "base_url": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "migration_tool": {
+          "type": "string",
+          "enum": [
+            "prisma",
+            "drizzle",
+            "knex",
+            "flyway",
+            "none"
+          ]
+        },
+        "require_down_migrations": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "observability": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "sentry",
+            "open-telemetry",
+            "none"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "budget": {
+      "type": "object",
+      "required": [
+        "enforce",
+        "max_cost_usd",
+        "max_slices_total"
+      ],
+      "properties": {
+        "enforce": {
+          "type": "boolean"
+        },
+        "max_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_slices_total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

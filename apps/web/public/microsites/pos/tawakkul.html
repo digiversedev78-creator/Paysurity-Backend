@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>POS Register — Tawakkul Restaurant</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--bg:#0b0408;--surface:rgba(35,10,18,.94);--glass:rgba(255,255,255,.04);--accent:#c73e5a;--accent-dark:#a3233b;--text:#f5eae0;--muted:rgba(245,234,224,.45)}</style>
+<link rel="stylesheet" href="pos.css">
+</head>
+<body>
+<div class="pos-wrap">
+  <header class="pos-header">
+    <h1>🕌 Tawakkul POS</h1>
+    <div class="pos-meta">
+      <span class="pos-clock" id="posClock">--:--:--</span>
+      <div class="pos-user">👤 Cashier · Halal Certified</div>
+    </div>
+  </header>
+  <div class="pos-left">
+    <div class="pos-toolbar">
+      <button class="pos-tool" onclick="POS.showTableMap()">🗺️ Table Map</button>
+      <button class="pos-tool" onclick="POS.showSplitCheck()">✂️ Split Check</button>
+      <label for="posTable" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">Table: <input id="posTable" value="" placeholder="#" style="width:48px;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);font-size:13px;text-align:center;font-family:inherit"></label>
+    </div>
+    <div class="table-map" id="tableMap"></div>
+    <div class="pos-cats" id="posCats" role="tablist"></div>
+    <div class="pos-grid" id="posGrid"></div>
+    <h2 style="font-size:14px;font-weight:700;color:var(--accent);margin:20px 0 8px">🍳 Kitchen Display (KDS)</h2>
+    <div class="kds-panel" id="kdsPanel"><div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center;padding:20px">No active orders — tickets appear here</div></div>
+  </div>
+  <div class="pos-right">
+    <div class="pos-stats">
+      <div class="pos-stat"><div class="pos-stat-label">Transactions</div><div class="pos-stat-val" id="statTxn">0</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Revenue</div><div class="pos-stat-val" id="statRev">$0.00</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Avg Ticket</div><div class="pos-stat-val" id="statAvg">$0.00</div></div>
+    </div>
+    <div class="pos-order-head"><h2>Current Order</h2><span class="pos-badge" id="posItemCount">0</span></div>
+    <div class="pos-cart" id="posCart"><div class="pos-empty">No items in order</div></div>
+    <div class="pos-footer">
+      <div class="pos-total-row"><span>Total</span><span class="pos-total" id="posTotal">$0.00</span></div>
+      <div class="pos-pay-methods">
+        <button class="pos-pm on" onclick="document.querySelectorAll('.pos-pm').forEach(b=>b.classList.remove('on'));this.classList.add('on')" data-m="CARD_PRESENT">💳 Card</button>
+        <button class="pos-pm" onclick="document.querySelectorAll('.pos-pm').forEach(b=>b.classList.remove('on'));this.classList.add('on')" data-m="CASH">💵 Cash</button>
+        <button class="pos-pm" onclick="document.querySelectorAll('.pos-pm').forEach(b=>b.classList.remove('on'));this.classList.add('on')" data-m="TAP">📱 Tap</button>
+      </div>
+      <div class="pos-actions">
+        <button class="pos-clear" onclick="POS.clearCart()">Clear</button>
+        <button class="pos-pay" id="posPayBtn" disabled onclick="POS.processPayment(document.querySelector('.pos-pm.on')?.dataset.m||'CARD_PRESENT')">💳 CHARGE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- SPLIT CHECK MODAL -->
+<div class="pos-modal" id="splitModal"><div class="pos-modal-box">
+  <h3>✂️ Split Check</h3>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Total: <strong id="splitTotal">$0.00</strong></p>
+  <label style="font-size:12px;color:var(--muted)">Number of guests:</label>
+  <input type="number" id="splitCount" value="2" min="2" max="12" oninput="POS.calcSplit()">
+  <div style="font-size:18px;font-weight:800;color:var(--accent);text-align:center;margin:8px 0" id="splitPer"></div>
+  <div id="splitBreakdown"></div>
+  <button class="secondary" onclick="POS.closeSplit()" style="margin-top:12px">Close</button>
+</div></div>
+<!-- RECEIPT MODAL -->
+<div class="pos-modal" id="receiptModal"><div class="pos-modal-box">
+  <div id="receiptContent"></div>
+  <button class="secondary" onclick="POS.closeReceipt()" style="margin-top:12px">Close</button>
+</div></div>
+<div class="pos-toast" id="posToast"></div>
+<script src="pos-engine.js"></script>
+<script>
+POS.init({
+  storeName:'Tawakkul Restaurant',
+  email:'admin@tawakkul.restaurant', password:'Test123!',
+  locationId:'dddddddd-0003-4000-8000-000000000003',
+  orderType:'DINE_IN', hasKDS:true,
+  items:[
+    {n:'Chicken Tikka',p:1699,e:'🍗',cat:'Grills',d:'4pcs',kds:'GRILL'},
+    {n:'Al Faham BBQ',p:1849,e:'🍖',cat:'Grills',kds:'GRILL'},
+    {n:'Lamb Chops',p:1499,e:'🥩',cat:'Grills',kds:'GRILL'},
+    {n:'Seekh Kebab',p:999,e:'🥩',cat:'Grills',kds:'GRILL'},
+    {n:'Malai Kebab',p:999,e:'🍢',cat:'Grills',kds:'GRILL'},
+    {n:'Mix Grill Platter',p:1499,e:'🔥',cat:'Grills',kds:'GRILL'},
+    {n:'Fish Tawa Fry',p:1599,e:'🐟',cat:'Fish',kds:'FRY'},
+    {n:'Grilled Fish',p:1849,e:'🐠',cat:'Fish',kds:'GRILL'},
+    {n:'Fish Pakoda',p:1699,e:'🍤',cat:'Fish',kds:'FRY'},
+    {n:'Fish Polichi',p:1999,e:'🐡',cat:'Fish',kds:'FRY'},
+    {n:'Chicken Biryani',p:1799,e:'🍚',cat:'Biryani',kds:'RICE'},
+    {n:'Goat Biryani',p:2249,e:'🐐',cat:'Biryani',kds:'RICE'},
+    {n:'Chicken 65 Biryani',p:1849,e:'🌶️',cat:'Biryani',kds:'RICE'},
+    {n:'Karachi Mutton',p:1699,e:'🍖',cat:'Biryani',kds:'RICE'},
+    {n:'Samosa (4)',p:999,e:'🥟',cat:'Apps',kds:'FRY'},
+    {n:'Chicken Pakoda',p:1549,e:'🍗',cat:'Apps',kds:'FRY'},
+    {n:'Paratha Roll',p:1399,e:'🌯',cat:'Apps',kds:'GRILL'},
+    {n:'Mango Lassi',p:599,e:'🥭',cat:'Drinks'},
+    {n:'Masala Chai',p:399,e:'☕',cat:'Drinks'},
+    {n:'Lime Soda',p:499,e:'🍋',cat:'Drinks'},
+  ]
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+﻿src/modules/orders/orders.dto.ts(20,13): error TS1005: '=' expected.
+src/modules/orders/orders.dto.ts(93,3): error TS1136: Property assignment expected.
+src/modules/orders/orders.dto.ts(93,69): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(96,70): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(99,72): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(102,95): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(105,86): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(108,96): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(111,106): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(114,103): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(117,100): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(120,85): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(123,82): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(126,84): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(129,78): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(132,81): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(136,99): error TS1146: Declaration expected.
+src/modules/orders/orders.dto.ts(137,18): error TS1109: Expression expected.
+src/modules/orders/orders.dto.ts(137,32): error TS1005: ',' expected.
+src/modules/orders/orders.dto.ts(137,46): error TS1005: ',' expected.
+src/modules/orders/orders.dto.ts(137,63): error TS1005: ',' expected.
+src/modules/orders/orders.dto.ts(137,81): error TS1005: ',' expected.
+src/modules/orders/orders.dto.ts(137,98): error TS1005: ',' expected.
+src/modules/orders/orders.dto.ts(138,1): error TS1128: Declaration or statement expected.

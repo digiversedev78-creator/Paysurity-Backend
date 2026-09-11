@@ -1,0 +1,13 @@
+﻿src/modules/analytics/eod-reporting.engine.ts(192,25): error TS1136: Property assignment expected.
+src/modules/analytics/eod-reporting.engine.ts(197,14): error TS1005: ',' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,24): error TS1005: ',' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,25): error TS1005: ',' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,38): error TS1005: ',' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,45): error TS1005: ',' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,53): error TS1005: ';' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,54): error TS1434: Unexpected keyword or identifier.
+src/modules/analytics/eod-reporting.engine.ts(197,72): error TS1005: ';' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,88): error TS1005: ';' expected.
+src/modules/analytics/eod-reporting.engine.ts(197,102): error TS1109: Expression expected.
+src/modules/analytics/eod-reporting.engine.ts(197,105): error TS1005: ';' expected.
+src/modules/analytics/eod-reporting.engine.ts(208,1): error TS1160: Unterminated template literal.

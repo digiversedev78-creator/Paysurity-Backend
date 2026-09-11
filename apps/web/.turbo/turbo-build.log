@@ -1,0 +1,17 @@
+
+> @paysurity/public-website@0.0.1 build D:\Projects\PaySurity-Mother Folder\paysurity-public-website\apps\web
+> next build
+
+  ▲ Next.js 14.2.35
+  - Experiments (use with caution):
+    · outputFileTracingRoot
+
+   Creating an optimized production build ...
+ ⚠ Found lockfile missing swc dependencies, patching...
+npm warn Unknown env config "store-dir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+ ⨯ Failed to patch lockfile, please try uninstalling and reinstalling next in this workspace
+TypeError: Cannot read properties of undefined (reading 'os')
+    at fetchPkgInfo (D:\Projects\PaySurity-Mother Folder\paysurity-public-website\node_modules\.pnpm\next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\lib\patch-incorrect-lockfile.js:73:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Promise.all (index 0)
+    at async patchIncorrectLockfile (D:\Projects\PaySurity-Mother Folder\paysurity-public-website\node_modules\.pnpm\next@14.2.35_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\lib\patch-incorrect-lockfile.js:162:26)

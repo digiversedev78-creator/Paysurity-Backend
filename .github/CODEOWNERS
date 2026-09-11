@@ -1,0 +1,3 @@
+# CODEOWNERS
+/Requirements/PaySurity_Requirements_Split_Set_v11_25/ @rwbgoachic
+/.github/workflows/ @rwbgoachic

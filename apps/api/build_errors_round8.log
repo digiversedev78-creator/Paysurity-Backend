@@ -1,0 +1,647 @@
+﻿src/app.module.ts(77,31): error TS2307: Cannot find module './modules/reports/reports.module' or its corresponding type declarations.
+src/modules/admin-portal/log-aggregation.controller.ts(37,39): error TS2339: Property 'getAggregatedLogs' does not exist on type 'LogAggregationService'.
+src/modules/affiliates/affiliates-payouts.service.ts(231,23): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(234,23): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "payout_date"; tableName: "affiliate_payouts"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(390,64): error TS2339: Property 'isNull' does not exist on type 'PgColumn<{ name: "product_id"; tableName: "affiliate_commission_rules"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>'.
+src/modules/affiliates/affiliates-payouts.service.ts(390,110): error TS2339: Property 'isNull' does not exist on type 'PgColumn<{ name: "category_id"; tableName: "affiliate_commission_rules"; dataType: "string"; columnType: "PgUUID"; data: string; driverParam: string; notNull: false; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>'.
+src/modules/affiliates/affiliates-payouts.service.ts(487,23): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(490,23): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "earned_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: true; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(493,23): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(496,23): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(565,9): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/affiliates-payouts.service.ts(575,9): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>, right: Date | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'string' is not assignable to parameter of type 'Date | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<string>, right: string | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'Aliased<string>'.
+      Type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is missing the following properties from type 'Aliased<string>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "eligible_for_payout_at"; tableName: "affiliate_commissions"; dataType: "date"; columnType: "PgTimestamp"; data: Date; driverParam: string; notNull: true; hasDefault: false; ... 6 more ...; generated: undefined; }, {}, {}>' is not assignable to parameter of type 'never'.
+src/modules/affiliates/drizzle.service.ts(2,10): error TS2395: Individual declarations in merged declaration 'NodePgDatabase' must be all exported or all local.
+src/modules/affiliates/drizzle.service.ts(2,10): error TS2440: Import declaration conflicts with local declaration of 'NodePgDatabase'.
+src/modules/affiliates/drizzle.service.ts(42,14): error TS2395: Individual declarations in merged declaration 'NodePgDatabase' must be all exported or all local.
+src/modules/affiliates/drizzle.service.ts(42,29): error TS2368: Type parameter name cannot be 'any'.
+src/modules/affiliates/payouts/affiliates-payouts.controller.ts(10,42): error TS2554: Expected 2 arguments, but got 1.
+src/modules/affiliates/payouts/affiliates-payouts.controller.ts(20,50): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/modules/affiliates/payouts/affiliates-payouts.controller.ts(25,42): error TS2554: Expected 3 arguments, but got 2.
+src/modules/affiliates/payouts/affiliates-payouts.controller.ts(30,42): error TS2554: Expected 2 arguments, but got 1.
+src/modules/affiliates/payouts/affiliates-payouts.service.ts(4,10): error TS2305: Module '"@paysurity/database"' has no exported member 'affiliatesPayouts'.
+src/modules/affiliates/schema.ts(3,27): error TS2307: Cannot find module '../merchants/schema' or its corresponding type declarations.
+src/modules/aggregator/aggregator.controller.ts(11,11): error TS2430: Interface 'RequestWithUser' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; merchantId?: string; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/aggregator/aggregator.service.ts(83,32): error TS2339: Property 'emit' does not exist on type 'EventBusService'.
+src/modules/aggregator/aggregator.service.ts(102,28): error TS2339: Property 'emit' does not exist on type 'EventBusService'.
+src/modules/aggregator/aggregator.service.ts(408,28): error TS2339: Property 'emit' does not exist on type 'EventBusService'.
+src/modules/aggregator/aggregator.service.ts(443,78): error TS2339: Property 'fetchDoorDashOrderStatus' does not exist on type 'AggregatorService'.
+src/modules/aggregator/aggregator.service.ts(449,78): error TS2339: Property 'fetchUberEatsOrderStatus' does not exist on type 'AggregatorService'.
+src/modules/aggregator/aggregator.service.ts(455,78): error TS2339: Property 'fetchGrubHubOrderStatus' does not exist on type 'AggregatorService'.
+src/modules/aggregator/aggregator.service.ts(470,30): error TS2339: Property 'emit' does not exist on type 'EventBusService'.
+src/modules/ai/ai-customer-segmentation.controller.ts(4,10): error TS2724: '"../dto/ai-customer-segmentation.dto"' has no exported member named 'CreateAiCustomerSegmentationDto'. Did you mean 'AiCustomerSegmentationDto'?
+src/modules/ai/ai-customer-segmentation.controller.ts(4,43): error TS2724: '"../dto/ai-customer-segmentation.dto"' has no exported member named 'UpdateAiCustomerSegmentationDto'. Did you mean 'AiCustomerSegmentationDto'?
+src/modules/ai/ai-customer-segmentation.controller.ts(35,47): error TS2339: Property 'create' does not exist on type 'AiCustomerSegmentationService'.
+src/modules/ai/ai-customer-segmentation.controller.ts(49,47): error TS2339: Property 'findAll' does not exist on type 'AiCustomerSegmentationService'.
+src/modules/ai/ai-customer-segmentation.controller.ts(68,67): error TS2339: Property 'findOne' does not exist on type 'AiCustomerSegmentationService'.
+src/modules/ai/ai-customer-segmentation.controller.ts(93,74): error TS2339: Property 'update' does not exist on type 'AiCustomerSegmentationService'.
+src/modules/ai/ai-customer-segmentation.controller.ts(117,62): error TS2339: Property 'remove' does not exist on type 'AiCustomerSegmentationService'.
+src/modules/ai/ai-customer-segmentation.service.ts(4,3): error TS2305: Module '"@paysurity/database"' has no exported member 'segmentationRunStatusEnum'.
+src/modules/analytics/eod-reporting.engine.ts(123,70): error TS2345: Argument of type 'PayrollSummaryReport' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type 'PayrollSummaryReport'.
+src/modules/analytics/eod-reporting.engine.ts(133,64): error TS2345: Argument of type 'POSSalesReport' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type 'POSSalesReport'.
+src/modules/analytics/profitability.service.ts(20,33): error TS2352: Conversion of type 'NodePgDatabase<Record<string, unknown>>' to type 'Record<string, unknown> & { execute: (q: string, p: string[]) => Promise<{ rows?: { gross_revenue?: string; }[]; }>; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'NodePgDatabase<Record<string, unknown>>' is not comparable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'NodePgDatabase<Record<string, unknown>>'.
+src/modules/analytics/profitability.service.ts(29,30): error TS2352: Conversion of type 'NodePgDatabase<Record<string, unknown>>' to type 'Record<string, unknown> & { execute: (q: string, p: string[]) => Promise<{ rows?: { total_cogs?: string; }[]; }>; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'NodePgDatabase<Record<string, unknown>>' is not comparable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'NodePgDatabase<Record<string, unknown>>'.
+src/modules/analytics/profitability.service.ts(41,31): error TS2352: Conversion of type 'NodePgDatabase<Record<string, unknown>>' to type 'Record<string, unknown> & { execute: (q: string, p: string[]) => Promise<{ rows?: { labor_cost?: string; }[]; }>; }' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'NodePgDatabase<Record<string, unknown>>' is not comparable to type 'Record<string, unknown>'.
+    Index signature for type 'string' is missing in type 'NodePgDatabase<Record<string, unknown>>'.
+src/modules/api-keys/api-platform.controller.ts(1,10): error TS2300: Duplicate identifier 'Controller'.
+src/modules/api-keys/api-platform.controller.ts(1,22): error TS2300: Duplicate identifier 'Post'.
+src/modules/api-keys/api-platform.controller.ts(1,28): error TS2300: Duplicate identifier 'Get'.
+src/modules/api-keys/api-platform.controller.ts(1,33): error TS2300: Duplicate identifier 'Delete'.
+src/modules/api-keys/api-platform.controller.ts(1,41): error TS2300: Duplicate identifier 'Param'.
+src/modules/api-keys/api-platform.controller.ts(1,48): error TS2300: Duplicate identifier 'Body'.
+src/modules/api-keys/api-platform.controller.ts(1,54): error TS2300: Duplicate identifier 'Request'.
+src/modules/api-keys/api-platform.controller.ts(1,63): error TS2300: Duplicate identifier 'HttpStatus'.
+src/modules/api-keys/api-platform.controller.ts(1,75): error TS2300: Duplicate identifier 'HttpException'.
+src/modules/api-keys/api-platform.controller.ts(1,90): error TS2300: Duplicate identifier 'Injectable'.
+src/modules/api-keys/api-platform.controller.ts(2,3): error TS2300: Duplicate identifier 'Optional'.
+src/modules/api-keys/api-platform.controller.ts(3,10): error TS2300: Duplicate identifier 'Controller'.
+src/modules/api-keys/api-platform.controller.ts(3,22): error TS2300: Duplicate identifier 'Post'.
+src/modules/api-keys/api-platform.controller.ts(3,28): error TS2300: Duplicate identifier 'Get'.
+src/modules/api-keys/api-platform.controller.ts(3,33): error TS2300: Duplicate identifier 'Delete'.
+src/modules/api-keys/api-platform.controller.ts(3,41): error TS2300: Duplicate identifier 'Param'.
+src/modules/api-keys/api-platform.controller.ts(3,48): error TS2300: Duplicate identifier 'Body'.
+src/modules/api-keys/api-platform.controller.ts(3,54): error TS2300: Duplicate identifier 'Request'.
+src/modules/api-keys/api-platform.controller.ts(3,63): error TS2300: Duplicate identifier 'HttpStatus'.
+src/modules/api-keys/api-platform.controller.ts(3,75): error TS2300: Duplicate identifier 'HttpException'.
+src/modules/api-keys/api-platform.controller.ts(3,90): error TS2300: Duplicate identifier 'Injectable'.
+src/modules/api-keys/api-platform.controller.ts(4,3): error TS2300: Duplicate identifier 'Optional'.
+src/modules/api-keys/api-platform.controller.ts(61,16): error TS2304: Cannot find name 'Inject'.
+src/modules/api-keys/api-platform.controller.ts(84,6): error TS2304: Cannot find name 'Inject'.
+src/modules/api-keys/api-platform.module.ts(2,18): error TS2305: Module '"@nestjs/common"' has no exported member 'CacheModule'.
+src/modules/api-keys/api-platform.module.ts(4,33): error TS2307: Cannot find module './audit-log.service' or its corresponding type declarations.
+src/modules/api-keys/api-platform.service.ts(2,23): error TS2307: Cannot find module 'cache-manager' or its corresponding type declarations.
+src/modules/api-keys/api-platform.service.ts(3,31): error TS2307: Cannot find module '@nestjs/cache-manager' or its corresponding type declarations.
+src/modules/api-keys/apikeys.controller.ts(7,6): error TS2300: Duplicate identifier 'NodePgDatabase'.
+src/modules/auth/audit-log.service.ts(7,35): error TS2307: Cannot find module './dto/create-audit-log.dto' or its corresponding type declarations.
+src/modules/auth/auth.service.ts(64,28): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/auth.service.ts(125,28): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/auth.service.ts(219,27): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/auth.service.ts(303,19): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/auth.service.ts(371,29): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/auth.service.ts(421,29): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/auth.service.ts(442,27): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/auth/drizzle.service.ts(2,10): error TS2395: Individual declarations in merged declaration 'NodePgDatabase' must be all exported or all local.
+src/modules/auth/drizzle.service.ts(2,10): error TS2440: Import declaration conflicts with local declaration of 'NodePgDatabase'.
+src/modules/auth/drizzle.service.ts(7,14): error TS2395: Individual declarations in merged declaration 'NodePgDatabase' must be all exported or all local.
+src/modules/auth/drizzle.service.ts(7,29): error TS2368: Type parameter name cannot be 'any'.
+src/modules/cash-drawer/cash-drawer.dto.ts(33,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  This expression is not callable.
+    Type '{ message: string; }' has no call signatures.
+src/modules/cash-drawer/cash-drawer.dto.ts(68,4): error TS1240: Unable to resolve signature of property decorator when called as an expression.
+  This expression is not callable.
+    Type '{ message: string; }' has no call signatures.
+src/modules/cash-drawer/cash-drawer.service.ts(18,10): error TS2305: Module '"@paysurity/database"' has no exported member 'cashDrawers'.
+src/modules/cash-drawer/cash-drawer.service.ts(18,23): error TS2305: Module '"@paysurity/database"' has no exported member 'cashDrawerTransactions'.
+src/modules/cash-drawer/cash-drawer.service.ts(18,47): error TS2305: Module '"@paysurity/database"' has no exported member 'CashDrawer'.
+src/modules/cash-drawer/cash-drawer.service.ts(33,13): error TS2339: Property 'locationId' does not exist on type 'CreateCashDrawerDto'.
+src/modules/cash-drawer/cash-drawer.service.ts(33,25): error TS2339: Property 'name' does not exist on type 'CreateCashDrawerDto'.
+src/modules/cash-drawer/cash-drawer.service.ts(33,31): error TS2339: Property 'initialBalance' does not exist on type 'CreateCashDrawerDto'.
+src/modules/cash-drawer/cash-drawer.service.ts(41,32): error TS2339: Property 'OPEN' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(60,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/cash-drawer/cash-drawer.service.ts(120,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/cash-drawer/cash-drawer.service.ts(145,44): error TS2339: Property 'CLOSED' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(176,34): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/cash-drawer/cash-drawer.service.ts(202,44): error TS2339: Property 'CLOSED' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(237,34): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/cash-drawer/cash-drawer.service.ts(260,13): error TS2339: Property 'finalBalance' does not exist on type 'CloseCashDrawerDto'.
+src/modules/cash-drawer/cash-drawer.service.ts(263,44): error TS2339: Property 'CLOSED' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(274,34): error TS2339: Property 'CLOSED' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(285,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/cash-drawer/cash-drawer.service.ts(292,37): error TS2339: Property 'OPEN' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(293,37): error TS2339: Property 'CLOSED' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(310,44): error TS2339: Property 'OPEN' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(317,34): error TS2339: Property 'OPEN' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(327,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/cash-drawer/cash-drawer.service.ts(334,37): error TS2339: Property 'CLOSED' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/cash-drawer/cash-drawer.service.ts(335,37): error TS2339: Property 'OPEN' does not exist on type 'typeof CashDrawerStatus'.
+src/modules/catering/catering.module.ts(210,11): error TS2430: Interface 'AuthenticatedRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/checkout/checkout.controller.ts(20,33): error TS2306: File 'D:/xampp/htdocs/websites/PaySurity-Monorepo-master/PaySurity-Monorepo-main/apps/api/src/modules/checkout/checkout.service.ts' is not a module.
+src/modules/checkout/checkout.controller.ts(22,34): error TS2307: Cannot find module './dto/start-checkout.dto' or its corresponding type declarations.
+src/modules/checkout/checkout.controller.ts(23,29): error TS2307: Cannot find module './dto/scan-item.dto' or its corresponding type declarations.
+src/modules/checkout/checkout.controller.ts(24,35): error TS2307: Cannot find module './dto/apply-promotion.dto' or its corresponding type declarations.
+src/modules/checkout/checkout.controller.ts(25,35): error TS2307: Cannot find module './dto/process-payment.dto' or its corresponding type declarations.
+src/modules/checkout/checkout.controller.ts(65,107): error TS2693: 'CheckoutSessionResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/checkout.controller.ts(81,88): error TS2693: 'CheckoutSessionResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/checkout.controller.ts(99,95): error TS2693: 'CheckoutSessionResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/checkout.controller.ts(117,90): error TS2693: 'CheckoutSessionResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/checkout.controller.ts(135,104): error TS2693: 'CheckoutSessionResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/checkout.controller.ts(151,95): error TS2693: 'CheckoutSessionResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/checkout.controller.ts(169,110): error TS2693: 'ReceiptResponse' only refers to a type, but is being used as a value here.
+src/modules/checkout/orders.service.ts(3,18): error TS2305: Module '"@paysurity/database"' has no exported member 'orderItems'.
+src/modules/checkout/orders.service.ts(43,11): error TS2488: Type 'any[] | QueryResult<never>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/modules/common/audit/audit-log.service.ts(4,21): error TS2724: '"@paysurity/database"' has no exported member named 'NewAuditLog'. Did you mean 'auditLogs'?
+src/modules/common/audit/audit-log.service.ts(4,34): error TS2724: '"@paysurity/database"' has no exported member named 'AuditLog'. Did you mean 'auditLogs'?
+src/modules/compliance/compliance.controller.ts(17,35): error TS2339: Property 'getPciArchives' does not exist on type 'ComplianceService'.
+src/modules/compliance/compliance.controller.ts(28,35): error TS2551: Property 'createPciArchive' does not exist on type 'ComplianceService'. Did you mean 'createPciAuditArchive'?
+src/modules/compliance/compliance.controller.ts(39,35): error TS2339: Property 'getPciArchiveById' does not exist on type 'ComplianceService'.
+src/modules/compliance/compliance.controller.ts(50,35): error TS2554: Expected 2 arguments, but got 1.
+src/modules/compliance/dto/pci-audit-archive.dto.ts(14,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/compliance/pci-audit-archive.controller.ts(35,56): error TS2559: Type 'PciAuditArchiveQueryDto' has no properties in common with type '{ limit?: number; offset?: number; sortBy?: string | number | symbol; sortOrder?: "asc" | "desc"; }'.
+src/modules/compliance/pci-audit-archive.service.ts(4,10): error TS2305: Module '"@paysurity/database"' has no exported member 'pciAuditArchives'.
+src/modules/core/security/dpop.guard.ts(2,33): error TS2307: Cannot find module './crypto.utils' or its corresponding type declarations.
+src/modules/delivery/delivery-driver-assignment.controller.ts(5,3): error TS2724: '"./dto/delivery-driver-assignment.dto"' has no exported member named 'CreateDeliveryDriverAssignmentDto'. Did you mean 'DeliveryDriverAssignmentDto'?
+src/modules/delivery/delivery-driver-assignment.controller.ts(6,3): error TS2724: '"./dto/delivery-driver-assignment.dto"' has no exported member named 'UpdateDeliveryDriverAssignmentDto'. Did you mean 'DeliveryDriverAssignmentDto'?
+src/modules/delivery/delivery-driver-assignment.controller.ts(7,3): error TS2724: '"./dto/delivery-driver-assignment.dto"' has no exported member named 'DeliveryDriverAssignmentIdParamDto'. Did you mean 'DeliveryDriverAssignmentDto'?
+src/modules/delivery/delivery-driver-assignment.controller.ts(8,3): error TS2305: Module '"./dto/delivery-driver-assignment.dto"' has no exported member 'DriverIdParamDto'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(9,3): error TS2305: Module '"./dto/delivery-driver-assignment.dto"' has no exported member 'DeliveryIdParamDto'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(19,49): error TS2339: Property 'create' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(24,49): error TS2339: Property 'findAll' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(29,49): error TS2339: Property 'findByDriverId' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(34,49): error TS2339: Property 'findByDeliveryId' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(39,49): error TS2339: Property 'findOne' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(47,49): error TS2339: Property 'update' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.controller.ts(53,49): error TS2339: Property 'remove' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery-driver-assignment.service.ts(4,18): error TS2305: Module '"@paysurity/database"' has no exported member 'deliveryDrivers'.
+src/modules/delivery/delivery.controller.ts(52,23): error TS2339: Property 'tenantId' does not exist on type 'AssignDeliveryDriverDto'.
+src/modules/delivery/delivery.controller.ts(52,33): error TS2339: Property 'userId' does not exist on type 'AssignDeliveryDriverDto'.
+src/modules/delivery/delivery.controller.ts(52,41): error TS2339: Property 'status' does not exist on type 'AssignDeliveryDriverDto'.
+src/modules/delivery/delivery.controller.ts(54,49): error TS2339: Property 'assignDeliveryDriver' does not exist on type 'DeliveryDriverAssignmentService'.
+src/modules/delivery/delivery.service.ts(18,6): error TS2300: Duplicate identifier 'NodePgDatabase'.
+src/modules/disputes/disputes.service.ts(28,43): error TS2339: Property 'disputes' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/disputes/disputes.service.ts(40,21): error TS2694: Namespace '"@paysurity/database"' has no exported member 'Dispute'.
+src/modules/disputes/disputes.service.ts(56,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/disputes/disputes.service.ts(76,21): error TS2694: Namespace '"@paysurity/database"' has no exported member 'Dispute'.
+src/modules/disputes/disputes.service.ts(97,21): error TS2694: Namespace '"@paysurity/database"' has no exported member 'Dispute'.
+src/modules/disputes/disputes.service.ts(98,36): error TS2339: Property 'amountMin' does not exist on type 'DisputeQueryDto'.
+src/modules/disputes/disputes.service.ts(98,47): error TS2339: Property 'amountMax' does not exist on type 'DisputeQueryDto'.
+src/modules/disputes/disputes.service.ts(98,102): error TS2339: Property 'sortBy' does not exist on type 'DisputeQueryDto'.
+src/modules/disputes/disputes.service.ts(98,124): error TS2339: Property 'sortOrder' does not exist on type 'DisputeQueryDto'.
+src/modules/disputes/disputes.service.ts(147,21): error TS2694: Namespace '"@paysurity/database"' has no exported member 'Dispute'.
+src/modules/disputes/disputes.service.ts(160,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/disputes/disputes.service.ts(182,21): error TS2694: Namespace '"@paysurity/database"' has no exported member 'Dispute'.
+src/modules/disputes/disputes.service.ts(199,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/disputes/disputes.service.ts(227,32): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/ecom/cart.service.ts(7,15): error TS2451: Cannot redeclare block-scoped variable 'sql'.
+src/modules/ecom/checkout.controller.ts(525,36): error TS2304: Cannot find name 'gen_random_uuid'.
+src/modules/ecom/checkout.service.ts(6,15): error TS2451: Cannot redeclare block-scoped variable 'sql'.
+src/modules/ecom/checkout.service.ts(11,6): error TS2300: Duplicate identifier 'NodePgDatabase'.
+src/modules/ecom/product.service.ts(221,94): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Placeholder<string, any>' is not assignable to parameter of type '(substring: string, ...args: any[]) => string'.
+      Type 'Placeholder<string, any>' provides no match for the signature '(substring: string, ...args: any[]): string'.
+src/modules/ecom/product.service.ts(343,94): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'Placeholder<string, any>' is not assignable to parameter of type '(substring: string, ...args: any[]) => string'.
+      Type 'Placeholder<string, any>' provides no match for the signature '(substring: string, ...args: any[]): string'.
+src/modules/ecom/shipping.controller.ts(1,10): error TS2300: Duplicate identifier 'Inject'.
+src/modules/ecom/shipping.controller.ts(1,18): error TS2300: Duplicate identifier 'Logger'.
+src/modules/ecom/shipping.controller.ts(35,22): error TS2300: Duplicate identifier 'Inject'.
+src/modules/ecom/shipping.controller.ts(35,30): error TS2300: Duplicate identifier 'Logger'.
+src/modules/ecom/shipping.service.ts(2,26): error TS2305: Module '"drizzle-orm/node-postgres"' has no exported member 'raw'.
+src/modules/ecom/shipping.service.ts(71,9): error TS2322: Type 'string' is not assignable to type 'Record<string, any>'.
+src/modules/ecom/shipping.service.ts(107,13): error TS2322: Type 'string' is not assignable to type 'Record<string, any>'.
+src/modules/ecom/shipping.service.ts(120,7): error TS2322: Type 'string' is not assignable to type 'Record<string, any>'.
+src/modules/ecom/shipping.service.ts(162,7): error TS2322: Type 'string' is not assignable to type 'Record<string, any>'.
+src/modules/ecom/shipping.service.ts(225,7): error TS2322: Type 'string' is not assignable to type 'Record<string, any>'.
+src/modules/ecommerce/ecommerce.controller.ts(33,20): error TS2305: Module '"../../common/decorators"' has no exported member 'UserId'.
+src/modules/ecommerce/ecommerce.controller.ts(48,53): error TS2339: Property 'createReview' does not exist on type 'ProductReviewsService'.
+src/modules/ecommerce/ecommerce.controller.ts(67,53): error TS2339: Property 'getProductReviews' does not exist on type 'ProductReviewsService'.
+src/modules/ecommerce/ecommerce.controller.ts(91,53): error TS2339: Property 'getReviewById' does not exist on type 'ProductReviewsService'.
+src/modules/ecommerce/ecommerce.controller.ts(108,60): error TS2339: Property 'updateReview' does not exist on type 'ProductReviewsService'.
+src/modules/ecommerce/ecommerce.controller.ts(128,38): error TS2339: Property 'deleteReview' does not exist on type 'ProductReviewsService'.
+src/modules/ecommerce/product-reviews.service.ts(3,10): error TS2305: Module '"@paysurity/database"' has no exported member 'productReviews'.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(9,10): error TS2305: Module '"../../../auth/interfaces/authenticated-user.interface"' has no exported member 'AuthenticatedUser'.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(25,55): error TS2554: Expected 1 arguments, but got 2.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(32,5): error TS2740: Type '{ data: any[]; total: number; }' is missing the following properties from type 'ProductReviewDto[]': length, pop, push, concat, and 29 more.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(39,39): error TS2339: Property 'findByProductId' does not exist on type 'ProductReviewsService'.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(46,47): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(57,59): error TS2554: Expected 2 arguments, but got 3.
+src/modules/ecommerce/product-reviews/product-reviews.controller.ts(68,49): error TS2554: Expected 1 arguments, but got 2.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(5,3): error TS2305: Module '"@paysurity/database"' has no exported member 'productReviewsTable'.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(6,3): error TS2305: Module '"@paysurity/database"' has no exported member 'productsTable'.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(7,3): error TS2305: Module '"@paysurity/database"' has no exported member 'usersTable'.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(28,24): error TS2339: Property 'userId' does not exist on type 'CreateProductReviewDto'.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(28,40): error TS2339: Property 'comment' does not exist on type 'CreateProductReviewDto'.
+src/modules/employees/clock.service.ts(16,6): error TS2304: Cannot find name 'Inject'.
+src/modules/employees/dto/employee-schedule.dto.ts(2,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/employees/employee-schedules.controller.ts(16,61): error TS2554: Expected 1 arguments, but got 2.
+src/modules/employees/employee-schedules.controller.ts(21,50): error TS2559: Type 'string' has no properties in common with type '{ employeeId?: string; startDate?: Date; endDate?: Date; }'.
+src/modules/employees/employee-schedules.controller.ts(29,62): error TS2554: Expected 1 arguments, but got 2.
+src/modules/employees/employee-schedules.controller.ts(38,65): error TS2554: Expected 2 arguments, but got 3.
+src/modules/employees/employee-schedules.controller.ts(46,61): error TS2554: Expected 1 arguments, but got 2.
+src/modules/employees/employee-schedules.service.ts(51,28): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/employees/employee-schedules.service.ts(109,26): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/employees/employee-schedules.service.ts(127,26): error TS2339: Property 'log' does not exist on type 'AuditLogService'.
+src/modules/employees/employee-schedules.service.ts(143,41): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>, right: string | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'Date' is not assignable to parameter of type 'string | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<Date>, right: Date | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>' is not assignable to parameter of type 'Aliased<Date>'.
+      Type 'PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>' is missing the following properties from type 'Aliased<Date>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>' is not assignable to parameter of type 'never'.
+src/modules/employees/employee-schedules.service.ts(144,41): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(left: PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>, right: string | SQLWrapper): SQL<...>', gave the following error.
+    Argument of type 'Date' is not assignable to parameter of type 'string | SQLWrapper'.
+  Overload 2 of 3, '(left: Aliased<Date>, right: Date | SQLWrapper): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>' is not assignable to parameter of type 'Aliased<Date>'.
+      Type 'PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>' is missing the following properties from type 'Aliased<Date>': sql, fieldAlias
+  Overload 3 of 3, '(left: never, right: unknown): SQL<unknown>', gave the following error.
+    Argument of type 'PgColumn<{ name: "schedule_date"; tableName: "employee_schedules"; dataType: "string"; columnType: "PgVarchar"; data: string; driverParam: string; notNull: true; hasDefault: false; isPrimaryKey: false; ... 5 more ...; generated: undefined; }, {}, { ...; }>' is not assignable to parameter of type 'never'.
+src/modules/employees/employees.service.ts(24,64): error TS2305: Module '"./dto/employee-schedule.dto"' has no exported member 'ClockInOutDto'.
+src/modules/employees/employees.service.ts(24,79): error TS2305: Module '"./dto/employee-schedule.dto"' has no exported member 'GetEmployeeHoursDto'.
+src/modules/employees/employees.service.ts(103,25): error TS2339: Property 'scheduledDate' does not exist on type 'CreateEmployeeScheduleDto'.
+src/modules/employees/employees.service.ts(103,60): error TS2339: Property 'role' does not exist on type 'CreateEmployeeScheduleDto'.
+src/modules/employees/employees.service.ts(148,22): error TS2339: Property 'SCHEDULED' does not exist on type 'typeof ScheduleStatus'.
+src/modules/employees/employees.service.ts(203,22): error TS2339: Property 'CLOCKED_IN' does not exist on type 'typeof ScheduleStatus'.
+src/modules/employees/employees.service.ts(264,22): error TS2339: Property 'COMPLETED' does not exist on type 'typeof ScheduleStatus'.
+src/modules/event-bus/event-consumers.ts(4,28): error TS2307: Cannot find module '../ops/ops.service' or its corresponding type declarations.
+src/modules/gift-cards/gift-cards.controller.ts(28,11): error TS2430: Interface 'AuthenticatedRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; userId: string; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': email, roles
+src/modules/gift-cards/gift-cards.service.ts(58,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(58,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(65,60): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(102,24): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(116,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(116,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(134,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(134,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(153,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(153,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(160,45): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(180,64): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(182,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(182,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(210,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(210,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(225,64): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(231,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(231,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(259,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(259,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(270,64): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(275,28): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(275,70): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(307,30): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(307,72): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(322,34): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(322,112): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(335,52): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(341,30): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(341,72): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(375,30): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(375,72): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(390,52): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(396,30): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(396,72): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(429,30): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(429,72): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(443,57): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(445,19): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(446,19): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(454,30): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(454,72): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(475,52): error TS2339: Property 'gift_cards' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/gift-cards/gift-cards.service.ts(478,7): error TS2353: Object literal may only specify known properties, and 'tenantId' does not exist in type 'GiftCardResponseDto'.
+src/modules/grocery/offline/cache.service.ts(1,39): error TS2307: Cannot find module './tpm.utils' or its corresponding type declarations.
+src/modules/grocery/offline/cache.service.ts(10,11): error TS2304: Cannot find name 'sqliteDb'.
+src/modules/inventory/inventory.controller.ts(17,10): error TS2724: '"drizzle-orm/pg-core"' has no exported member named 'NodePgDatabase'. Did you mean 'PgDatabase'?
+src/modules/inventory/inventory.controller.ts(226,11): error TS2322: Type '{ barcode?: string; name?: string; description?: string; stockLevel?: number; reorderPoint?: number; supplierId?: string; cost?: number; price?: number; category?: string; locationBin?: string; }' is not assignable to type 'Partial<{ name: string; tenantId: string; price: string; barcode: string; supplierId: string; cost: string; id?: string; description?: string; createdAt?: Date; updatedAt?: Date; category?: string; stockLevel?: number; reorderPoint?: number; locationBin?: string; }>'.
+  Types of property 'price' are incompatible.
+    Type 'number' is not assignable to type 'string'.
+src/modules/inventory/purchase-orders.controller.ts(7,3): error TS2724: '"./dto/purchase-order.dto"' has no exported member named 'PurchaseOrderQueryDto'. Did you mean 'PurchaseOrderItemDto'?
+src/modules/inventory/purchase-orders.controller.ts(8,3): error TS2724: '"./dto/purchase-order.dto"' has no exported member named 'ReceivePurchaseOrderDto'. Did you mean 'CreatePurchaseOrderDto'?
+src/modules/inventory/purchase-orders.controller.ts(26,39): error TS2339: Property 'create' does not exist on type 'PurchaseOrdersService'.
+src/modules/inventory/purchase-orders.controller.ts(38,39): error TS2339: Property 'findAll' does not exist on type 'PurchaseOrdersService'.
+src/modules/inventory/purchase-orders.controller.ts(51,60): error TS2339: Property 'findOne' does not exist on type 'PurchaseOrdersService'.
+src/modules/inventory/purchase-orders.controller.ts(70,67): error TS2339: Property 'update' does not exist on type 'PurchaseOrdersService'.
+src/modules/inventory/purchase-orders.controller.ts(89,68): error TS2551: Property 'receivePurchaseOrder' does not exist on type 'PurchaseOrdersService'. Did you mean 'createPurchaseOrder'?
+src/modules/kds/kds.controller.ts(37,3): error TS2305: Module '"./kds.dto"' has no exported member 'UpdateOrderItemPriorityDto'.
+src/modules/kds/kds.controller.ts(38,3): error TS2305: Module '"./kds.dto"' has no exported member 'CreateKdsOrderDto'.
+src/modules/kds/kds.controller.ts(39,3): error TS2305: Module '"./kds.dto"' has no exported member 'KdsOrderItemResponseDto'.
+src/modules/kds/kds.controller.ts(40,3): error TS2305: Module '"./kds.dto"' has no exported member 'KdsQueueResponseDto'.
+src/modules/kds/kds.controller.ts(41,3): error TS2305: Module '"./kds.dto"' has no exported member 'GetKdsQueueFilterDto'.
+src/modules/kds/kds.controller.ts(67,28): error TS2339: Property 'createKdsOrderItems' does not exist on type 'KdsService'.
+src/modules/kds/kds.controller.ts(96,28): error TS2339: Property 'getKdsQueue' does not exist on type 'KdsService'.
+src/modules/kds/kds.controller.ts(113,28): error TS2339: Property 'updateOrderItemStatus' does not exist on type 'KdsService'.
+src/modules/kds/kds.controller.ts(135,28): error TS2339: Property 'getTicketOrderItems' does not exist on type 'KdsService'.
+src/modules/kds/kds.controller.ts(152,28): error TS2339: Property 'reprioritizeOrderItem' does not exist on type 'KdsService'.
+src/modules/loyalty/loyalty-earn.consumer.ts(43,31): error TS2339: Property 'earnPoints' does not exist on type 'LoyaltyService'.
+src/modules/mastercard/mastercard-send.adapter.ts(221,20): error TS2304: Cannot find name 'HeadersInit'.
+src/modules/mastercard/mastercard.controller.ts(65,24): error TS2339: Property 'instantMerchantPayout' does not exist on type 'MastercardService'.
+src/modules/mastercard/mastercard.controller.ts(67,24): error TS2339: Property 'instantPayrollPayout' does not exist on type 'MastercardService'.
+src/modules/mastercard/mastercard.controller.ts(69,24): error TS2339: Property 'instantCommissionPayout' does not exist on type 'MastercardService'.
+src/modules/mastercard/mastercard.controller.ts(78,20): error TS2339: Property 'getDisbursementStatus' does not exist on type 'MastercardService'.
+src/modules/mastercard/mastercard.controller.ts(88,20): error TS2339: Property 'checkPayoutEligibility' does not exist on type 'MastercardService'.
+src/modules/mastercard/mastercard.service.ts(4,33): error TS2305: Module '"./mastercard-send.adapter"' has no exported member 'DisbursementRequest'.
+src/modules/mastercard/mastercard.service.ts(4,54): error TS2305: Module '"./mastercard-send.adapter"' has no exported member 'DisbursementResult'.
+src/modules/mastercard/mastercard.service.ts(106,145): error TS2339: Property 'apiTransactionId' does not exist on type 'SendFundsResult'.
+src/modules/merchant/dto/merchant.dto.ts(3,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/merchant/merchant-onboarding.controller.ts(161,120): error TS2339: Property 'MERCHANT_VIEWER' does not exist on type 'typeof UserRole'.
+src/modules/merchant/merchant-onboarding.controller.ts(258,83): error TS2322: Type 'boolean' is not assignable to type 'string[]'.
+src/modules/merchant/merchant-onboarding.controller.ts(388,72): error TS2322: Type 'boolean' is not assignable to type 'string[]'.
+src/modules/merchant/merchant-onboarding.controller.ts(441,25): error TS2304: Cannot find name 'Param'.
+src/modules/merchant/merchant-onboarding.controller.ts(451,6): error TS2304: Cannot find name 'Param'.
+src/modules/merchant/merchant-onboarding.service.ts(131,36): error TS2339: Property 'recordAuditLog' does not exist on type 'AuditLogService'.
+src/modules/merchant/merchant-onboarding.service.ts(262,34): error TS2339: Property 'recordAuditLog' does not exist on type 'AuditLogService'.
+src/modules/merchant/merchants.service.ts(28,35): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/merchant/merchants.service.ts(56,22): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/merchant/merchants.service.ts(69,32): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/merchant/merchants.service.ts(117,39): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/merchant/merchants.service.ts(143,20): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/merchant/merchants.service.ts(143,45): error TS2339: Property 'length' does not exist on type 'unknown'.
+src/modules/microsite/microsite.module.ts(312,11): error TS2430: Interface 'AuthenticatedRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; userId: string; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': email, roles
+src/modules/orders/orders.controller.ts(66,12): error TS1016: A required parameter cannot follow an optional parameter.
+src/modules/orders/orders.dto.ts(17,10): error TS2724: '"@paysurity/database"' has no exported member named 'Order'. Did you mean 'orders'?
+src/modules/payment/adapters/ach.adapter.ts(95,34): error TS2339: Property 'padRight' does not exist on type 'AchAdapterService'.
+src/modules/payment/payment.processor.ts(1,36): error TS2307: Cannot find module '@nestjs/bull' or its corresponding type declarations.
+src/modules/payment/payment.processor.ts(2,21): error TS2307: Cannot find module 'bull' or its corresponding type declarations.
+src/modules/payroll/controllers/payroll-runs.controller.ts(14,10): error TS2305: Module '"../../auth/decorators/auth-user.decorator"' has no exported member 'AuthUser'.
+src/modules/payroll/controllers/payroll-runs.controller.ts(15,10): error TS2305: Module '"../../auth/interfaces/user-context.interface"' has no exported member 'UserContext'.
+src/modules/payroll/controllers/payroll-runs.controller.ts(18,3): error TS2724: '"../dto/payroll-run.dto"' has no exported member named 'CreatePayrollRunDto'. Did you mean 'PayrollRunDto'?
+src/modules/payroll/controllers/payroll-runs.controller.ts(19,3): error TS2724: '"../dto/payroll-run.dto"' has no exported member named 'UpdatePayrollRunDto'. Did you mean 'PayrollRunDto'?
+src/modules/payroll/controllers/payroll-runs.controller.ts(20,3): error TS2305: Module '"../dto/payroll-run.dto"' has no exported member 'PayrollRunIdParamDto'.
+src/modules/payroll/controllers/payroll-runs.controller.ts(22,10): error TS2724: '"../dto/payroll-run-query.dto"' has no exported member named 'GetPayrollRunsQueryDto'. Did you mean 'PayrollRunQueryDto'?
+src/modules/payroll/controllers/payroll-runs.controller.ts(34,64): error TS2554: Expected 1 arguments, but got 2.
+src/modules/payroll/controllers/payroll-runs.controller.ts(42,44): error TS2554: Expected 0 arguments, but got 2.
+src/modules/payroll/controllers/payroll-runs.controller.ts(50,55): error TS2554: Expected 1 arguments, but got 2.
+src/modules/payroll/controllers/payroll-runs.controller.ts(59,75): error TS2554: Expected 2 arguments, but got 3.
+src/modules/payroll/controllers/payroll-runs.controller.ts(68,53): error TS2554: Expected 1 arguments, but got 2.
+src/modules/payroll/controllers/payroll-runs.controller.ts(77,36): error TS2339: Property 'submitPayrollRun' does not exist on type 'PayrollRunsService'.
+src/modules/payroll/services/payroll-runs.service.ts(2,10): error TS2305: Module '"@paysurity/database"' has no exported member 'NodePgDatabase'.
+src/modules/payroll/services/payroll-runs.service.ts(2,26): error TS2305: Module '"@paysurity/database"' has no exported member 'payrollRuns'.
+src/modules/pos-sync/pos-sync.controller.ts(387,11): error TS2430: Interface 'CustomRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/pos-sync/pos-sync.service.ts(78,77): error TS2551: Property 'is_active' does not exist on type 'MenuItemDto'. Did you mean 'isActive'?
+src/modules/pos-sync/pos-sync.service.ts(85,98): error TS2339: Property 'id' does not exist on type 'MenuItemDto'.
+src/modules/pos-sync/pos-sync.service.ts(146,83): error TS2551: Property 'is_active' does not exist on type 'MenuItemDto'. Did you mean 'isActive'?
+src/modules/pos-sync/pos-sync.service.ts(153,104): error TS2339: Property 'id' does not exist on type 'MenuItemDto'.
+src/modules/price-engine/price-engine.controller.ts(18,11): error TS2430: Interface 'AuthenticatedRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; isAdmin?: boolean; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/price-engine/price-engine.module.ts(242,11): error TS2430: Interface 'CustomRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId?: string; isSuperAdmin?: boolean; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/price-engine/price-engine.service.ts(49,30): error TS2300: Duplicate identifier 'BadRequestException'.
+src/modules/price-engine/price-engine.service.ts(49,51): error TS2300: Duplicate identifier 'ForbiddenException'.
+src/modules/price-engine/price-engine.service.ts(199,85): error TS2300: Duplicate identifier 'BadRequestException'.
+src/modules/price-engine/price-engine.service.ts(199,106): error TS2300: Duplicate identifier 'ForbiddenException'.
+src/modules/price-engine/price-engine.service.ts(204,11): error TS2430: Interface 'CustomRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId?: string; isSuperAdmin?: boolean; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/products/products.service.ts(18,10): error TS2305: Module '"drizzle-orm/postgres-js"' has no exported member 'NodePgDatabase'.
+src/modules/products/products.service.ts(22,10): error TS2724: '"@paysurity/database"' has no exported member named 'NewProduct'. Did you mean 'products'?
+src/modules/products/products.service.ts(22,22): error TS2724: '"@paysurity/database"' has no exported member named 'Product'. Did you mean 'products'?
+src/modules/products/products.service.ts(51,34): error TS2551: Property 'category' does not exist on type 'CreateProductDto'. Did you mean 'categoryId'?
+src/modules/products/products.service.ts(52,39): error TS2339: Property 'nutritionInfo' does not exist on type 'CreateProductDto'.
+src/modules/products/products.service.ts(53,35): error TS2339: Property 'allergens' does not exist on type 'CreateProductDto'.
+src/modules/products/products.service.ts(54,43): error TS2339: Property 'weightUnitPricing' does not exist on type 'CreateProductDto'.
+src/modules/products/products.service.ts(55,42): error TS2339: Property 'bulkPricingTiers' does not exist on type 'CreateProductDto'.
+src/modules/products/products.service.ts(64,32): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/products/products.service.ts(72,47): error TS2339: Property 'pageSize' does not exist on type 'PaginationDto'.
+src/modules/products/products.service.ts(135,34): error TS2551: Property 'category' does not exist on type 'UpdateProductDto'. Did you mean 'categoryId'?
+src/modules/products/products.service.ts(136,39): error TS2339: Property 'nutritionInfo' does not exist on type 'UpdateProductDto'.
+src/modules/products/products.service.ts(137,35): error TS2339: Property 'allergens' does not exist on type 'UpdateProductDto'.
+src/modules/products/products.service.ts(138,43): error TS2339: Property 'weightUnitPricing' does not exist on type 'UpdateProductDto'.
+src/modules/products/products.service.ts(139,42): error TS2339: Property 'bulkPricingTiers' does not exist on type 'UpdateProductDto'.
+src/modules/products/products.service.ts(153,32): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/products/products.service.ts(179,32): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/public/kyc.controller.ts(9,51): error TS2304: Cannot find name 'Req'.
+src/modules/public/kyc.controller.ts(11,28): error TS2304: Cannot find name 'db'.
+src/modules/public/kyc.controller.ts(17,34): error TS2304: Cannot find name 'Query'.
+src/modules/receipts/receipts.module.ts(3,36): error TS2306: File 'D:/xampp/htdocs/websites/PaySurity-Monorepo-master/PaySurity-Monorepo-main/apps/api/src/modules/receipts/receipts.controller.ts' is not a module.
+src/modules/receipts/receipts.module.ts(22,16): error TS2304: Cannot find name 'PG_CONNECTION'.
+src/modules/refund-workflow/refund-workflow.controller.ts(15,35): error TS2339: Property 'registerWalletToken' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.controller.ts(25,35): error TS2339: Property 'processWalletPayment' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.controller.ts(30,35): error TS2339: Property 'getWalletTokens' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.controller.ts(41,61): error TS2554: Expected 3 arguments, but got 7.
+src/modules/refund-workflow/refund-workflow.controller.ts(47,35): error TS2551: Property 'approveRefund' does not exist on type 'RefundWorkflowService'. Did you mean 'approveDenyRefund'?
+src/modules/refund-workflow/refund-workflow.controller.ts(52,35): error TS2339: Property 'denyRefund' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.controller.ts(61,35): error TS2339: Property 'receiveRefundItem' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.controller.ts(70,35): error TS2339: Property 'issueRefund' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.controller.ts(76,35): error TS2339: Property 'getRefund' does not exist on type 'RefundWorkflowService'.
+src/modules/refund-workflow/refund-workflow.service.ts(397,30): error TS2339: Property 'emit' does not exist on type 'EventBusService'.
+src/modules/returns/returns.dto.ts(15,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/returns/returns.service.ts(49,24): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(52,42): error TS2339: Property 'transactionId' does not exist on type 'CreateReturnDto'.
+src/modules/returns/returns.service.ts(53,41): error TS2339: Property 'returnReason' does not exist on type 'CreateReturnDto'.
+src/modules/returns/returns.service.ts(88,23): error TS2339: Property 'transactionId' does not exist on type 'ReturnQueryDto'.
+src/modules/returns/returns.service.ts(92,21): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(93,30): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(95,25): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(113,30): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(113,57): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(141,24): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(149,30): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(149,57): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(186,24): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(187,30): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(187,57): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/returns/returns.service.ts(188,33): error TS2339: Property 'returns' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.controller.ts(25,65): error TS2353: Object literal may only specify known properties, and 'format' does not exist in type 'ApiQueryOptions'.
+src/modules/security/security-events.controller.ts(26,63): error TS2353: Object literal may only specify known properties, and 'format' does not exist in type 'ApiQueryOptions'.
+src/modules/security/security-events.controller.ts(28,39): error TS2339: Property 'findAll' does not exist on type 'SecurityEventsService'.
+src/modules/security/security-events.controller.ts(36,39): error TS2339: Property 'findOne' does not exist on type 'SecurityEventsService'.
+src/modules/security/security-events.controller.ts(49,39): error TS2339: Property 'updateStatus' does not exist on type 'SecurityEventsService'.
+src/modules/security/security-events.service.ts(44,61): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(62,29): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(73,24): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(84,24): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(85,29): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(96,24): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(97,29): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(109,65): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(114,24): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(126,65): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/security/security-events.service.ts(127,24): error TS2339: Property 'securityEvents' does not exist on type 'typeof import("@paysurity/database")'.
+src/modules/services/log-aggregation.service.ts(3,21): error TS2305: Module '"@paysurity/database"' has no exported member 'LogStatus'.
+src/modules/services/payroll-runs.service.ts(5,10): error TS2305: Module '"@paysurity/database"' has no exported member 'payrollRunsTable'.
+src/modules/services/payroll-runs.service.ts(5,28): error TS2305: Module '"@paysurity/database"' has no exported member 'PayrollRun'.
+src/modules/services/payroll-runs.service.ts(5,40): error TS2305: Module '"@paysurity/database"' has no exported member 'NewPayrollRun'.
+src/modules/settlement/settlement-batch.controller.ts(62,39): error TS2339: Property 'processBatch' does not exist on type 'SettlementBatchService'.
+src/modules/settlement/settlement-batch.controller.ts(71,39): error TS2339: Property 'getReport' does not exist on type 'SettlementBatchService'.
+src/modules/settlement/settlement.controller.ts(25,3): error TS2300: Duplicate identifier 'Req'.
+src/modules/settlement/settlement.controller.ts(26,3): error TS2300: Duplicate identifier 'Req'.
+src/modules/settlement/settlement.controller.ts(33,3): error TS2305: Module '"./dto/settlement-batch.dto"' has no exported member 'SettlementReportDto'.
+src/modules/settlement/settlement.controller.ts(44,11): error TS2430: Interface 'AuthenticatedRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type 'AuthenticatedUser' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/settlement/settlement.controller.ts(64,7): error TS2554: Expected 1 arguments, but got 3.
+src/modules/settlement/settlement.controller.ts(76,60): error TS2554: Expected 1 arguments, but got 2.
+src/modules/settlement/settlement.controller.ts(86,60): error TS2554: Expected 1 arguments, but got 2.
+src/modules/settlement/settlement.controller.ts(101,7): error TS2554: Expected 2 arguments, but got 4.
+src/modules/settlement/settlement.controller.ts(114,42): error TS2339: Property 'processBatch' does not exist on type 'SettlementBatchesService'.
+src/modules/settlement/settlement.controller.ts(124,42): error TS2339: Property 'getReport' does not exist on type 'SettlementBatchesService'.
+src/modules/settlement/settlement.dto.ts(15,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/settlement/settlement.service.ts(18,33): error TS2307: Cannot find module '../audit/audit-log.service' or its corresponding type declarations.
+src/modules/settlement/settlement.service.ts(20,10): error TS2305: Module '"./dto/settlement.dto"' has no exported member 'ProcessSettlementDto'.
+src/modules/settlement/settlement.service.ts(20,32): error TS2305: Module '"./dto/settlement.dto"' has no exported member 'SettlementStatus'.
+src/modules/settlement/settlement.service.ts(20,50): error TS2724: '"./dto/settlement.dto"' has no exported member named 'SettlementType'. Did you mean 'SettlementDto'?
+src/modules/settlement/settlement.service.ts(20,66): error TS2305: Module '"./dto/settlement.dto"' has no exported member 'SettlementReport'.
+src/modules/settlement/settlement.service.ts(125,61): error TS2339: Property 'get' does not exist on type 'RequestContextService'.
+src/modules/settlement/settlement.service.ts(305,61): error TS2339: Property 'get' does not exist on type 'RequestContextService'.
+src/modules/settlement/settlement.service.ts(347,61): error TS2339: Property 'get' does not exist on type 'RequestContextService'.
+src/modules/settlement/settlement.service.ts(353,56): error TS2322: Type 'SQL<unknown>' is not assignable to type '<TName extends string>(name: TName) => Placeholder<TName, any>'.
+  Type 'SQL<unknown>' provides no match for the signature '<TName extends string>(name: TName): Placeholder<TName, any>'.
+src/modules/settlement/settlement.service.ts(355,23): error TS2345: Argument of type 'SQL<unknown>' is not assignable to parameter of type '<TName extends string>(name: TName) => Placeholder<TName, any>'.
+  Type 'SQL<unknown>' provides no match for the signature '<TName extends string>(name: TName): Placeholder<TName, any>'.
+src/modules/settlement/settlement.service.ts(358,23): error TS2345: Argument of type 'SQL<unknown>' is not assignable to parameter of type '<TName extends string>(name: TName) => Placeholder<TName, any>'.
+  Type 'SQL<unknown>' provides no match for the signature '<TName extends string>(name: TName): Placeholder<TName, any>'.
+src/modules/tables/dto/table.dto.ts(13,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/tables/tables.controller.ts(21,11): error TS2430: Interface 'AuthenticatedRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Property 'roles' is missing in type '{ tenantId: string; userId: string; email: string; }' but required in type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }'.
+src/modules/tables/tables.controller.ts(236,31): error TS2339: Property 'findAll' does not exist on type 'TablesService'.
+src/modules/tables/tables.controller.ts(253,31): error TS2339: Property 'create' does not exist on type 'TablesService'.
+src/modules/tables/tables.controller.ts(274,31): error TS2339: Property 'updateStatus' does not exist on type 'TablesService'.
+src/modules/tables/tables.controller.ts(296,31): error TS2339: Property 'assignOrder' does not exist on type 'TablesService'.
+src/modules/tables/tables.controller.ts(315,31): error TS2554: Expected 3 arguments, but got 2.
+src/modules/tables/tables.controller.ts(333,31): error TS2554: Expected 3 arguments, but got 2.
+src/modules/tables/tables.service.ts(18,88): error TS2305: Module '"./dto/table.dto"' has no exported member 'AssignOrderToTableDto'.
+src/modules/tables/tables.service.ts(18,111): error TS2305: Module '"./dto/table.dto"' has no exported member 'MergeTablesDto'.
+src/modules/tables/tables.service.ts(18,127): error TS2305: Module '"./dto/table.dto"' has no exported member 'SplitTableDto'.
+src/modules/tables/tables.service.ts(21,10): error TS2305: Module '"@paysurity/database"' has no exported member 'locations'.
+src/modules/tables/tables.service.ts(21,21): error TS2305: Module '"@paysurity/database"' has no exported member 'tables'.
+src/modules/tables/tables.service.ts(98,47): error TS2551: Property 'locationId' does not exist on type 'CreateTableDto'. Did you mean 'location'?
+src/modules/tables/tables.service.ts(102,34): error TS2551: Property 'locationId' does not exist on type 'CreateTableDto'. Did you mean 'location'?
+src/modules/tables/tables.service.ts(103,35): error TS2339: Property 'tableNumber' does not exist on type 'CreateTableDto'.
+src/modules/tables/tables.service.ts(107,36): error TS2339: Property 'coordinatesX' does not exist on type 'CreateTableDto'.
+src/modules/tables/tables.service.ts(108,36): error TS2339: Property 'coordinatesY' does not exist on type 'CreateTableDto'.
+src/modules/tables/tables.service.ts(109,29): error TS2339: Property 'width' does not exist on type 'CreateTableDto'.
+src/modules/tables/tables.service.ts(110,30): error TS2339: Property 'height' does not exist on type 'CreateTableDto'.
+src/modules/tables/tables.service.ts(131,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(151,22): error TS2551: Property 'locationId' does not exist on type 'TableQueryParamsDto'. Did you mean 'location'?
+src/modules/tables/tables.service.ts(154,44): error TS2551: Property 'locationId' does not exist on type 'TableQueryParamsDto'. Did you mean 'location'?
+src/modules/tables/tables.service.ts(158,41): error TS2551: Property 'locationId' does not exist on type 'TableQueryParamsDto'. Did you mean 'location'?
+src/modules/tables/tables.service.ts(164,21): error TS2339: Property 'tableNumber' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(165,69): error TS2339: Property 'tableNumber' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(167,21): error TS2339: Property 'minCapacity' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(168,61): error TS2339: Property 'minCapacity' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(170,21): error TS2339: Property 'maxCapacity' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(171,61): error TS2339: Property 'maxCapacity' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(173,21): error TS2339: Property 'isMerged' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(174,23): error TS2339: Property 'isMerged' does not exist on type 'TableQueryParamsDto'.
+src/modules/tables/tables.service.ts(271,24): error TS2339: Property 'tableNumber' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(271,111): error TS2339: Property 'tableNumber' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(272,24): error TS2339: Property 'capacity' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(272,105): error TS2339: Property 'capacity' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(274,24): error TS2339: Property 'status' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(274,63): error TS2339: Property 'status' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(275,62): error TS2339: Property 'status' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(277,24): error TS2339: Property 'shape' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(277,99): error TS2339: Property 'shape' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(278,24): error TS2339: Property 'coordinatesX' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(278,113): error TS2339: Property 'coordinatesX' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(279,24): error TS2339: Property 'coordinatesY' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(279,113): error TS2339: Property 'coordinatesY' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(280,24): error TS2339: Property 'width' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(280,99): error TS2339: Property 'width' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(281,24): error TS2339: Property 'height' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(281,101): error TS2339: Property 'height' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(284,50): error TS2339: Property 'status' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(298,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(310,24): error TS2339: Property 'status' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(310,49): error TS2339: Property 'status' does not exist on type 'UpdateTableDto'.
+src/modules/tables/tables.service.ts(359,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(396,95): error TS2339: Property 'CLEANING' does not exist on type 'typeof TableStatus'.
+src/modules/tables/tables.service.ts(413,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(469,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(525,46): error TS2339: Property 'MERGED' does not exist on type 'typeof TableStatus'.
+src/modules/tables/tables.service.ts(539,42): error TS2339: Property 'MERGED' does not exist on type 'typeof TableStatus'.
+src/modules/tables/tables.service.ts(553,44): error TS2339: Property 'MERGED' does not exist on type 'typeof TableStatus'.
+src/modules/tables/tables.service.ts(566,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(645,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tables/tables.service.ts(695,144): error TS2339: Property 'CLEANING' does not exist on type 'typeof TableStatus'.
+src/modules/tables/tables.service.ts(707,26): error TS2339: Property 'logAudit' does not exist on type 'AuditLogService'.
+src/modules/tax/tax-nexus.controller.ts(89,24): error TS1329: 'Request' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@Request()'?
+src/modules/tax/tax-nexus.controller.ts(113,23): error TS1329: 'Request' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@Request()'?
+src/modules/tax/tax-nexus.controller.ts(162,22): error TS1329: 'Request' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@Request()'?
+src/modules/tax/tax-nexus.controller.ts(240,29): error TS1329: 'Request' accepts too few arguments to be used as a decorator here. Did you mean to call it first and write '@Request()'?
+src/modules/tax/tax.controller.ts(41,104): error TS2339: Property 'taxYear' does not exist on type 'GetTaxSummaryReportDto'.
+src/modules/tax/tax.controller.ts(41,132): error TS2339: Property 'employeeId' does not exist on type 'GetTaxSummaryReportDto'.
+src/modules/tax/tax.controller.ts(42,28): error TS2339: Property 'getTaxSummaryReport' does not exist on type 'TaxService'.
+src/modules/tenant-admin/tenant-admin.module.ts(14,11): error TS2430: Interface 'TenantAdminRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ [key: string]: any; tenantId: string; roles: string[]; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email
+src/modules/tenant-admin/tenant-admin.module.ts(300,35): error TS2694: Namespace 'global.Express' has no exported member 'Multer'.
+src/modules/tenant-admin/tenant-admin.service.ts(68,11): error TS2430: Interface 'ExpressRequestWithUser' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type 'AuthenticatedUser' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': email, roles
+src/modules/tenant/tenant.service.ts(18,22): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/tenant/tenant.service.ts(31,22): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/tenant/tenant.service.ts(77,22): error TS2339: Property 'rows' does not exist on type 'unknown'.
+src/modules/tips/tips.controller.ts(23,11): error TS2430: Interface 'AuthRequest' incorrectly extends interface 'Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>'.
+  Types of property 'user' are incompatible.
+    Type '{ tenantId: string; }' is missing the following properties from type '{ [key: string]: unknown; userId: string; email: string; tenantId: string; roles: string[]; }': userId, email, roles
+src/modules/tips/tips.controller.ts(37,68): error TS2554: Expected 2 arguments, but got 1.
+src/modules/tips/tips.controller.ts(37,68): error TS1345: An expression of type 'void' cannot be tested for truthiness.
+src/modules/tips/tips.controller.ts(48,68): error TS2554: Expected 2 arguments, but got 1.
+src/modules/tips/tips.controller.ts(48,68): error TS1345: An expression of type 'void' cannot be tested for truthiness.
+src/modules/vendors/vendors.service.ts(17,10): error TS2305: Module '"@paysurity/database"' has no exported member 'vendors'.
+src/modules/website/website.controller.ts(21,16): error TS2554: Expected 1 arguments, but got 2.
+src/modules/website/website.controller.ts(62,33): error TS1016: A required parameter cannot follow an optional parameter.
+src/modules/website/website.controller.ts(145,9): error TS7030: Not all code paths return a value.
+src/modules/website/website.controller.ts(161,33): error TS1016: A required parameter cannot follow an optional parameter.
+src/modules/website/website.controller.ts(216,33): error TS1016: A required parameter cannot follow an optional parameter.
+src/modules/website/website.controller.ts(255,33): error TS1016: A required parameter cannot follow an optional parameter.
+src/modules/website/website.controller.ts(338,9): error TS7030: Not all code paths return a value.

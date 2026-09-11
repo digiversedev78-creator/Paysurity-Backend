@@ -1,0 +1,48 @@
+﻿{
+    "updatedAt":  "2026-06-04 13:06:42 -05:00",
+    "overall":  0,
+    "buckets":  [
+                    {
+                        "key":  "aesthetics",
+                        "label":  "Aesthetics",
+                        "pct":  0,
+                        "notes":  ""
+                    },
+                    {
+                        "key":  "foundational",
+                        "label":  "Foundational",
+                        "pct":  0,
+                        "notes":  ""
+                    },
+                    {
+                        "key":  "public_site",
+                        "label":  "Public Site",
+                        "pct":  0,
+                        "notes":  ""
+                    },
+                    {
+                        "key":  "merchant_services",
+                        "label":  "Merchant Services",
+                        "pct":  0,
+                        "notes":  ""
+                    },
+                    {
+                        "key":  "ecom_pos",
+                        "label":  "Ecom/POS",
+                        "pct":  0,
+                        "notes":  ""
+                    },
+                    {
+                        "key":  "wallets",
+                        "label":  "Wallets",
+                        "pct":  0,
+                        "notes":  ""
+                    },
+                    {
+                        "key":  "payroll",
+                        "label":  "Payroll",
+                        "pct":  0,
+                        "notes":  ""
+                    }
+                ]
+}

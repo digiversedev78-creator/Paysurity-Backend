@@ -1,0 +1,93 @@
+﻿name: ebt-agentic-build-dispatch
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: "Optional run note"
+        required: false
+        default: ""
+      dry_run:
+        description: "If true, only emits status + progress"
+        required: false
+        default: "true"
+      max_sections:
+        description: "Smoke scope: number of sections to emit (0 = all)"
+        required: false
+        default: "3"
+
+concurrency:
+  group: ebt-agentic-build-dispatch
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  agentic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Emit requirements_status.json (SMOKE scaffold)
+        shell: pwsh
+        env:
+          MAX_SECTIONS: ${{ inputs.max_sections }}
+          NOTE: ${{ inputs.note }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          Set-StrictMode -Version Latest
+          $ErrorActionPreference = "Stop"
+
+          New-Item -ItemType Directory -Force -Path "progress/_inputs" | Out-Null
+
+          $max = 0
+          if ($env:MAX_SECTIONS) {
+            try { $max = [int]$env:MAX_SECTIONS } catch { $max = 0 }
+          }
+
+          # Small smoke list (first few only)
+          $cats = @(
+            @{ key="aesthetics";   name="Aesthetics" },
+            @{ key="foundational"; name="Foundational" },
+            @{ key="public_site";  name="Public Site" }
+          )
+          if ($max -gt 0) { $cats = @($cats | Select-Object -First $max) }
+
+          $sections = @{}
+          foreach($c in $cats){
+            $sections[$c.key] = @{
+              total = 100
+              done  = 1
+              pct   = 1
+              notes = @("Smoke scaffold. Real agent overwrites with audit-driven progress.")
+            }
+          }
+
+          $outObj = @{
+            schemaVersion = 1
+            source        = "ebt-agentic-build-dispatch"
+            isPlaceholder = $false
+            runNote       = $env:NOTE
+            dryRun        = $env:DRY_RUN
+            generatedAt   = (Get-Date).ToString("o")
+            sections      = $sections
+          }
+
+          ($outObj | ConvertTo-Json -Depth 10) | Set-Content -Encoding UTF8 "progress/_inputs/requirements_status.json"
+
+      - name: Create/Update PR with emitted status file
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: agentic status update (smoke)"
+          title: "Agentic status update (smoke)"
+          body: "Automated smoke run: emits progress/_inputs/requirements_status.json for first few sections."
+          branch: "agentic/status-smoke"
+          delete-branch: true
+          add-paths: |
+            progress/_inputs/requirements_status.json

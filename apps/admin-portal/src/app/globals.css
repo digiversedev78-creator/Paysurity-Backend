@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --admin-bg:      #080809;
+  --admin-sidebar: #0d0d0f;
+  --admin-card:    #111114;
+  --admin-border:  #1e1e22;
+  --admin-muted:   #2a2a30;
+  --admin-accent:  #dc2626;
+  --admin-gold:    #f59e0b;
+  --admin-success: #10b981;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  background-color: var(--admin-bg);
+  color: #e4e4e7;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar — extremely thin, red accent */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #b91c1c; }
+
+/* Utility classes for the admin theme */
+.admin-card {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  @apply backdrop-blur-md;
+}
+
+.admin-card-hover {
+  @apply admin-card transition-all duration-300;
+}
+.admin-card-hover:hover {
+  border-color: rgba(220, 38, 38, 0.4);
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Sidebar nav link active state */
+.nav-link-active {
+  background: rgba(220, 38, 38, 0.1);
+  color: #ef4444;
+  border-right: 3px solid #dc2626;
+  @apply font-bold;
+}
+
+/* Scanline texture overlay for "command center" feel */
+.scanlines::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* Premium Background Pattern */
+.dot-grid-admin {
+  background-image: radial-gradient(circle at 1px 1px, rgba(220, 38, 38, 0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+.glow-point {
+  animation: pulse-glow 4s ease-in-out infinite;
+}

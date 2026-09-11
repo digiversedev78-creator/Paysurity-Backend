@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "paths": {
+      "@paysurity/database": ["./packages/database/src"],
+      "@paysurity/auth": ["./packages/auth/src"],
+      "@paysurity/shared-types": ["./packages/shared-types/src"],
+      "@paysurity/config": ["./packages/config/src"],
+      "@paysurity/ui-components": ["./packages/ui-components/src"],
+      "@paysurity/integrations/*": ["./packages/integrations/*/src"],
+      "@paysurity/testing": ["./packages/testing/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".next", "coverage"]
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySurity Demo - Ashiana Collections (E-Comm Web3 Wallet)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #050505; color: white; display: flex; height: 100vh; overflow: hidden; margin: 0; flex-direction: column; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .phone { width: 340px; height: 700px; background: #000; border-radius: 40px; border: 8px solid #1a1a1a; position: relative; overflow: hidden; margin: auto; }
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1a1a1a; border-radius: 0 0 12px 12px; z-index: 10; }
+        .screen { background: #fafafa; height: 100%; color: #111; display:flex; flex-direction:column; overflow: hidden; }
+        @keyframes slideIn { from{ opacity:0; transform: translateY(20px); } to{ opacity:1; transform: translateY(0); } }
+        .slide { animation: slideIn 0.3s forwards; }
+    </style>
+</head>
+<body>
+    <header class="h-14 bg-[#111] border-b border-gray-800 flex items-center justify-between px-6 shrink-0 z-10">
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-fuchsia-500">PAYSURITY E-COMMERCE ENGINE</span>
+            <span class="text-xs text-gray-500">SCENARIO: DIGITAL WALLET QUICK CHECKOUT</span>
+        </div>
+        <div class="text-xs font-mono text-fuchsia-400 border border-fuchsia-500/30 px-3 py-1 rounded bg-fuchsia-500/10">TENANT: ASHIANA COLLECTIONS</div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden">
+        <!-- LEFT: E-comm Admin -->
+        <div class="flex-1 bg-[#111] border-r border-gray-800 p-6 flex flex-col">
+            <div class="text-xs tracking-widest text-gray-400 mb-6">LEFT: TENANT E-COMMERCE DASHBOARD</div>
+            
+            <div class="bg-gray-900 rounded-xl border border-gray-800 shadow-2xl overflow-hidden flex flex-col h-full max-h-[600px]">
+                <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-gray-950">
+                    <h2 class="font-bold text-white">Live Order Stream</h2>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-1 rounded flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>LISTENING</span>
+                </div>
+                <div class="p-4 flex-1 flex flex-col gap-3" id="order-queue">
+                    <div class="bg-gray-800 p-3 rounded flex justify-between items-center border border-gray-700">
+                        <div><div class="font-bold text-sm text-white">ORD-55102</div><div class="text-xs text-gray-400">Silk Saree Collection</div></div>
+                        <div class="flex items-center gap-3"><span class="text-xs text-gray-400">Stripe CC</span><span class="font-mono text-emerald-400 font-bold">$1,250.00</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MIDDLE: Telemetry -->
+        <div class="w-[35%] bg-black font-mono text-[11px] p-4 overflow-y-auto" id="terminal">
+            <div class="text-fuchsia-500 mb-4 tracking-widest border-b border-gray-800 pb-2">MIDDLE: PAYMENT TOKENIZATION TELEMETRY</div>
+            <div class="text-gray-500">> Connection established to Staging Storefront. Target: Ashiana...</div>
+        </div>
+
+        <!-- RIGHT: End User App -->
+        <div class="w-[400px] bg-[#0a0a0a] flex flex-col items-center justify-center p-4 relative">
+            <div class="text-xs tracking-widest text-gray-400 mb-6 w-full text-center border-b border-gray-800 pb-2">RIGHT: END USER STOREFRONT UX</div>
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="screen relative relative overflow-y-auto scrollbar-hide">
+                    <!-- Fake store image -->
+                    <div class="w-full h-80 bg-gray-200" style="background: url('https://images.unsplash.com/photo-1618932260643-eee4a2f652a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;"></div>
+                    
+                    <div class="p-5 -mt-6 bg-white rounded-t-3xl relative z-10 flex flex-col h-full">
+                        <div class="text-[10px] font-bold tracking-widest text-fuchsia-600 uppercase mb-1">Luxury Attire</div>
+                        <h1 class="text-2xl font-black text-gray-900 leading-tight mb-2">Emerald Bridal Lehenga</h1>
+                        <div class="text-xl font-bold text-gray-600 mb-6">$3,890.00</div>
+                        
+                        <p class="text-xs text-gray-500 mb-8 leading-relaxed">Hand-crafted intricate emerald weaving with absolute gold trims imported directly from authentic fabric artisans.</p>
+
+                        <!-- Checkout Bottom Sheet -->
+                        <div class="mt-auto">
+                            <button onclick="checkout()" id="pay-btn" class="w-full bg-black hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-2xl transition-all flex items-center justify-center gap-3">
+                                <svg class="w-5 h-5 text-fuchsia-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4C2.89 4 2 4.89 2 6V18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4ZM20 18H4V12H20V18ZM20 8H4V6H20V8Z"/></svg>
+                                Pay instantly with PaySurity Wallet
+                            </button>
+                            
+                            <div id="success-screen" class="hidden absolute inset-0 bg-white/95 backdrop-blur z-50 flex flex-col items-center justify-center slide">
+                                <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-4xl mb-4 text-emerald-600 shadow-xl border-4 border-emerald-50">✓</div>
+                                <h2 class="font-black text-xl text-gray-900 mb-1">Payment Successful</h2>
+                                <p class="text-xs text-gray-500">Order #55103 confirmed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        function appendLog(html) { const div = document.createElement('div'); div.innerHTML = html; div.className="mb-1 slide"; terminal.appendChild(div); terminal.scrollTop = terminal.scrollHeight; }
+
+        let active = false;
+        async function checkout() {
+            if(active) return; active = true;
+            document.getElementById('pay-btn').classList.add('opacity-50');
+            document.getElementById('pay-btn').innerHTML = `<span class="animate-pulse">Authorizing Token...</span>`;
+
+            appendLog("<span class='text-fuchsia-400'>[FRONTEND] Wallet Pay button triggered. Requesting Auth Token.</span>");
+            await delay(600);
+            appendLog("<span class='text-blue-400'>[WALLET_EDGE] Cryptographic token generated. Forwarding to Payment Core...</span>");
+            await delay(800);
+            appendLog("<span class='text-emerald-400'>[LEDGER] Token Validated. Sufficient wallet funds detected ($14,500.00 > $3,890.00).</span>");
+            await delay(600);
+            
+            appendLog("<span class='text-yellow-400'>[POS_ENGINE] Updating Ashiana E-Comm Database. Firing webhooks.</span>");
+            
+            // Show Success Mobile
+            document.getElementById('success-screen').classList.remove('hidden');
+
+            // Inject to Left Screen visually simulating realtime websocket
+            const q = document.getElementById('order-queue');
+            const newOrder = document.createElement('div');
+            newOrder.className = "bg-emerald-950/30 p-3 rounded flex justify-between items-center border border-emerald-500/50 slide shadow-[0_0_15px_rgba(16,185,129,0.2)]";
+            newOrder.innerHTML = `
+                <div><div class="font-bold text-sm text-emerald-400 flex items-center gap-2"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span> ORD-55103</div><div class="text-xs text-gray-300 pointer-events-none">Emerald Bridal Lehenga</div></div>
+                <div class="flex items-center gap-3"><span class="text-xs text-fuchsia-400 font-bold border border-fuchsia-500/30 bg-fuchsia-900/20 px-1 rounded">PS WALLET</span><span class="font-mono text-emerald-400 font-bold">$3,890.00</span></div>
+            `;
+            q.insertBefore(newOrder, q.firstChild);
+
+            await delay(500);
+            appendLog("<span class='text-white bg-green-900 border border-green-500 px-1'>[SYNC_COMPLETE] Omnichannel broadcast successful. Order locked for fulfillment.</span>");
+        }
+    </script>
+</body>
+</html>

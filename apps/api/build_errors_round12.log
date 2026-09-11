@@ -1,0 +1,11 @@
+﻿src/modules/gift-cards/gift-cards.service.ts(160,38): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(160,79): error TS1109: Expression expected.
+src/modules/gift-cards/gift-cards.service.ts(162,5): error TS1109: Expression expected.
+src/modules/gift-cards/gift-cards.service.ts(475,45): error TS1003: Identifier expected.
+src/modules/gift-cards/gift-cards.service.ts(475,84): error TS1005: ';' expected.
+src/modules/gift-cards/gift-cards.service.ts(475,85): error TS1128: Declaration or statement expected.
+src/modules/gift-cards/gift-cards.service.ts(475,87): error TS1434: Unexpected keyword or identifier.
+src/modules/gift-cards/gift-cards.service.ts(492,1): error TS1128: Declaration or statement expected.
+src/modules/settlement/settlement.service.ts(356,67): error TS1005: ':' expected.
+src/modules/settlement/settlement.service.ts(356,71): error TS1005: ',' expected.
+src/modules/settlement/settlement.service.ts(356,76): error TS1005: ';' expected.

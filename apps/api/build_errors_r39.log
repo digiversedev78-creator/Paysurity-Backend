@@ -1,0 +1,46 @@
+﻿src/modules/affiliates/drizzle.service.ts(42,29): error TS2368: Type parameter name cannot be 'any'.
+src/modules/affiliates/schema.ts(22,23): error TS2304: Cannot find name 'merchants'.
+src/modules/affiliates/schema.ts(43,17): error TS2304: Cannot find name 'merchants'.
+src/modules/affiliates/schema.ts(45,18): error TS2304: Cannot find name 'merchants'.
+src/modules/ai/ai-customer-segmentation.service.ts(4,3): error TS2305: Module '"@paysurity/database"' has no exported member 'segmentationRunStatusEnum'.
+src/modules/auth/drizzle.service.ts(7,29): error TS2368: Type parameter name cannot be 'any'.
+src/modules/cash-drawer/cash-drawer.service.ts(105,8): error TS2339: Property 'update' does not exist on type 'NodePgDatabase<any>'.
+src/modules/cash-drawer/cash-drawer.service.ts(269,8): error TS2339: Property 'update' does not exist on type 'NodePgDatabase<any>'.
+src/modules/cash-drawer/cash-drawer.service.ts(312,8): error TS2339: Property 'update' does not exist on type 'NodePgDatabase<any>'.
+src/modules/checkout/orders.service.ts(43,11): error TS2488: Type 'any[] | QueryResult<never>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/modules/employees/dto/employee-schedule.dto.ts(2,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/event-bus/event-consumers.ts(24,37): error TS2749: 'OpsService' refers to a value, but is being used as a type here. Did you mean 'typeof OpsService'?
+src/modules/event-bus/event-consumers.ts(97,37): error TS2749: 'OpsService' refers to a value, but is being used as a type here. Did you mean 'typeof OpsService'?
+src/modules/gift-cards/gift-cards.service.ts(58,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(102,14): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(116,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(134,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(153,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(182,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(210,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(231,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(259,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(275,18): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(307,20): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(341,20): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(375,20): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(396,20): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(429,20): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(445,9): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(454,20): error TS2554: Expected 2 arguments, but got 1.
+src/modules/gift-cards/gift-cards.service.ts(481,7): error TS2353: Object literal may only specify known properties, and 'currentBalance' does not exist in type 'GiftCardResponseDto'.
+src/modules/grocery/offline/cache.service.ts(1,39): error TS2307: Cannot find module './tpm.utils' or its corresponding type declarations.
+src/modules/inventory/inventory.controller.ts(226,11): error TS2322: Type '{ barcode?: string; name?: string; description?: string; stockLevel?: number; reorderPoint?: number; supplierId?: string; cost?: number; price?: any; category?: string; locationBin?: string; }' is not assignable to type 'Partial<{ name: string; tenantId: string; price: string; barcode: string; supplierId: string; cost: string; id?: string; description?: string; createdAt?: Date; updatedAt?: Date; category?: string; stockLevel?: number; reorderPoint?: number; locationBin?: string; }>'.
+  Types of property 'cost' are incompatible.
+    Type 'number' is not assignable to type 'string'.
+src/modules/merchant/merchants.service.ts(143,54): error TS2339: Property 'length' does not exist on type 'unknown'.
+src/modules/orders/orders.dto.ts(18,10): error TS2724: '"@paysurity/database"' has no exported member named 'Order'. Did you mean 'orders'?
+src/modules/products/products.service.ts(73,47): error TS2339: Property 'pageSize' does not exist on type 'PaginationDto'.
+src/modules/receipts/receipts.module.ts(15,17): error TS2304: Cannot find name 'ReceiptsController'.
+src/modules/returns/returns.dto.ts(15,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/returns/returns.service.ts(49,10): error TS2339: Property 'insert' does not exist on type 'NodePgDatabase<typeof import("@paysurity/database")>'.
+src/modules/returns/returns.service.ts(88,23): error TS2339: Property 'transactionId' does not exist on type 'ReturnQueryDto'.
+src/modules/returns/returns.service.ts(141,10): error TS2339: Property 'update' does not exist on type 'NodePgDatabase<typeof import("@paysurity/database")>'.
+src/modules/returns/returns.service.ts(186,10): error TS2339: Property 'delete' does not exist on type 'NodePgDatabase<typeof import("@paysurity/database")>'.
+src/modules/settlement/settlement.dto.ts(15,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.
+src/modules/tables/dto/table.dto.ts(13,29): error TS2307: Cannot find module '@nestjs/mapped-types' or its corresponding type declarations.

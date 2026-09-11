@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "generated_at": "2026-06-04T18:06:00.970Z",
+    "repo_root": "C:/Projects/PaySurity",
+    "source_index": "repo_index.json",
+    "used_infra_truth": false,
+    "used_doc_audit": false
+  },
+  "inventory": {
+    "services": [],
+    "roles": [],
+    "contracts": []
+  },
+  "derived": {
+    "routes": [],
+    "role_mentions": {},
+    "todos": [],
+    "features": {}
+  },
+  "suspected_obsolete_docs": []
+}

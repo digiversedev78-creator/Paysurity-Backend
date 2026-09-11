@@ -1,0 +1,53 @@
+﻿name: "Deploy Cloud Orchestrator"
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'apps/orchestrator/**'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Initialize Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Apply IAM & Service Accounts
+        run: |
+          cd apps/orchestrator/terraform
+          terraform init
+          terraform apply -auto-approve -var="project_id=paysurity-platform-2026"
+          echo "SA_EMAIL=$(terraform output -raw service_account_email)" >> $GITHUB_ENV
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy Serverless Cloud Run Webhook
+        run: |
+          cd apps/orchestrator
+          gcloud run deploy paysurity-cloud-orchestrator \
+            --source . \
+            --region us-central1 \
+            --service-account ${{ env.SA_EMAIL }} \
+            --set-secrets "TELEGRAM_BOT_TOKEN=telegram-bot-token:latest,ALLOWED_USER_ID=telegram-user-id:latest" \
+            --set-env-vars "GCP_PROJECT_ID=paysurity-platform-2026" \
+            --allow-unauthenticated \
+            --format="value(status.url)" > service_url.txt
+            
+          echo "SERVICE_URL=$(cat service_url.txt)" >> $GITHUB_ENV
+
+      - name: Register Webhook with Telegram
+        run: |
+          TOKEN=$(gcloud secrets versions access latest --secret="telegram-bot-token" --project="paysurity-platform-2026")
+          curl -s -X POST "https://api.telegram.org/bot${TOKEN}/setWebhook?url=${{ env.SERVICE_URL }}/webhook"

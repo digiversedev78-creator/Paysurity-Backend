@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>POS Register — House of Biryani</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--bg:#0c0802;--surface:rgba(30,20,5,.94);--glass:rgba(255,255,255,.04);--accent:#e8a317;--accent-dark:#c98a10;--text:#f5ede0;--muted:rgba(245,237,224,.45)}</style>
+<link rel="stylesheet" href="pos.css">
+</head>
+<body>
+<div class="pos-wrap">
+  <header class="pos-header">
+    <h1>👑 House of Biryani POS</h1>
+    <div class="pos-meta">
+      <span class="pos-clock" id="posClock">--:--:--</span>
+      <div class="pos-user">👤 Devon Ave · Chicago</div>
+    </div>
+  </header>
+  <div class="pos-left">
+    <div class="pos-toolbar">
+      <button class="pos-tool" onclick="POS.showTableMap()">🗺️ Table Map</button>
+      <button class="pos-tool" onclick="POS.showSplitCheck()">✂️ Split Check</button>
+      <button class="pos-tool" onclick="showLoyaltyLookup()">👑 Loyalty Lookup</button>
+      <label for="posTable" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">Table: <input id="posTable" value="" placeholder="#" style="width:48px;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--text);font-size:13px;text-align:center;font-family:inherit"></label>
+    </div>
+    <div class="table-map" id="tableMap"></div>
+    <div class="pos-cats" id="posCats" role="tablist"></div>
+    <div class="pos-grid" id="posGrid"></div>
+    <h2 style="font-size:14px;font-weight:700;color:var(--accent);margin:20px 0 8px">🍳 Kitchen Display (KDS)</h2>
+    <div class="kds-panel" id="kdsPanel"><div style="color:var(--muted);font-size:12px;grid-column:1/-1;text-align:center;padding:20px">Awaiting orders...</div></div>
+  </div>
+  <div class="pos-right">
+    <div class="pos-stats">
+      <div class="pos-stat"><div class="pos-stat-label">Transactions</div><div class="pos-stat-val" id="statTxn">0</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Revenue</div><div class="pos-stat-val" id="statRev">$0.00</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Avg Ticket</div><div class="pos-stat-val" id="statAvg">$0.00</div></div>
+    </div>
+    <div class="pos-order-head"><h2>Current Order</h2><span class="pos-badge" id="posItemCount">0</span></div>
+    <div class="pos-cart" id="posCart"><div class="pos-empty">Tap items to build order</div></div>
+    <div class="pos-footer">
+      <div class="pos-total-row"><span>Total</span><span class="pos-total" id="posTotal">$0.00</span></div>
+      <div class="pos-pay-methods">
+        <button class="pos-pm on" data-m="CARD_PRESENT">💳 Card</button>
+        <button class="pos-pm" data-m="CASH">💵 Cash</button>
+        <button class="pos-pm" data-m="TAP">📱 Tap</button>
+      </div>
+      <div class="pos-actions">
+        <button class="pos-clear" onclick="POS.clearCart()">Clear</button>
+        <button class="pos-pay" id="posPayBtn" disabled onclick="chargeWithLoyalty()">💳 CHARGE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- SPLIT MODAL -->
+<div class="pos-modal" id="splitModal"><div class="pos-modal-box">
+  <h3>✂️ Split Check</h3>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Total: <strong id="splitTotal">$0.00</strong></p>
+  <label style="font-size:12px;color:var(--muted)">Guests:</label>
+  <input type="number" id="splitCount" value="2" min="2" max="12" oninput="POS.calcSplit()">
+  <div style="font-size:18px;font-weight:800;color:var(--accent);text-align:center;margin:8px 0" id="splitPer"></div>
+  <div id="splitBreakdown"></div>
+  <button class="secondary" onclick="POS.closeSplit()">Close</button>
+</div></div>
+<!-- LOYALTY MODAL -->
+<div class="pos-modal" id="loyaltyModal"><div class="pos-modal-box">
+  <h3>👑 Royal Rewards Lookup</h3>
+  <label style="font-size:12px;color:var(--muted)">Customer phone:</label>
+  <input id="loyaltyPhone" placeholder="+1 (xxx) xxx-xxxx" type="tel">
+  <button class="primary" onclick="lookupLoyalty()">Look Up Points</button>
+  <div id="loyaltyResult" style="margin-top:10px"></div>
+  <button class="secondary" onclick="document.getElementById('loyaltyModal').style.display='none'">Close</button>
+</div></div>
+<!-- RECEIPT MODAL -->
+<div class="pos-modal" id="receiptModal"><div class="pos-modal-box">
+  <div id="receiptContent"></div>
+  <button class="secondary" onclick="POS.closeReceipt()">Close</button>
+</div></div>
+<div class="pos-toast" id="posToast"></div>
+<script src="pos-engine.js"></script>
+<script>
+// Pay method toggle
+document.querySelectorAll('.pos-pm').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.pos-pm').forEach(x=>x.classList.remove('on'));
+  this.classList.add('on');
+}));
+function showLoyaltyLookup(){document.getElementById('loyaltyModal').style.display='flex';document.getElementById('loyaltyPhone').focus()}
+function lookupLoyalty(){
+  const phone=document.getElementById('loyaltyPhone').value;
+  if(!phone){POS.toast('Enter phone number');return}
+  // Simulate WAL-V2 lookup
+  const pts=Math.floor(Math.random()*400);
+  document.getElementById('loyaltyResult').innerHTML=`
+    <div style="background:rgba(232,163,23,.08);border:1px solid rgba(232,163,23,.12);border-radius:12px;padding:14px;text-align:center">
+      <div style="font-size:28px;font-weight:800;color:var(--accent)">${pts} PTS</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">${pts>=250?'🎉 FREE Biryani eligible!':'📈 '+(250-pts)+' pts to FREE Biryani'}</div>
+    </div>`;
+}
+function chargeWithLoyalty(){
+  const method=document.querySelector('.pos-pm.on')?.dataset.m||'CARD_PRESENT';
+  POS.processPayment(method);
+}
+POS.init({
+  storeName:'House of Biryani — Devon Ave',
+  email:'admin@houseofbiryanirestaurant.food', password:'Test123!',
+  locationId:'dddddddd-0004-4000-8000-000000000004',
+  orderType:'DINE_IN', hasKDS:true,
+  items:[
+    {n:'Chicken Dum Biryani',p:2837,e:'🍗',cat:'Biryanis',kds:'DUM'},
+    {n:'Mutton Biryani',p:3340,e:'🐐',cat:'Biryanis',kds:'DUM'},
+    {n:'Boneless Biryani',p:3340,e:'🍖',cat:'Biryanis',kds:'DUM'},
+    {n:'Veg Dum Biryani',p:2503,e:'🥕',cat:'Biryanis',kds:'DUM'},
+    {n:'Hyderabadi Special',p:3599,e:'👑',cat:'Biryanis',kds:'DUM'},
+    {n:'Chicken 65',p:2336,e:'🌶️',cat:'Curries',kds:'FRY'},
+    {n:'Butter Chicken',p:1899,e:'🍛',cat:'Curries',kds:'CURRY'},
+    {n:'Goat Curry',p:2199,e:'🥘',cat:'Curries',kds:'CURRY'},
+    {n:'Palak Paneer',p:1599,e:'🧀',cat:'Curries',kds:'CURRY'},
+    {n:'Garlic Naan',p:399,e:'🫓',cat:'Sides',kds:'TANDOOR'},
+    {n:'Tandoori Roti',p:299,e:'🫓',cat:'Sides',kds:'TANDOOR'},
+    {n:'Raita',p:299,e:'🥒',cat:'Sides'},
+    {n:'Mirchi Ka Salan',p:499,e:'🌶️',cat:'Sides'},
+    {n:'Gulab Jamun',p:599,e:'🍩',cat:'Desserts'},
+    {n:'Kheer',p:699,e:'🍚',cat:'Desserts'},
+    {n:'Mango Lassi',p:499,e:'🥭',cat:'Drinks'},
+    {n:'Masala Chai',p:399,e:'☕',cat:'Drinks'},
+  ]
+});
+</script>
+</body>
+</html>

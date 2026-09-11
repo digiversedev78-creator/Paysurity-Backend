@@ -1,0 +1,56 @@
+# ─── Stage 1: Dependencies ────────────────────────────────────────────────────
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+RUN npm install -g pnpm@9.15.4
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/ ./packages/
+COPY apps/public-website/ ./apps/public-website/
+
+# Install all deps (required for monorepo workspace symlink resolution)
+RUN pnpm install --frozen-lockfile
+
+# ─── Stage 2: Builder ────────────────────────────────────────────────────────
+FROM deps AS builder
+WORKDIR /app
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
+ARG NEXT_PUBLIC_API_URL=https://paysurity-api-44gyeebm6a-uc.a.run.app
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+# Explicitly set CI=true so next.config.js activates output:'standalone'.
+ENV CI=true
+
+WORKDIR /app/apps/public-website
+
+# next.config.js must have `output: 'standalone'` for Cloud Run optimized boot
+RUN rm -f pnpm-lock.yaml && pnpm run build
+
+# Hard-assert that the standalone output was produced.
+RUN test -f .next/standalone/apps/public-website/server.js || \
+    (echo "ERROR: .next/standalone not found. Ensure next.config.js has output:'standalone' active (CI=true)." && exit 1)
+
+# ─── Stage 3: Production Runner ──────────────────────────────────────────────
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup -g 1001 nodejs && adduser -D -u 1001 -G nodejs nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/apps/public-website/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/public-website/.next/static \
+     ./apps/public-website/.next/static
+
+# Copy public assets (critical for tenant microsites like grandtobacco.html)
+COPY --from=builder --chown=nextjs:nodejs /app/apps/public-website/public \
+     ./apps/public-website/public
+
+USER nextjs
+EXPOSE 8080
+
+CMD ["node", "apps/public-website/server.js"]

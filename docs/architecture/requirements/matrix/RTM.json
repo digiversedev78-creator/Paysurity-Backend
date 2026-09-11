@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "schema_type": "requirements_traceability_matrix",
+  "reference_spec": "docs/architecture/MASTER_SEMANTIC_REQUIREMENTS_SPEC.json",
+  "mappings": [
+    {
+      "requirement_id": "REQ-000",
+      "status": "pending",
+      "semantic_link": "null",
+      "verification_method": "cli_exit_code_0"
+    }
+  ]
+}

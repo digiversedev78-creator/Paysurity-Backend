@@ -1,0 +1,5 @@
+﻿src/modules/cash-drawer/cash-drawer.service.ts(18,10): error TS1003: Identifier expected.
+src/modules/cash-drawer/cash-drawer.service.ts(18,90): error TS1128: Declaration or statement expected.
+src/modules/cash-drawer/cash-drawer.service.ts(18,92): error TS1434: Unexpected keyword or identifier.
+src/modules/cash-drawer/cash-drawer.service.ts(79,35): error TS1003: Identifier expected.
+src/modules/cash-drawer/cash-drawer.service.ts(85,49): error TS1003: Identifier expected.

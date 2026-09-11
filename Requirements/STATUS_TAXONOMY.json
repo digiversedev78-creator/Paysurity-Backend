@@ -1,0 +1,20 @@
+{
+  "status": [
+    "todo",
+    "in_progress",
+    "blocked",
+    "done"
+  ],
+  "priority": [
+    "must",
+    "should",
+    "could",
+    "wont"
+  ],
+  "definition": {
+    "todo": "Not started or no evidence found.",
+    "in_progress": "Work started, partial evidence exists.",
+    "blocked": "Cannot proceed due to dependency or external requirement.",
+    "done": "Implemented AND tested AND evidence recorded."
+  }
+}

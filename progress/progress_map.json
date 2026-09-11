@@ -1,0 +1,21 @@
+﻿{
+  "version": 1,
+  "audit_candidates_glob": [
+    "Requirements/**/requirements_status*.json",
+    "Requirements/**/audit*.json",
+    "**/AGENT_GUARD/**/audit*.json",
+    "**/out/**/audit*.json",
+    "**/artifacts/**/audit*.json",
+    "**/*requirements*status*.json",
+    "**/*coverage*.json"
+  ],
+  "buckets": [
+    { "key": "aesthetics", "label": "Aesthetics", "match": ["AESTH", "UX", "UI", "BRAND"] },
+    { "key": "foundational", "label": "Foundational", "match": ["FOUND", "AUTH", "RBAC", "CORE", "SEC"] },
+    { "key": "public_site", "label": "Public Site", "match": ["PUBLIC", "MARKETING", "SEO", "SITE"] },
+    { "key": "merchant_services", "label": "Merchant Services", "match": ["MERCHANT", "MS"] },
+    { "key": "ecom_pos", "label": "Ecom/POS", "match": ["ECOM", "POS", "RETAIL"] },
+    { "key": "wallets", "label": "Wallets", "match": ["WALLET"] },
+    { "key": "payroll", "label": "Payroll", "match": ["PAYROLL", "TAX"] }
+  ]
+}

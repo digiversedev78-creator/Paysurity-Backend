@@ -1,0 +1,19 @@
+{
+  "name": "@paysurity/restaurant",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.4.0",
+    "@nestjs/core": "^10.4.0",
+    "@paysurity/auth": "workspace:*",
+    "@paysurity/database": "workspace:*",
+    "@paysurity/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

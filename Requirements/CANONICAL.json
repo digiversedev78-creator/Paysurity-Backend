@@ -1,0 +1,26 @@
+{
+  "project": "REPLACE_ME",
+  "generated_at_utc": "TBD",
+  "requirements": [
+    {
+      "id": "FLOW-EXAMPLE-BOOTSTRAP",
+      "title": "Example MUST flow placeholder",
+      "description": "Replace with real MUST flows during requirements discovery.",
+      "priority": "must",
+      "status": "todo",
+      "type": "flow",
+      "platforms": [
+        "web"
+      ],
+      "e2e_test_id": "flow_example_bootstrap",
+      "acceptance_criteria": [
+        "Example acceptance criteria"
+      ],
+      "evidence": {
+        "ui_paths": [],
+        "api_endpoints": [],
+        "test_files": []
+      }
+    }
+  ]
+}

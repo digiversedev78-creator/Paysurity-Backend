@@ -1,0 +1,428 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# PaySurity — Cloud Build Staging Deployment
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# CONFIRMED FACTS (from forensic probe 2026-04-14):
+#   GCP Project:       paysurity-platform-2026
+#   Artifact Registry: us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/
+#   Region:            us-central1
+#   API secret names:  paysurity-db-url, paysurity-jwt-secret, gemini-api-key
+#   Cloud SQL:         paysurity-platform-2026:us-central1:paysurity-dev
+#   DNS provider:      Google Cloud DNS (ns-cloud-a1.googledomains.com)
+#   API live URL:      paysurity-api-44gyeebm6a-uc.a.run.app (confirmed HTTP 404 = alive)
+#
+# PUBLIC STAGING URLS (requires DNS records in Cloud DNS after this build):
+#   staging.paysurity.com           → paysurity-public-website (Cloud Run)
+#   api.staging.paysurity.com       → paysurity-api (Cloud Run)
+#   dashboard.staging.paysurity.com → paysurity-dashboard (Cloud Run)
+#
+# TRIGGER: push to main → staging-deploy.yml → gcloud builds submit --config cloudbuild.yaml
+# ═══════════════════════════════════════════════════════════════════════════════
+
+steps:
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 0 — Authenticate Docker to Artifact Registry
+  # ────────────────────────────────────────────────────────────────────────────
+  - id: 'configure-docker'
+    name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - auth
+      - configure-docker
+      - us-central1-docker.pkg.dev
+      - --quiet
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 1 — Build Images (all 3 run in parallel after Phase 0)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  # 1A — NestJS API
+  - id: 'build-api'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['configure-docker']
+    args:
+      - build
+      - --file=apps/api/Dockerfile
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-api:$BUILD_ID
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-api:latest
+      - --cache-from=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-api:latest
+      - .
+
+  # 1B — Public Website (NEXT_PUBLIC_ vars baked into browser bundle at build time)
+  - id: 'build-public-website'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['configure-docker']
+    args:
+      - build
+      - --file=apps/public-website/Dockerfile
+      - --build-arg=NEXT_PUBLIC_API_URL=https://paysurity-api-44gyeebm6a-uc.a.run.app
+      - --build-arg=NEXT_PUBLIC_DASHBOARD_URL=https://paysurity-dashboard-44gyeebm6a-uc.a.run.app
+      - --build-arg=NEXT_PUBLIC_SUPER_ADMIN_URL=https://paysurity-admin-portal-44gyeebm6a-uc.a.run.app
+      - --build-arg=NEXT_PUBLIC_WALLET_URL=https://paysurity-public-website-44gyeebm6a-uc.a.run.app/demo-wallet
+      - --build-arg=NEXT_PUBLIC_ENV=staging
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:$BUILD_ID
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:latest
+      - --cache-from=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:latest
+      - .
+
+  # 1C — Merchant Dashboard
+  - id: 'build-dashboard'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['configure-docker']
+    args:
+      - build
+      - --file=apps/merchant-dashboard/Dockerfile
+      - --build-arg=NEXT_PUBLIC_API_URL=https://api.staging.paysurity.com
+      - --build-arg=NEXT_PUBLIC_ENV=staging
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-dashboard:$BUILD_ID
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-dashboard:latest
+      - --cache-from=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-dashboard:latest
+      - .
+
+  # 1D — Shareholder Admin Portal
+  - id: 'build-admin-portal'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['configure-docker']
+    args:
+      - build
+      - --file=apps/admin-portal/Dockerfile
+      - --build-arg=NEXT_PUBLIC_API_URL=https://paysurity-api-111328865246.us-central1.run.app
+      - --build-arg=NEXT_PUBLIC_ENV=staging
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-admin-portal:$BUILD_ID
+      - --tag=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-admin-portal:latest
+      - .
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 2 — Push (parallel, each waits for its own build)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  - id: 'push-api'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['build-api']
+    args:
+      - push
+      - --all-tags
+      - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-api
+
+  - id: 'push-public-website'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['build-public-website']
+    args:
+      - push
+      - --all-tags
+      - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website
+
+  - id: 'push-dashboard'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['build-dashboard']
+    args:
+      - push
+      - --all-tags
+      - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-dashboard
+
+  - id: 'push-admin-portal'
+    name: 'gcr.io/cloud-builders/docker'
+    waitFor: ['build-admin-portal']
+    args:
+      - push
+      - --all-tags
+      - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-admin-portal
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 3 — Deploy to Cloud Run (parallel, each waits for its own push)
+  # ────────────────────────────────────────────────────────────────────────────
+
+  # 3A — Deploy API
+  # PORT=8080: Cloud Run routes external traffic to container port 8080.
+  #            NestJS reads process.env.PORT and listens on 8080.
+  # Secrets pulled from GCP Secret Manager (confirmed secret names from forensic probe).
+  - id: 'deploy-api'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['push-api']
+    args:
+      - run
+      - deploy
+      - paysurity-api
+      - --image=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-api:$BUILD_ID
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=1Gi
+      - --cpu=1
+      - --concurrency=80
+      - --timeout=120
+      - --min-instances=0
+      - --max-instances=10
+      - --set-env-vars=^|^NODE_ENV=production|ALLOWED_ORIGINS=https://staging.paysurity.com,https://paysurity-admin-portal-44gyeebm6a-uc.a.run.app,https://paysurity-dashboard-44gyeebm6a-uc.a.run.app,https://paysurity-public-website-44gyeebm6a-uc.a.run.app,https://paysurity-api-111328865246.us-central1.run.app,https://paysurity-api-44gyeebm6a-uc.a.run.app|DISABLE_REDIS=true
+      - --add-cloudsql-instances=paysurity-platform-2026:us-central1:paysurity-dev
+      - --set-secrets=DATABASE_URL=paysurity-db-url:latest,JWT_SECRET=paysurity-jwt-secret:latest,GEMINI_API_KEY=gemini-api-key:latest
+
+  # 3B — Deploy Public Website
+  - id: 'deploy-public-website'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['push-public-website']
+    args:
+      - run
+      - deploy
+      - paysurity-public-website
+      - --image=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:$BUILD_ID
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=512Mi
+      - --cpu=1
+      - --min-instances=0
+      - --max-instances=3
+      # NEXT_PUBLIC_ vars are already baked into the image via --build-arg in Phase 1.
+      # Runtime env vars here are for server-side only (not browser-visible).
+      - --set-env-vars=NODE_ENV=production
+
+  # 3C — Deploy Merchant Dashboard
+  - id: 'deploy-dashboard'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['push-dashboard']
+    args:
+      - run
+      - deploy
+      - paysurity-dashboard
+      - --image=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-dashboard:$BUILD_ID
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=512Mi
+      - --cpu=1
+      - --min-instances=0
+      - --max-instances=3
+      - --set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://api.staging.paysurity.com,NEXT_PUBLIC_ENV=staging
+
+  # 3D — Deploy Shareholder Admin Portal
+  - id: 'deploy-admin-portal'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['push-admin-portal']
+    args:
+      - run
+      - deploy
+      - paysurity-admin-portal
+      - --image=us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-admin-portal:$BUILD_ID
+      - --region=us-central1
+      - --platform=managed
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=512Mi
+      - --cpu=1
+      - --min-instances=0
+      - --max-instances=3
+      - --set-env-vars=NODE_ENV=production,NEXT_PUBLIC_API_URL=https://paysurity-api-111328865246.us-central1.run.app,NEXT_PUBLIC_ENV=staging
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 4 — In-Build Smoke Test (raw *.run.app URLs — no DNS required)
+  # ────────────────────────────────────────────────────────────────────────────
+  # Runs immediately after API and public-website are deployed.
+  # Uses the Cloud Run *.run.app URLs which are always live regardless of DNS.
+  - id: 'smoke-test-internal'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deploy-api', 'deploy-public-website']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        set -e
+
+        echo "=== Phase 4: Internal Smoke Test (*.run.app URLs) ==="
+
+        API_URL=$$(gcloud run services describe paysurity-api \
+          --platform managed --region us-central1 \
+          --format="value(status.url)")
+        PUBLIC_URL=$$(gcloud run services describe paysurity-public-website \
+          --platform managed --region us-central1 \
+          --format="value(status.url)")
+
+        echo "API_URL:    $$API_URL"
+        echo "PUBLIC_URL: $$PUBLIC_URL"
+
+        # Retry with backoff — Cloud Run may take 10-15s to warm first instance
+        for i in 1 2 3 4 5; do
+          HTTP=$$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "$$API_URL/health" || echo "000")
+          echo "Attempt $$i: GET $$API_URL/health → HTTP $$HTTP"
+          if [ "$$HTTP" = "200" ]; then break; fi
+          sleep 10
+        done
+
+        [ "$$HTTP" = "200" ] && echo "✓ API /health OK" || (echo "✗ API /health FAILED" && exit 1)
+
+        SOV=$$(curl -s --max-time 15 "$$API_URL/health/sovereign" || echo "{}")
+        echo "GET /health/sovereign → $$SOV"
+        echo "$$SOV" | grep -q "SOVEREIGN_OK" && echo "✓ PQC handshake OK" || echo "⚠ /health/sovereign not returning SOVEREIGN_OK — check deployed image version"
+
+        PUB=$$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 "$$PUBLIC_URL/" || echo "000")
+        echo "GET $$PUBLIC_URL/ → HTTP $$PUB"
+        [ "$$PUB" = "200" ] && echo "✓ Public website OK" || (echo "✗ Public website FAILED" && exit 1)
+
+        echo "=== Smoke Test PASSED ==="
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 5 — Custom Domain Mapping
+  # ────────────────────────────────────────────────────────────────────────────
+  # Maps staging.paysurity.com, api.staging.*, dashboard.staging.* to services.
+  # PREREQUISITES (Super Admin must complete BEFORE this build runs):
+  #   1. DNS CNAME records must exist in Google Cloud DNS pointing to ghs.googlehosted.com
+  #   2. Domain must be verified in GCP Console → Cloud Run → Domain Mappings
+  # These steps are idempotent — safe to re-run if mapping already exists.
+  - id: 'map-staging-paysurity-com'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deploy-public-website']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        gcloud beta run domain-mappings create \
+          --service=paysurity-public-website \
+          --domain=staging.paysurity.com \
+          --region=us-central1 \
+          --platform=managed 2>&1 || echo "INFO: Domain mapping may already exist — continuing"
+
+  - id: 'map-api-staging'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deploy-api']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        gcloud beta run domain-mappings create \
+          --service=paysurity-api \
+          --domain=api.staging.paysurity.com \
+          --region=us-central1 \
+          --platform=managed 2>&1 || echo "INFO: Domain mapping may already exist — continuing"
+
+  - id: 'map-dashboard-staging'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deploy-dashboard']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        gcloud beta run domain-mappings create \
+          --service=paysurity-dashboard \
+          --domain=dashboard.staging.paysurity.com \
+          --region=us-central1 \
+          --platform=managed 2>&1 || echo "INFO: Domain mapping may already exist — continuing"
+
+  - id: 'map-admin-staging'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deploy-admin-portal']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        gcloud beta run domain-mappings create \
+          --service=paysurity-admin-portal \
+          --domain=admin.staging.paysurity.com \
+          --region=us-central1 \
+          --platform=managed 2>&1 || echo "INFO: Domain mapping may already exist — continuing"
+
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 6 — Print Deployment Manifest
+  # ────────────────────────────────────────────────────────────────────────────
+  - id: 'deployment-manifest'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['smoke-test-internal', 'map-staging-paysurity-com', 'map-api-staging', 'map-dashboard-staging', 'map-admin-staging']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        echo ""
+        echo "╔══════════════════════════════════════════════════════════════╗"
+        echo "║        PaySurity Staging — Deployment Manifest               ║"
+        echo "╠══════════════════════════════════════════════════════════════╣"
+        echo "║  Commit:    $$SHORT_SHA"
+        echo "║  Project:   paysurity-platform-2026"
+        echo "║  Region:    us-central1"
+        echo "╠══════════════════════════════════════════════════════════════╣"
+
+        for SVC in paysurity-api paysurity-public-website paysurity-dashboard; do
+          URL=$$(gcloud run services describe $$SVC \
+            --platform managed --region us-central1 \
+            --format="value(status.url)" 2>/dev/null || echo "NOT FOUND")
+          echo "║  $$SVC"
+          echo "║    run.app: $$URL"
+        done
+
+        echo "╠══════════════════════════════════════════════════════════════╣"
+        echo "║  Custom domains (active after DNS propagation):              ║"
+        echo "║    https://staging.paysurity.com                             ║"
+        echo "║    https://api.staging.paysurity.com                         ║"
+        echo "║    https://dashboard.staging.paysurity.com                   ║"
+        echo "╠══════════════════════════════════════════════════════════════╣"
+        echo "║  Run scripts/test-staging.sh to verify DNS + endpoints       ║"
+        echo "╚══════════════════════════════════════════════════════════════╝"
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 8 — Cache Invalidation (Cloud CDN)
+  # ────────────────────────────────────────────────────────────────────────────
+  - id: 'cache-invalidation'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deployment-manifest']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        echo "=== Phase 8: Cache Invalidation (Cloud CDN) ==="
+        # Invalidate the cache for the Global Load Balancer to force fetch of new container revisions.
+        # This is asynchronous to avoid blocking the build completion for too long.
+        gcloud compute url-maps invalidate-cdn-cache paysurity-url-map --path "/*" --async || \
+        echo "INFO: CDN invalidation skipped (map 'paysurity-url-map' not found or CDN not enabled)"
+
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # PHASE 7 — Storage Janitor (Artifact Registry Pruning)
+  # ────────────────────────────────────────────────────────────────────────────
+  - id: 'storage-janitor'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['deployment-manifest']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        echo "=== Phase 7: Storage Janitor ==="
+        REPO="us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker"
+        
+        for SVC in paysurity-api paysurity-public-website paysurity-dashboard; do
+          echo "Cleaning up $$SVC..."
+          # List all image tags/digests ordered by newest, skip the first 5 records
+          gcloud artifacts docker images list "$$REPO/$$SVC" \
+            --sort-by="~update_time" \
+            --format="value(version)" | tail -n +6 > /workspace/old_images.txt || true
+            
+          if [ -s /workspace/old_images.txt ]; then
+            while read -r DIGEST; do
+              if [ -n "$$DIGEST" ]; then
+                echo "Deleting $$SVC@$$DIGEST ..."
+                gcloud artifacts docker images delete "$$REPO/$$SVC@$$DIGEST" --quiet --delete-tags || true
+              fi
+            done < /workspace/old_images.txt
+          else
+            echo "No old images found to delete for $$SVC."
+          fi
+        done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Artifact Registry images to retain after build
+# ─────────────────────────────────────────────────────────────────────────────
+images:
+  - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-api:latest
+  - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-public-website:latest
+  - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-dashboard:latest
+  - us-central1-docker.pkg.dev/paysurity-platform-2026/paysurity-docker/paysurity-admin-portal:latest
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Build options
+# ─────────────────────────────────────────────────────────────────────────────
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+
+timeout: '2400s'

@@ -1,0 +1,108 @@
+{
+  "project": "PaySurity System Integrity Discovery Audit (SIDA)",
+  "version": "1.0.0",
+  "last_updated": "2026-05-04",
+  "source_of_truth": {
+    "root": "requirements/",
+    "manifest": "master_manifest.json"
+  },
+  "index": [
+    {
+      "category": "00_shared",
+      "files": [
+        "00_CANONICAL_INDEX.md",
+        "ACT_ACTOR_LIBRARY.md",
+        "ADM_SUPER_ADMIN_PORTAL.md",
+        "AFR_AFFILIATES_RESELLERS.md",
+        "AGG_ORDER_AGGREGATION.md",
+        "AI_EXPERIENCE.md",
+        "ANA_ANALYTICS_DASHBOARD.md",
+        "API_ERROR_CODES.md",
+        "API_PLATFORM.md",
+        "ARC_MULTITENANT_EDGE_ROUTING.md",
+        "COM_COMPLIANCE_LEGAL.md",
+        "CRM_CUSTOMER_SERVICE.md",
+        "DEFERRED_VERTICALS.md",
+        "DEFINITION_OF_DONE.md",
+        "DEV_IMPLEMENTATION_STANDARD.md",
+        "ECO_ECOMMERCE.md",
+        "ERP_ACCOUNTING_INVENTORY.md",
+        "FAC_FREIGHT_LOAD_FACTORING.md",
+        "FRN_FRANCHISE_MANAGEMENT.md",
+        "GAP_FILL_ADDENDUM.md",
+        "IMPL_GAP_ANALYSIS.md",
+        "LOY_LOYALTY_ENGINE.md",
+        "MOB_MOBILE_AND_SAV_ESTIMATOR.md",
+        "NFR_PLATFORM_NONFUNCTIONAL.md",
+        "NOT_NOTIFICATION_ENGINE.md",
+        "ORC_PAYMENT_ORCHESTRATION.md",
+        "POS_RETAIL.md",
+        "READINESS_GAP_ANALYSIS.md",
+        "SEC_SECURITY_PRIVACY.md",
+        "STATE_MACHINES.md",
+        "STATE_OF_THE_UNION_AUDIT.md",
+        "SUB_SUBSCRIPTION_BILLING.md",
+        "TAX_ENGINE.md",
+        "WEB_MOB_WEBSITE_MOBILE.md"
+      ]
+    },
+    {
+      "category": "01_core",
+      "files": [
+        "AESTHETIC_SYSTEM.md",
+        "GCP_LAUNCH_PLAYBOOK.md",
+        "LAUNCH_PLAN.md",
+        "PROJECT_PLAN.md",
+        "TECH_STACK.md",
+        "WEB_PUBLIC_WEBSITE.md"
+      ]
+    },
+    {
+      "category": "02_merchant",
+      "files": [
+        "MER_MERCHANT_SERVICES_ONBOARDING.md"
+      ]
+    },
+    {
+      "category": "03_restaurant",
+      "files": [
+        "POSR_POS_RESTAURANT.md",
+        "SEED_BISTROBEEST_TEST_TENANT.md"
+      ]
+    },
+    {
+      "category": "04_grocery",
+      "files": [
+        "POSG_POS_GROCERY.md"
+      ]
+    },
+    {
+      "category": "05_payroll",
+      "files": [
+        "PAY_PAYROLL.md"
+      ]
+    },
+    {
+      "category": "06_wallets",
+      "files": [
+        "WAL_DIGITAL_WALLETS.md"
+      ]
+    },
+    {
+      "category": "10_microsites",
+      "files": [
+        "HOB_FIDELITY_REPORT.md",
+        "MST_TENANT_MICROSITE.md",
+        "SCRAPER_REQUIREMENTS.md"
+      ]
+    },
+    {
+      "category": "11_internal",
+      "files": [
+        "OPS_MANAGEMENT.md",
+        "RBAC_PERMISSION_MATRIX.md",
+        "SUPER_ADMIN_ONBOARDING_GUIDE.md"
+      ]
+    }
+  ]
+}

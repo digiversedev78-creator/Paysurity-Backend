@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: paysurity_staging_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-paysurity}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-paysurity_staging_secure}
+      POSTGRES_DB: ${POSTGRES_DB:-paysurity_staging}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata_staging:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-paysurity}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - paysurity_staging_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: paysurity_staging_redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redisdata_staging:/data
+    restart: unless-stopped
+    networks:
+      - paysurity_staging_net
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: paysurity_staging_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file: .env.staging.example
+    ports:
+      - '4000:4000'
+    restart: unless-stopped
+    networks:
+      - paysurity_staging_net
+
+  admin-portal:
+    build:
+      context: .
+      dockerfile: apps/admin-portal/Dockerfile
+    container_name: paysurity_staging_admin
+    depends_on:
+      - api
+    env_file: .env.staging.example
+    ports:
+      - '4004:4004' # Port from Next.js standalone server
+    restart: unless-stopped
+    networks:
+      - paysurity_staging_net
+
+  merchant-dashboard:
+    build:
+      context: .
+      dockerfile: apps/merchant-dashboard/Dockerfile
+    container_name: paysurity_staging_merchant
+    depends_on:
+      - api
+    env_file: .env.staging.example
+    ports:
+      - '4001:4001'
+    restart: unless-stopped
+    networks:
+      - paysurity_staging_net
+
+  public-website:
+    build:
+      context: .
+      dockerfile: apps/public-website/Dockerfile
+    container_name: paysurity_staging_public
+    depends_on:
+      - api
+    env_file: .env.staging.example
+    ports:
+      - '4003:4003'
+    restart: unless-stopped
+    networks:
+      - paysurity_staging_net
+
+volumes:
+  pgdata_staging:
+  redisdata_staging:
+
+networks:
+  paysurity_staging_net:
+    driver: bridge

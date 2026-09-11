@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySurity Omnichannel Orchestrator - Chicago Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: white; margin: 0; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass { background: rgba(15, 20, 25, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .pane { height: 100%; overflow-y: auto; overflow-x: hidden; position: relative; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        
+        /* Phone Frame */
+        .phone { width: 340px; height: 700px; background: #000; border-radius: 40px; border: 8px solid #1a1a1a; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); position: relative; overflow: hidden; margin: auto; }
+        .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1a1a1a; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; z-index: 10; }
+        .screen { background: #f8fafc; height: 100%; width: 100%; padding-top: 40px; color: #0f172a; display: flex; flex-direction: column; }
+        
+        /* Animations */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.4s ease-out forwards; }
+        .pulse-green { animation: pulseG 2s infinite; }
+        @keyframes pulseG { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="glass h-14 shrink-0 flex items-center justify-between px-6 z-20">
+        <div class="flex items-center gap-3">
+            <div class="h-6 w-6 rounded bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 font-bold text-xs">P</div>
+            <h1 class="font-bold tracking-widest text-sm uppercase bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">PaySurity Orchestrator</h1>
+            <div class="h-1 w-1 bg-gray-600 rounded-full mx-2"></div>
+            <span class="text-xs text-gray-400 font-mono">SCENARIO: CHICAGO TIER-1 PAYROLL RUN</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="flex items-center gap-2 text-xs font-mono text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded border border-emerald-400/20">
+                <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
+                GCP CLOUD LINK ACTIVE
+            </span>
+        </div>
+    </header>
+
+    <!-- Main 3-Pane Setup -->
+    <div class="flex-1 flex w-full h-full overflow-hidden">
+        
+        <!-- PANE 1: Tenant Admin (LEFT) -->
+        <div class="flex-1 border-r border-gray-800 bg-[#0a0a0a] pane flex flex-col">
+            <div class="bg-[#111] border-b border-gray-800 p-3 text-xs tracking-widest text-gray-400 flex justify-between">
+                <span>TENANT ADMIN CONTEXT</span>
+                <span class="text-emerald-500 font-mono">UUID: 9fbe18ef...</span>
+            </div>
+            <div class="flex flex-1 overflow-hidden">
+                <!-- Admin Sidebar -->
+                <div class="w-48 border-r border-gray-800 h-full p-4 flex flex-col gap-2 text-sm text-gray-400">
+                    <div class="font-bold text-white mb-4 px-2">Illinois Retail</div>
+                    <div class="px-2 py-1.5 rounded hover:bg-gray-800 cursor-pointer">Dashboard</div>
+                    <div class="px-2 py-1.5 rounded hover:bg-gray-800 cursor-pointer">Locations</div>
+                    <div class="px-2 py-1.5 rounded hover:bg-gray-800 cursor-pointer text-emerald-400 bg-emerald-400/10 font-medium">Payroll Engine</div>
+                    <div class="px-2 py-1.5 rounded hover:bg-gray-800 cursor-pointer">DDA Wallets</div>
+                    <div class="px-2 py-1.5 rounded hover:bg-gray-800 cursor-pointer">POS Items</div>
+                </div>
+                
+                <!-- Admin Main Area -->
+                <div class="flex-1 p-6 overflow-y-auto">
+                    <h2 class="text-xl font-bold mb-1">Payroll Orchestration</h2>
+                    <p class="text-xs text-gray-500 mb-8">Execute instantaneous clearing for employee child-wallets via Corporate Treasury.</p>
+                    
+                    <div class="bg-[#111] border border-gray-800 rounded-xl p-5 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <h3 class="font-bold text-gray-200">Treasury Reserve</h3>
+                                <p class="text-xs text-gray-500">Master Wallet: USD Balance</p>
+                            </div>
+                            <div class="text-2xl font-mono font-bold text-emerald-400" id="treasury-balance">$550,000.00</div>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden"><div class="bg-emerald-500 h-full w-3/4"></div></div>
+                    </div>
+
+                    <h3 class="text-sm font-bold text-gray-400 mb-3 border-b border-gray-800 pb-2">PENDING BATCH RUN (Store: Mag Mile)</h3>
+                    
+                    <div class="space-y-3 mb-8">
+                        <!-- Employee Row -->
+                        <div class="flex items-center justify-between p-3 bg-gray-900/50 border border-gray-800 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xs">MW</div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Marcus Wright</div>
+                                    <div class="text-xs text-gray-500">Cashier • 50 hrs @ $18.50</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-mono font-bold text-gray-200">$925.00</div>
+                                <div class="text-[10px] text-emerald-500">Target: DDA Wallet</div>
+                            </div>
+                        </div>
+                        <!-- Employee Row -->
+                        <div class="flex items-center justify-between p-3 bg-gray-900/50 border border-gray-800 rounded-lg opacity-50">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-xs">SC</div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">Sarah Connor</div>
+                                    <div class="text-xs text-gray-500">Manager • 40 hrs @ $35.00</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-mono font-bold text-gray-200">$1,400.00</div>
+                                <div class="text-[10px] text-emerald-500">Target: DDA Wallet</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="run-payroll-btn" onclick="executePayroll()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg pulse-green transition-all focus:outline-none focus:ring-4 focus:ring-blue-500/30 flex items-center justify-center gap-2">
+                        Execute $2,325.00 Payroll Disburse
+                    </button>
+                    <div id="payroll-success" class="hidden mt-4 text-center text-sm font-bold text-emerald-400 animate-fade-up">✓ Disbursed instantly. Child wallets credited.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANE 2: Technical Telemetry (MIDDLE) -->
+        <div class="w-[35%] border-r border-gray-800 bg-[#020202] pane font-mono text-[11px] leading-relaxed relative flex flex-col">
+            <div class="bg-[#111] border-b border-gray-800 p-3 text-xs tracking-widest text-[#00ffcc] flex justify-between z-10 shrink-0">
+                <span>TECHNICAL TELEMETRY</span>
+                <span class="animate-pulse">● LIVE</span>
+            </div>
+            <div id="terminal" class="p-4 flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-1 pb-10">
+                <div class="text-gray-500">root@paysurity-dev-cluster:~# tail -f /var/log/pg_stat_activity.log</div>
+                <div class="text-gray-400">Listening to Database Ledger (ID: 9fbe18ef)...</div>
+            </div>
+            <div class="h-10 bg-gradient-to-t from-[#020202] to-transparent absolute bottom-0 w-full z-10"></div>
+        </div>
+
+        <!-- PANE 3: Mobile Experience (RIGHT) -->
+        <div class="w-[400px] bg-[#0a0f14] pane flex flex-col items-center justify-center relative">
+            <div class="absolute top-0 left-0 w-full bg-[#111] border-b border-gray-800 p-3 text-xs tracking-widest text-gray-400 flex justify-between z-10">
+                <span>END USER (RIGHT)</span>
+                <span class="text-blue-400">Marcus's iPhone</span>
+            </div>
+            
+            <div class="phone mt-10">
+                <div class="notch"></div>
+                <div class="screen px-5">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="font-bold text-lg tracking-tight">Illinois<span class="text-emerald-500">Pay</span></div>
+                        <div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus" alt="avatar"></div>
+                    </div>
+                    
+                    <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Digital Wallet Balance</h2>
+                    <div class="text-4xl font-extrabold tracking-tight text-gray-900 mb-1" id="mobile-balance">$1,500.00</div>
+                    <div class="text-xs font-medium text-emerald-600 bg-emerald-100 w-max px-2 py-0.5 rounded mb-6">Available to Spend</div>
+
+                    <div class="flex gap-3 mb-8">
+                        <button class="flex-1 bg-gray-900 text-white py-3 rounded-2xl font-semibold text-sm shadow-lg hover:bg-gray-800">Send</button>
+                        <button class="flex-1 bg-blue-600 text-white py-3 rounded-2xl font-semibold text-sm shadow-lg hover:bg-blue-700">Scan QR</button>
+                    </div>
+
+                    <h3 class="text-base font-bold text-gray-800 mb-4">Ledger Activity</h3>
+                    
+                    <div class="flex flex-col gap-4" id="mobile-ledger">
+                        <!-- Existing Tx -->
+                        <div class="flex justify-between items-center">
+                            <div class="flex gap-3 items-center">
+                                <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-lg">🍔</div>
+                                <div><div class="text-sm font-bold text-gray-900">Bistro Lunch</div><div class="text-[10px] text-gray-500">Yesterday, 1:15 PM</div></div>
+                            </div>
+                            <div class="font-bold text-sm text-gray-900">-$18.50</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Orchestration Controller Script -->
+    <script>
+        const terminal = document.getElementById('terminal');
+        const runBtn = document.getElementById('run-payroll-btn');
+        const successTag = document.getElementById('payroll-success');
+        const treasury = document.getElementById('treasury-balance');
+        const mobileBalance = document.getElementById('mobile-balance');
+        const mobileLedger = document.getElementById('mobile-ledger');
+        
+        // Ambient background telemetry
+        const ambientLogs = [
+            "<span class='text-gray-600'>[SYS] Heartbeat OK. Connection pool: 12/50.</span>",
+            "<span class='text-gray-600'>[ROUTER] Health check payload acknowledged.</span>",
+            "<span class='text-purple-400'>[KDS] Station 3 verified layout config block.</span>"
+        ];
+
+        setInterval(() => {
+            if (Math.random() > 0.6) {
+                appendLog(ambientLogs[Math.floor(Math.random() * ambientLogs.length)]);
+            }
+        }, 3000);
+
+        function appendLog(htmlContent) {
+            const div = document.createElement('div');
+            div.className = "animate-fade-up";
+            div.innerHTML = `<span class="text-gray-700 mx-1">➜</span> ${htmlContent}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // The Magic Playable Button Logic
+        let executed = false;
+        async function executePayroll() {
+            if(executed) return;
+            executed = true;
+            runBtn.classList.remove('pulse-green', 'bg-blue-600', 'hover:bg-blue-500');
+            runBtn.classList.add('bg-gray-700', 'cursor-not-allowed', 'opacity-50');
+            runBtn.innerText = "Processing Sequence...";
+
+            // Sequence 1: Init transfer
+            appendLog("<span class='text-yellow-400'>[PAYROLL_ENGINE] INITIATING BATCH RUN: $2,325.00</span>");
+            await delay(800);
+            
+            // Sequence 2: Treasury Deduction
+            appendLog("<span class='text-blue-400'>[LEDGER] LOCKING ROW: UPDATE wallets SET balance_cents = balance_cents - 232500 WHERE id = 'treasury-idx'</span>");
+            treasury.innerText = "$547,675.00";
+            treasury.classList.add('text-red-400');
+            await delay(1200);
+            treasury.classList.remove('text-red-400');
+            
+            // Sequence 3: AML / Compliance validation
+            appendLog("<span class='text-orange-400'>[COMPLIANCE] Scanning destination DDA child-wallets against OFAC matrices...</span>");
+            await delay(1000);
+            appendLog("<span class='text-emerald-400'>[COMPLIANCE] OK. CLEARANCE ISSUED.</span>");
+            await delay(600);
+
+            // Sequence 4: Marcus Wallet Credit (Right Screen Reacts instantly)
+            appendLog("<span class='text-pink-400'>[POS_ENGINE] INSERT INTO wallets (owner_user_id, balance_cents) VALUES ('marcus-wright-idx', +92500)</span>");
+            
+            // Visually insert into the mobile frame!
+            const newDiv = document.createElement('div');
+            newDiv.className = "flex justify-between items-center animate-fade-up bg-emerald-50 -mx-2 px-2 py-2 rounded-xl";
+            newDiv.innerHTML = `
+                <div class="flex gap-3 items-center">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-lg shadow-sm border border-emerald-200">💰</div>
+                    <div><div class="text-sm font-bold text-gray-900 border-b border-transparent">Payroll Deposit</div><div class="text-[10px] font-medium text-emerald-600">Just Now • Instant Clear</div></div>
+                </div>
+                <div class="font-bold text-base text-emerald-600">+$925.00</div>
+            `;
+            mobileLedger.insertBefore(newDiv, mobileLedger.firstChild);
+            
+            // Odometer tick up
+            mobileBalance.innerText = "$2,425.00";
+            mobileBalance.style.color = "#059669"; // Emerald 600
+            mobileBalance.classList.add('scale-105', 'transition-transform');
+            
+            await delay(600);
+            appendLog("<span class='text-white font-bold bg-emerald-900 px-1'>[SETTLEMENT] BATCH ID 0x9fbe FULLY CLEARED & SYNCED. HASH VERIFIED.</span>");
+            
+            runBtn.innerText = "Batch Run Completed & Audited";
+            successTag.classList.remove('hidden');
+            
+            setTimeout(() => {
+                mobileBalance.style.color = "";
+                mobileBalance.classList.remove('scale-105');
+            }, 1000);
+        }
+
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+    </script>
+</body>
+</html>

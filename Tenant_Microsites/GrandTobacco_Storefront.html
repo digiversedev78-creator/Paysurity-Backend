@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Tobacco Hub | Built on PaySurity Retail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; }
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+        .hero { background: linear-gradient(rgba(9, 9, 11, 0.5), rgba(9, 9, 11, 1)), url('https://images.unsplash.com/photo-1528646197116-e578cd3632cf?auto=format&fit=crop&w=1600&q=80') center/cover; }
+        .item-card { transition: all 0.4s ease; border: 1px solid #27272a; }
+        .item-card:hover { transform: translateY(-5px); border-color: #991b1b; box-shadow: 0 10px 40px -10px rgba(153,27,27,0.3); }
+    </style>
+</head>
+<body class="pb-20 relative">
+
+    <!-- Age Gate Modal -->
+    <div id="age-gate" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+        <div class="bg-[#111] border border-red-900 shadow-2xl rounded-2xl p-10 max-w-lg w-full text-center">
+            <h2 class="text-4xl serif font-bold text-red-600 mb-2">Age Restriction</h2>
+            <p class="text-gray-400 mb-8 leading-relaxed">You must be 21 years of age or older to purchase tobacco products in the State of Illinois. By entering, you consent to digital cryptographic ID verification driven by PaySurity Compliance.</p>
+            <div class="flex gap-4">
+                <button onclick="document.body.innerHTML=''" class="flex-1 bg-gray-900 border border-gray-800 hover:bg-gray-800 text-white font-bold py-4 rounded-xl transition">I am under 21</button>
+                <button onclick="document.getElementById('age-gate').style.display='none'" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(185,28,28,0.4)] transition">I am 21+</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="w-full px-6 py-8 flex justify-between tracking-widest uppercase text-xs font-bold border-b border-gray-900 relative z-10 bg-black/50">
+        <div>GRAND TOBACCO HUB</div>
+        <div>CIGARS & ACCESSORIES</div>
+        <div class="text-red-500 cursor-pointer">CART (0)</div>
+    </header>
+
+    <!-- Hero: slight padding-top so text never sits behind header -->
+    <div class="hero w-full flex flex-col justify-center items-center text-center" style="min-height: 50vh; padding-top: 80px; padding-bottom: 40px;">
+        <h1 class="text-6xl md:text-8xl font-black mb-6 text-red-50">Artisan Imports.</h1>
+        <p class="text-lg text-gray-400 max-w-xl font-light tracking-wide uppercase">Uncompromised Selection. Verified Provenance.</p>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="max-w-6xl mx-auto px-6 py-20 pb-32">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <!-- Product: Cohiba Siglo VI -->
+            <div class="bg-[#111] item-card p-6 flex flex-col group cursor-pointer">
+                <div class="h-64 mb-6 relative overflow-hidden" style="background: url('https://images.unsplash.com/photo-1571748982800-fa51082c2224?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;"></div>
+                <h3 class="text-2xl font-bold mb-1 group-hover:text-red-500 transition-colors">Cohiba Siglo VI</h3>
+                <p class="text-gray-500 text-sm mb-6 flex-1">Box of 10. Origin: DR. Medium-Full profile.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-gray-800">
+                    <span class="font-mono text-xl text-white">$450.00</span>
+                    <button class="text-xs uppercase tracking-widest border border-red-900 hover:bg-red-900 px-4 py-2 text-red-400 transition">Add To Box</button>
+                </div>
+            </div>
+            <!-- Product: Premium Rosewood Cutter -->
+            <div class="bg-[#111] item-card p-6 flex flex-col group cursor-pointer">
+                <div class="h-64 mb-6 relative overflow-hidden" style="background: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;"></div>
+                <h3 class="text-2xl font-bold mb-1 group-hover:text-red-500 transition-colors">Premium Rosewood Cutter</h3>
+                <p class="text-gray-500 text-sm mb-6 flex-1">Double guillotine stainless steel blades. Hand-polished.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-gray-800">
+                    <span class="font-mono text-xl text-white">$85.00</span>
+                    <button class="text-xs uppercase tracking-widest border border-red-900 hover:bg-red-900 px-4 py-2 text-red-400 transition">Add To Box</button>
+                </div>
+            </div>
+            <!-- Product: Montecristo No. 2 -->
+            <div class="bg-[#111] item-card p-6 flex flex-col group cursor-pointer">
+                <div class="h-64 mb-6 relative overflow-hidden" style="background: url('https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=600&q=80') center/cover no-repeat;"></div>
+                <h3 class="text-2xl font-bold mb-1 group-hover:text-red-500 transition-colors">Montecristo No. 2</h3>
+                <p class="text-gray-500 text-sm mb-6 flex-1">Box of 25. The iconic torpedo.</p>
+                <div class="flex justify-between items-center pt-4 border-t border-gray-800">
+                    <span class="font-mono text-xl text-white">$390.00</span>
+                    <button class="text-xs uppercase tracking-widest border border-red-900 hover:bg-red-900 px-4 py-2 text-red-400 transition">Add To Box</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Power Footer -->
+    <div class="fixed bottom-0 w-full py-4 text-center bg-black/90 border-t border-gray-900 text-xs text-gray-500 font-mono flex flex-col items-center">
+        <span class="mb-1">STATE-LICENSED DISPENSARY • ID VERIFICATION MANDATORY</span>
+        <span>Infrastructure & KYC powered by <span class="text-emerald-500 font-bold tracking-tight">PaySurity Ecosystem</span></span>
+    </div>
+</body>
+</html>

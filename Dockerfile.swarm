@@ -1,0 +1,33 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install git, bash, and python/build tools for any native node modules
+RUN apk add --no-cache git bash build-base python3
+
+# Install pnpm
+RUN npm install -g pnpm@9.15.4
+
+# Copy monorepo configuration locks
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/ ./packages/
+COPY apps/ ./apps/
+COPY scripts/ ./scripts/
+COPY Requirements/ ./Requirements/
+
+# Important: Copy manifests
+COPY REQUIREMENT*.json ./
+COPY turbo.json .
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Configure Git so the autonomous AI swarm can author commits
+RUN git config --global user.name "PaySurity Swarm Worker" && \
+    git config --global user.email "paysurity-swarm-worker@paysurity.system"
+
+# Expose internal port in case the orchestrator spins up an Express listener later
+EXPOSE 8080
+
+# The default behavior is to run the manager (this can be overridden via gcloud args or entrypoint overrides)
+CMD ["node", "scripts/swarm-manager-v5.js"]

@@ -1,0 +1,3922 @@
+{
+  "version": "2.0-COGNITIVE-MASTER",
+  "status": "LOCKED",
+  "requirements": [
+    {
+      "id": "REQ-WAL-001",
+      "description": "Wallet Lifecycle & Double-Entry Ledger",
+      "domain": "Core Finance",
+      "preconditions": [
+        "Valid KYC/KYB verified entity (User or Merchant) exists",
+        "Entity must not have an active AML hold status",
+        "Ledger engine must have a balanced initial root state (zero-sum validation)"
+      ],
+      "data_invariants": [
+        "Sum of all debits must exactly equal sum of all credits in every transaction (double-entry constraint)",
+        "Ledger entries must be immutable (append-only table schema)",
+        "Currency codes must be ISO 4217 compliant",
+        "Amounts must be stored as integers representing the lowest currency denominator (e.g., cents)"
+      ],
+      "postconditions": [
+        "Two distinct ledger entry rows created: 1 Debit, 1 Credit",
+        "Wallet available balance synchronously updated via materialized view or trigger",
+        "Transaction reference UUID generated and returned to client"
+      ],
+      "error_states": [
+        "INSUFFICIENT_FUNDS: Debit amount exceeds available balance",
+        "LEDGER_IMBALANCE_DETECTED: Transaction debit/credit arrays do not sum to 0",
+        "WALLET_FROZEN: Target wallet is locked for compliance reasons"
+      ]
+    },
+    {
+      "id": "REQ-MER-001",
+      "description": "Merchant Application & KYB Flow",
+      "domain": "Merchant Services",
+      "preconditions": [
+        "Applicant email must be verified via OTP",
+        "Applicant must provide a valid Employer Identification Number (EIN) or SSN"
+      ],
+      "data_invariants": [
+        "EIN must match the 9-digit US format XX-XXXXXXX",
+        "Beneficial Ownership information must sum to exactly 100% equity distribution",
+        "Application status must transition linearly: DRAFT -> SUBMITTED -> IN_REVIEW -> APPROVED/REJECTED"
+      ],
+      "postconditions": [
+        "KYB payload dispatched to external underwriting API (e.g., Stripe Connect / Alloy)",
+        "Merchant entity record created in `merchant_profiles` table",
+        "Default clearing bank account securely tokenized"
+      ],
+      "error_states": [
+        "KYB_VERIFICATION_FAILED: Automated identity check returned false",
+        "DUPLICATE_EIN: The provided tax ID is already registered in the system",
+        "INVALID_EQUITY_DISTRIBUTION: Ownership shares do not equal 100%"
+      ]
+    },
+    {
+      "id": "REQ-POSR-001",
+      "description": "Core Order Management & Table Workflow",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "POS Terminal must be authenticated and assigned to a valid Location ID",
+        "Shift must be strictly OPEN for the interacting server",
+        "Target table ID must exist in the active floor plan"
+      ],
+      "data_invariants": [
+        "Order state must follow: OPEN -> FIRED -> BILLED -> PAID -> CLOSED",
+        "Tax calculated must equal the sum of (Item Price * Line Item Tax Rate)",
+        "Table status must be mutually exclusive (e.g., cannot be 'AVAILABLE' if order is 'OPEN')"
+      ],
+      "postconditions": [
+        "Order lines committed to `pos_orders` and `pos_order_items` tables",
+        "KDS (Kitchen Display System) routing events triggered via WebSockets",
+        "Table status updated to 'OCCUPIED' or 'BILLED'"
+      ],
+      "error_states": [
+        "SHIFT_CLOSED: Attempted to open order outside of active shift",
+        "TABLE_CONFLICT: Attempted to seat guests at an already occupied table",
+        "MENU_ITEM_UNAVAILABLE: Item requested is marked 86'd (out of stock)"
+      ]
+    },
+    {
+      "id": "REQ-PAY-001",
+      "description": "Payroll Calculation Engine",
+      "domain": "Finance/Payroll",
+      "preconditions": [
+        "Employer must have valid state tax registration IDs",
+        "Employees must have active W-4 configuration on file",
+        "Timesheet data for the pay period must be explicitly approved by management"
+      ],
+      "data_invariants": [
+        "Gross Pay = (Regular Hours * Rate) + (Overtime Hours * OT Rate) + Tips",
+        "Net Pay = Gross Pay - PreTax Deductions - Taxes - PostTax Deductions",
+        "Net Pay must be >= 0",
+        "Overtime must strictly apply for hours > 40 per workweek (Federal FLSA)"
+      ],
+      "postconditions": [
+        "Payroll Run object transitioned to 'LOCKED' state",
+        "ACH NACHA file generated for direct deposits",
+        "Tax liability staging records created for automated remittance"
+      ],
+      "error_states": [
+        "NEGATIVE_NET_PAY: Deductions exceed gross earnings",
+        "MISSING_TIMESHEET_APPROVAL: Hours submitted but not manager approved",
+        "INVALID_TAX_JURISDICTION: Employee address unmapped to a tax engine locale"
+      ]
+    },
+    {
+      "id": "REQ-ORC-001",
+      "description": "Payment Authorization & Capture",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "Valid Payment Method Token (Network Token or PCI-compliant vault token)",
+        "Order amount > 0",
+        "Merchant processing account must be ACTIVE"
+      ],
+      "data_invariants": [
+        "Authorization amount must exactly equal requested checkout amount",
+        "Capture amount must be <= Authorization amount",
+        "Tokenization format must comply with PCI-DSS standards (no raw PAN storage)"
+      ],
+      "postconditions": [
+        "Processor gateway returns valid Authorization Code and Network Transaction ID",
+        "Ledger updated with a 'Pending Hold' entry for the auth amount",
+        "Order status advanced to 'PAID' or 'PARTIALLY_PAID'"
+      ],
+      "error_states": [
+        "DECLINED_INSUFFICIENT_FUNDS: Issuer rejected due to balance",
+        "DECLINED_FRAUD_RISK: High-risk indicators triggered gateway rejection",
+        "EXPIRED_AUTHORIZATION: Capture attempted after auth window (typically 7 days) elapsed"
+      ]
+    },
+    {
+      "id": "REQ-SEC-001",
+      "description": "Authentication & JWT Flow",
+      "domain": "Platform Security",
+      "preconditions": [
+        "Valid credentials (email/password hash match) or valid MFA token provided",
+        "User account status must be ACTIVE (not suspended or deleted)"
+      ],
+      "data_invariants": [
+        "JWT must be signed using RS256 algorithm",
+        "Access tokens must have a strict expiration <= 15 minutes",
+        "Refresh tokens must be stored in HTTP-only, secure cookies or secure enclaves",
+        "Passwords must be hashed using Argon2id or bcrypt"
+      ],
+      "postconditions": [
+        "Short-lived Access Token and long-lived Refresh Token issued",
+        "Successful login event logged in the Security Audit Trail with IP and User-Agent",
+        "Failed attempts counter reset to 0"
+      ],
+      "error_states": [
+        "INVALID_CREDENTIALS: Hash mismatch",
+        "ACCOUNT_LOCKED: Exceeded maximum retry threshold (brute force protection)",
+        "MFA_REQUIRED: Primary auth succeeded but secondary factor pending"
+      ]
+    },
+    {
+      "id": "REQ-FRN-001",
+      "description": "4-Level Hierarchy Entity Model & Role Access",
+      "domain": "Enterprise/Franchise",
+      "preconditions": [
+        "User must possess a valid RBAC role definition",
+        "Target resource must belong to a node within the user's hierarchy graph"
+      ],
+      "data_invariants": [
+        "Hierarchy levels are strictly: ROOT -> BRAND -> FRANCHISEE -> LOCATION",
+        "A Location must have exactly one parent Franchisee",
+        "Permissions flow downwards: Brand admins inherit access to Franchisees and Locations, but not vice-versa"
+      ],
+      "postconditions": [
+        "Data access scoped strictly to the authorized hierarchy depth (e.g., query adds `location_id IN (descendants)`)",
+        "Context-aware JWT minted containing `context_node_id` and `context_level`"
+      ],
+      "error_states": [
+        "HIERARCHY_VIOLATION_403: Attempt to access a node outside permitted branch",
+        "ORPHANED_NODE: Attempted to create a Location without a valid parent Franchisee",
+        "ROLE_INSUFFICIENT: Action requires a permission not granted by the current hierarchy role"
+      ]
+    },
+    {
+      "id": "REQ-SUB-001",
+      "description": "Billing Lifecycle & Dunning",
+      "domain": "SaaS Billing",
+      "preconditions": [
+        "Tenant has an active subscription tier configured",
+        "Tenant has a default payment method attached to their billing profile",
+        "Current date is >= Next Billing Date"
+      ],
+      "data_invariants": [
+        "Subscription status transitions: ACTIVE -> PAST_DUE -> UNPAID -> CANCELED",
+        "Dunning cycle spans exactly 14 days with 3 distinct retry attempts",
+        "Invoice line items must strictly map to provisioned usage or base tier fees"
+      ],
+      "postconditions": [
+        "Invoice generated in `invoices` table and marked 'PAID'",
+        "Next Billing Date incremented by exactly 1 billing period (e.g., +1 month)",
+        "Payment receipt emailed to tenant billing contacts"
+      ],
+      "error_states": [
+        "PAYMENT_FAILED: Default card declined, transition to PAST_DUE",
+        "NO_DEFAULT_PAYMENT_METHOD: Billing profile lacks a chargeable instrument",
+        "SUBSCRIPTION_SUSPENDED: Max dunning retries exhausted, service locked"
+      ]
+    },
+    {
+      "id": "REQ-ECO-001",
+      "description": "Storefront Online Ordering",
+      "domain": "Consumer E-Commerce",
+      "preconditions": [
+        "Location ID must be actively accepting online orders",
+        "Shopping cart must contain at least 1 valid, available menu item",
+        "Requested fulfillment time must fall within location's operational hours"
+      ],
+      "data_invariants": [
+        "Cart total must equal sum of items + modifiers + delivery fee + taxes + tip",
+        "Delivery polygons/radiuses strictly enforced for delivery fulfillment type",
+        "Inventory levels for 86'd items must be strictly validated immediately prior to checkout lock"
+      ],
+      "postconditions": [
+        "Order object created with source 'ONLINE'",
+        "Payment Authorized",
+        "Order immediately pushed to Location's KDS via WebSocket queue"
+      ],
+      "error_states": [
+        "LOCATION_CLOSED: Store is not accepting orders at this time",
+        "OUT_OF_DELIVERY_ZONE: Customer address unmapped to delivery boundaries",
+        "ITEM_UNAVAILABLE: A cart item became out of stock during checkout"
+      ]
+    },
+    {
+      "id": "REQ-TAX-001",
+      "description": "Real-Time Tax Quote (Order Checkout)",
+      "domain": "Compliance & Tax",
+      "preconditions": [
+        "Destination address (or Location address for pickup) is fully resolved",
+        "Cart contains categorized line items (e.g., Grocery vs. Prepared Food)"
+      ],
+      "data_invariants": [
+        "Tax calculation must apply item-level taxability rules (e.g., cold food untaxed in some states, hot food taxed)",
+        "Total tax must be the exact sum of all applicable jurisdiction taxes (State + County + City + Special)",
+        "Rounding must follow standard half-up logic to 2 decimal places per line item"
+      ],
+      "postconditions": [
+        "Tax quote object attached to the draft order payload",
+        "Detailed tax breakdown provided for the customer receipt (tax lines)",
+        "Tax nexus liability staged for month-end reporting"
+      ],
+      "error_states": [
+        "GEOCODING_FAILURE: Address could not be resolved to a specific tax jurisdiction",
+        "TAX_ENGINE_TIMEOUT: External tax provider (e.g., Avalara/TaxJar) failed to respond within 500ms",
+        "UNCATEGORIZED_ITEM: Menu item lacks necessary tax code metadata"
+      ]
+    },
+    {
+      "id": "ACT-T-001",
+      "description": "Restaurant Owner / Multi-Location Operator",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Account tier includes multi-location permissions."
+      ],
+      "data_invariants": [
+        "Actor permissions subset strictly includes global configuration rights.",
+        "TenantID is uniquely bound to the multi-location hierarchy."
+      ],
+      "postconditions": [
+        "Actor is granted overarching read/write across all child locations.",
+        "Audit logging captures all cross-location actions under this actor's ID."
+      ],
+      "error_states": [
+        "ERR-ACT-001: Insufficient tier for multi-location access.",
+        "ERR-ACT-002: Invalid login credentials."
+      ]
+    },
+    {
+      "id": "ACT-T-002",
+      "description": "District / Area Manager",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Assigned a specific regional subset of locations."
+      ],
+      "data_invariants": [
+        "Actor permissions strictly bounded by the assigned district location IDs.",
+        "Actor role equals 'DISTRICT_MANAGER'."
+      ],
+      "postconditions": [
+        "Actor is granted read/write only to assigned locations.",
+        "Actor actions are restricted from global tenant modifications."
+      ],
+      "error_states": [
+        "ERR-ACT-003: Access denied for out-of-district location.",
+        "ERR-ACT-004: District assignment missing."
+      ]
+    },
+    {
+      "id": "ACT-T-003",
+      "description": "General Manager (Location Level)",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Assigned to exactly one primary location."
+      ],
+      "data_invariants": [
+        "Actor access scope length equals 1.",
+        "Role enforces location-level isolation."
+      ],
+      "postconditions": [
+        "Actor can modify schedules, inventory, and ops for the single assigned location.",
+        "Actor cannot view peers' location data."
+      ],
+      "error_states": [
+        "ERR-ACT-005: Location assignment invalid or inactive."
+      ]
+    },
+    {
+      "id": "ACT-T-004",
+      "description": "Server / Waiter",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid POS pin/login.",
+        "Currently clocked into an active shift."
+      ],
+      "data_invariants": [
+        "Actor permissions restricted to order entry and basic payment processing.",
+        "No access to location-level financial reporting."
+      ],
+      "postconditions": [
+        "Actor can open, modify, and close tickets.",
+        "Actor tips are accumulated per session."
+      ],
+      "error_states": [
+        "ERR-ACT-006: Shift not started.",
+        "ERR-ACT-007: Unauthorized ticket modification."
+      ]
+    },
+    {
+      "id": "ACT-T-005",
+      "description": "Bartender",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid POS pin/login.",
+        "Currently clocked into an active shift."
+      ],
+      "data_invariants": [
+        "Actor permissions allow fast-bar ticket creation and direct tab management.",
+        "Restricted from voiding items without manager override."
+      ],
+      "postconditions": [
+        "Actor can maintain open tabs associated with physical cards or names.",
+        "Actor can settle immediate transactions."
+      ],
+      "error_states": [
+        "ERR-ACT-008: Void requires manager approval.",
+        "ERR-ACT-009: Tab settlement failed."
+      ]
+    },
+    {
+      "id": "ACT-T-006",
+      "description": "Cook / Kitchen Staff",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid KDS login or generic station login.",
+        "Assigned to a specific kitchen station."
+      ],
+      "data_invariants": [
+        "Read-only access to order tickets.",
+        "Write access limited to ticket state mutation (prep, ready)."
+      ],
+      "postconditions": [
+        "Actor can transition ticket states.",
+        "Actor actions trigger downstream KDS notifications."
+      ],
+      "error_states": [
+        "ERR-ACT-010: Invalid state transition.",
+        "ERR-ACT-011: Station offline."
+      ]
+    },
+    {
+      "id": "ACT-T-007",
+      "description": "Cashier",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid POS pin/login.",
+        "Currently clocked in and assigned a specific cash drawer."
+      ],
+      "data_invariants": [
+        "Actor cannot perform deep inventory changes.",
+        "Actor strictly bound to the assigned cash drawer session."
+      ],
+      "postconditions": [
+        "Actor can process checkouts and tender payments.",
+        "Drawer balance updates in real-time."
+      ],
+      "error_states": [
+        "ERR-ACT-012: Drawer assignment conflict.",
+        "ERR-ACT-013: Drawer balance mismatch on close."
+      ]
+    },
+    {
+      "id": "ACT-T-008",
+      "description": "In-House Delivery Driver",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid driver app login.",
+        "Active shift and valid vehicle assignment."
+      ],
+      "data_invariants": [
+        "Actor permissions limited to assigned delivery manifests.",
+        "GPS tracking active during dispatch."
+      ],
+      "postconditions": [
+        "Actor can transition delivery states (dispatched, arrived, delivered).",
+        "Proof of delivery is captured and synced."
+      ],
+      "error_states": [
+        "ERR-ACT-014: Out of delivery zone.",
+        "ERR-ACT-015: Delivery state transition invalid."
+      ]
+    },
+    {
+      "id": "ACT-T-009",
+      "description": "Grocery Store Owner / Chain Operator",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Account provisioned for grocery/retail capabilities."
+      ],
+      "data_invariants": [
+        "Actor has full hierarchical access across all chain stores.",
+        "Permissions include high-volume inventory pricing capabilities."
+      ],
+      "postconditions": [
+        "Actor can push global price book updates.",
+        "Actor can access consolidated chain-wide reports."
+      ],
+      "error_states": [
+        "ERR-ACT-016: Invalid chain identifier.",
+        "ERR-ACT-017: Price push failed."
+      ]
+    },
+    {
+      "id": "ACT-T-010",
+      "description": "Retail Store Owner / Chain Operator",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Account provisioned for retail multi-store capabilities."
+      ],
+      "data_invariants": [
+        "Actor has cross-store visibility for inventory transfers.",
+        "Permissions encompass multi-store promotions."
+      ],
+      "postconditions": [
+        "Actor can authorize cross-store transfers.",
+        "Actor can configure store-level access controls."
+      ],
+      "error_states": [
+        "ERR-ACT-018: Inventory transfer authorization denied."
+      ]
+    },
+    {
+      "id": "ACT-T-011",
+      "description": "Payroll Admin",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Granted strictly 'PAYROLL_ADMIN' role."
+      ],
+      "data_invariants": [
+        "Actor has access to PII and wage data.",
+        "No access to POS operations or menu configurations."
+      ],
+      "postconditions": [
+        "Actor can run payroll calculations and export ACH files.",
+        "Actor can modify employee wage rates."
+      ],
+      "error_states": [
+        "ERR-ACT-019: Unauthorized PII access attempt.",
+        "ERR-ACT-020: Payroll lock violation."
+      ]
+    },
+    {
+      "id": "ACT-T-012",
+      "description": "Employee (Non-Management)",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid employee portal login."
+      ],
+      "data_invariants": [
+        "Actor can only access own schedule, paystubs, and personal details.",
+        "Zero access to operational POS configurations."
+      ],
+      "postconditions": [
+        "Actor can request time off and view shifts.",
+        "Actor can view historical pay data."
+      ],
+      "error_states": [
+        "ERR-ACT-021: Attempted access of another employee's data."
+      ]
+    },
+    {
+      "id": "ACT-T-013",
+      "description": "Merchant Accountant / Bookkeeper",
+      "domain": "Actor Management",
+      "preconditions": [
+        "Valid system login session established.",
+        "Granted 'ACCOUNTANT' read-only or accounting-write role."
+      ],
+      "data_invariants": [
+        "Access restricted to financial ledgers, journal entries, and tax reporting.",
+        "No capability to alter live menu items or inventory counts."
+      ],
+      "postconditions": [
+        "Actor can export general ledger integrations.",
+        "Actor can reconcile daily settlement batches."
+      ],
+      "error_states": [
+        "ERR-ACT-022: Settlement reconciliation mismatch.",
+        "ERR-ACT-023: Write attempt on non-financial entity."
+      ]
+    },
+    {
+      "id": "ACT-C-001",
+      "description": "Dine-In Restaurant Customer",
+      "domain": "Consumer Engagement",
+      "preconditions": [
+        "Physical presence at the location.",
+        "Valid table assignment."
+      ],
+      "data_invariants": [
+        "Customer identity is transient unless linked via loyalty or payment method.",
+        "Session bound to a specific table ticket."
+      ],
+      "postconditions": [
+        "Customer can view digital menu via QR and optionally pay at table.",
+        "Receipt is generated upon successful payment."
+      ],
+      "error_states": [
+        "ERR-CUS-001: Invalid table QR code.",
+        "ERR-CUS-002: Payment authorization failed."
+      ]
+    },
+    {
+      "id": "ACT-C-002",
+      "description": "Online / AI-Ordering Consumer",
+      "domain": "Consumer Engagement",
+      "preconditions": [
+        "Valid web/mobile session established.",
+        "Delivery/Pickup parameters defined."
+      ],
+      "data_invariants": [
+        "Cart session state strictly maintained across navigation.",
+        "Pricing dynamically reflects location-specific availability."
+      ],
+      "postconditions": [
+        "Customer successfully submits order and receives tracking link.",
+        "Customer data stored if account created."
+      ],
+      "error_states": [
+        "ERR-CUS-003: Cart validation failed (item unavailable).",
+        "ERR-CUS-004: Delivery address out of bounds."
+      ]
+    },
+    {
+      "id": "ACT-C-003",
+      "description": "Grocery Shopper",
+      "domain": "Consumer Engagement",
+      "preconditions": [
+        "Valid session for grocery interface.",
+        "Store location selected."
+      ],
+      "data_invariants": [
+        "Cart supports high item count with batch pricing rules.",
+        "Inventory availability checked pre-checkout."
+      ],
+      "postconditions": [
+        "Customer successfully schedules pickup/delivery.",
+        "Loyalty points accumulated based on basket size."
+      ],
+      "error_states": [
+        "ERR-CUS-005: Item quantity exceeds available stock."
+      ]
+    },
+    {
+      "id": "ACT-C-004",
+      "description": "Retail / E-Commerce Shopper",
+      "domain": "Consumer Engagement",
+      "preconditions": [
+        "Valid session for retail storefront."
+      ],
+      "data_invariants": [
+        "Cart applies retail-specific tax and shipping rules.",
+        "Identity linked to distinct shipping address."
+      ],
+      "postconditions": [
+        "Customer successfully checks out with shipping calculation.",
+        "Tracking number provisioned post-fulfillment."
+      ],
+      "error_states": [
+        "ERR-CUS-006: Shipping address validation failed."
+      ]
+    },
+    {
+      "id": "ACT-P-001",
+      "description": "Affiliate Partner",
+      "domain": "Partner Ecosystem",
+      "preconditions": [
+        "Valid affiliate account registered and approved."
+      ],
+      "data_invariants": [
+        "Affiliate ID strictly appended to all referred traffic.",
+        "No access to internal merchant operations."
+      ],
+      "postconditions": [
+        "Affiliate can view conversion metrics and commission reports.",
+        "System accurately attributes sales to affiliate ID."
+      ],
+      "error_states": [
+        "ERR-PAR-001: Invalid or expired affiliate tracking link."
+      ]
+    },
+    {
+      "id": "ACT-P-002",
+      "description": "Reseller Partner",
+      "domain": "Partner Ecosystem",
+      "preconditions": [
+        "Valid reseller contract and portal access."
+      ],
+      "data_invariants": [
+        "Reseller can provision new sub-merchant accounts.",
+        "Commissions calculated based on sub-merchant processing volume."
+      ],
+      "postconditions": [
+        "Reseller can view hierarchical portfolio performance.",
+        "Reseller can initiate onboarding flows for clients."
+      ],
+      "error_states": [
+        "ERR-PAR-002: Sub-merchant provisioning failed.",
+        "ERR-PAR-003: Portfolio access violation."
+      ]
+    },
+    {
+      "id": "ACT-I-001",
+      "description": "PaySurity AI Operations Manager (Autonomous Agent)",
+      "domain": "Internal Operations",
+      "preconditions": [
+        "System running in continuous execution mode.",
+        "Agent has internal-only secure RPC access."
+      ],
+      "data_invariants": [
+        "Agent actions strictly audited in immutable ledger.",
+        "Agent cannot bypass hard financial authorization thresholds."
+      ],
+      "postconditions": [
+        "Agent autonomously resolves defined Tier 1 issues.",
+        "Agent escalates complex anomalies to human operators."
+      ],
+      "error_states": [
+        "ERR-INT-001: AI confidence threshold not met (escalation required).",
+        "ERR-INT-002: RPC execution timeout."
+      ]
+    },
+    {
+      "id": "ACT-I-002",
+      "description": "PaySurity Support Engineer",
+      "domain": "Internal Operations",
+      "preconditions": [
+        "Authenticated via SSO with internal VPN access.",
+        "Granted 'SUPPORT_ENGINEER' role."
+      ],
+      "data_invariants": [
+        "Engineer has read access to system logs and non-PII diagnostic data.",
+        "Write access restricted to configuration overrides with audit trail."
+      ],
+      "postconditions": [
+        "Engineer can resolve merchant support tickets.",
+        "Engineer can trigger webhook replays or cache invalidations."
+      ],
+      "error_states": [
+        "ERR-INT-003: Action requires elevated administrative approval."
+      ]
+    },
+    {
+      "id": "ACT-I-003",
+      "description": "PaySurity Underwriter",
+      "domain": "Internal Operations",
+      "preconditions": [
+        "Authenticated via SSO.",
+        "Granted 'UNDERWRITER' role."
+      ],
+      "data_invariants": [
+        "Underwriter has access to merchant KYB, credit, and risk data.",
+        "Cannot execute live payment transactions."
+      ],
+      "postconditions": [
+        "Underwriter can approve, decline, or request information on merchant applications.",
+        "Risk tiers updated based on underwriter decision."
+      ],
+      "error_states": [
+        "ERR-INT-004: Missing mandatory compliance documentation for decision."
+      ]
+    },
+    {
+      "id": "ACT-I-004",
+      "description": "PaySurity Compliance Officer",
+      "domain": "Internal Operations",
+      "preconditions": [
+        "Authenticated via SSO.",
+        "Granted 'COMPLIANCE_OFFICER' role."
+      ],
+      "data_invariants": [
+        "Officer has overarching access to AML/KYC flags and SAR reporting capabilities.",
+        "Cannot alter business operational logic."
+      ],
+      "postconditions": [
+        "Officer can freeze accounts pending investigation.",
+        "Officer can generate compliance regulatory reports."
+      ],
+      "error_states": [
+        "ERR-INT-005: Account freeze failed due to active in-flight batch."
+      ]
+    },
+    {
+      "id": "ACT-I-005",
+      "description": "PaySurity Finance Admin",
+      "domain": "Internal Operations",
+      "preconditions": [
+        "Authenticated via SSO.",
+        "Granted 'FINANCE_ADMIN' role."
+      ],
+      "data_invariants": [
+        "Admin has full access to platform revenue, processing fees, and payouts.",
+        "Admin cannot modify merchant menu or inventory."
+      ],
+      "postconditions": [
+        "Admin can execute manual payout exceptions.",
+        "Admin can adjust platform-wide fee configurations."
+      ],
+      "error_states": [
+        "ERR-INT-006: Fee adjustment exceeds maximum allowable delta."
+      ]
+    },
+    {
+      "id": "REQ-API-001",
+      "description": "API Key Lifecycle Management",
+      "domain": "API Platform",
+      "preconditions": [
+        "Developer account provisioned and active.",
+        "Secure transmission channel (HTTPS) strictly enforced."
+      ],
+      "data_invariants": [
+        "API keys map 1:1 to a specific environment (Test/Live) and scope.",
+        "Secret keys are stored using one-way cryptographic hashing."
+      ],
+      "postconditions": [
+        "New API keys are generated and returned only once to the client.",
+        "Revoked keys immediately reject subsequent requests with HTTP 401."
+      ],
+      "error_states": [
+        "ERR-API-001: Rate limit exceeded during key generation.",
+        "ERR-API-002: Attempted use of revoked API key."
+      ]
+    },
+    {
+      "id": "REQ-API-002",
+      "description": "Webhook Delivery Engine",
+      "domain": "API Platform",
+      "preconditions": [
+        "Valid webhook endpoint registered by merchant.",
+        "Event trigger successfully fired within core system."
+      ],
+      "data_invariants": [
+        "Webhook payloads must include cryptographic signatures for verification.",
+        "Retry mechanism adheres to exponential backoff strictly up to max attempts."
+      ],
+      "postconditions": [
+        "Webhook is delivered with HTTP 200 OK acknowledgment from receiver.",
+        "Failed deliveries are logged and queued for retry or marked dead-letter."
+      ],
+      "error_states": [
+        "ERR-API-003: Endpoint unreachable or timed out.",
+        "ERR-API-004: Invalid receiver SSL certificate."
+      ]
+    },
+    {
+      "id": "REQ-API-003",
+      "description": "API Rate Limiting",
+      "domain": "API Platform",
+      "preconditions": [
+        "Incoming request identified by API key or IP address."
+      ],
+      "data_invariants": [
+        "Rate limits enforce strict token-bucket or sliding-window algorithms.",
+        "Limits are evaluated independently per tenant and endpoint priority."
+      ],
+      "postconditions": [
+        "Requests within limits are forwarded to backend services.",
+        "Rate limit headers (X-RateLimit-Remaining) are accurately appended to responses."
+      ],
+      "error_states": [
+        "ERR-API-005: HTTP 429 Too Many Requests returned when limit exceeded."
+      ]
+    },
+    {
+      "id": "REQ-API-004",
+      "description": "API Versioning",
+      "domain": "API Platform",
+      "preconditions": [
+        "Request specifies API version via header or URL path."
+      ],
+      "data_invariants": [
+        "Unspecified versions default to the lowest supported backwards-compatible version.",
+        "Deprecated versions execute perfectly until hard sunset date."
+      ],
+      "postconditions": [
+        "Request is routed to the correctly versioned controller.",
+        "Sunset headers are included for deprecated versions."
+      ],
+      "error_states": [
+        "ERR-API-006: HTTP 400 Bad Request for unsupported API version."
+      ]
+    },
+    {
+      "id": "REQ-COM-001",
+      "description": "CCPA Consumer Rights Fulfillment",
+      "domain": "Compliance & Legal",
+      "preconditions": [
+        "Verified consumer data request received (Right to Know/Delete)."
+      ],
+      "data_invariants": [
+        "Data deletion enforces cascading hard deletes across all PII stores, excluding legally mandated financial retention records.",
+        "Request state machine strictly follows CCPA statutory timeframes."
+      ],
+      "postconditions": [
+        "Consumer receives comprehensive data export or deletion confirmation.",
+        "Audit log records the fulfillment action without retaining the underlying PII."
+      ],
+      "error_states": [
+        "ERR-COM-001: Verification of consumer identity failed.",
+        "ERR-COM-002: Statutory fulfillment timeout breached."
+      ]
+    },
+    {
+      "id": "REQ-COM-002",
+      "description": "ADA/WCAG 2.1 AA Compliance",
+      "domain": "Compliance & Legal",
+      "preconditions": [
+        "User interface rendered in browser or mobile application."
+      ],
+      "data_invariants": [
+        "Color contrast ratios strictly >= 4.5:1 for normal text.",
+        "All interactive DOM elements strictly maintain ARIA accessibility labels."
+      ],
+      "postconditions": [
+        "Screen readers can successfully navigate all critical transaction paths.",
+        "Keyboard-only navigation functions without trapping focus."
+      ],
+      "error_states": [
+        "ERR-COM-003: Automated accessibility scan detected violation in CI/CD pipeline."
+      ]
+    },
+    {
+      "id": "DEF-001",
+      "description": "Dental Practice Management",
+      "domain": "Deferred Verticals",
+      "preconditions": [
+        "System attempts to initialize Dental module."
+      ],
+      "data_invariants": [
+        "Dental vertical flag strictly equals 'DEFERRED'.",
+        "No HIPAA PHI data structures are provisioned."
+      ],
+      "postconditions": [
+        "Initialization is gracefully bypassed.",
+        "Admin interface hides Dental configuration options."
+      ],
+      "error_states": [
+        "ERR-DEF-001: Attempted access to disabled Dental module."
+      ]
+    },
+    {
+      "id": "DEF-002",
+      "description": "Legal Practice / Law Firm Billing",
+      "domain": "Deferred Verticals",
+      "preconditions": [
+        "System attempts to initialize Legal module."
+      ],
+      "data_invariants": [
+        "Legal vertical flag strictly equals 'DEFERRED'.",
+        "Trust accounting ledgers (IOLTA) remain uninitialized."
+      ],
+      "postconditions": [
+        "Initialization is gracefully bypassed.",
+        "Admin interface hides Legal configuration options."
+      ],
+      "error_states": [
+        "ERR-DEF-002: Attempted access to disabled Legal module."
+      ]
+    },
+    {
+      "id": "DEF-003",
+      "description": "Chiropractic / Physical Therapy Practice",
+      "domain": "Deferred Verticals",
+      "preconditions": [
+        "System attempts to initialize Chiropractic module."
+      ],
+      "data_invariants": [
+        "Chiropractic vertical flag strictly equals 'DEFERRED'."
+      ],
+      "postconditions": [
+        "Initialization is gracefully bypassed."
+      ],
+      "error_states": [
+        "ERR-DEF-003: Attempted access to disabled Chiropractic module."
+      ]
+    },
+    {
+      "id": "DEF-004",
+      "description": "QR Loyalty Program (Standalone)",
+      "domain": "Deferred Verticals",
+      "preconditions": [
+        "System attempts to initialize Standalone QR Loyalty."
+      ],
+      "data_invariants": [
+        "Standalone QR Loyalty flag strictly equals 'DEFERRED'."
+      ],
+      "postconditions": [
+        "Initialization is gracefully bypassed."
+      ],
+      "error_states": [
+        "ERR-DEF-004: Attempted access to disabled Standalone Loyalty module."
+      ]
+    },
+    {
+      "id": "DEF-005",
+      "description": "Cash-In / Cash-Out via Retail Agents",
+      "domain": "Deferred Verticals",
+      "preconditions": [
+        "System attempts to initialize Retail Agent Cash-In/Out."
+      ],
+      "data_invariants": [
+        "Retail Agent Cash flag strictly equals 'DEFERRED'."
+      ],
+      "postconditions": [
+        "Initialization is gracefully bypassed."
+      ],
+      "error_states": [
+        "ERR-DEF-005: Attempted access to disabled Retail Agent Cash module."
+      ]
+    },
+    {
+      "id": "REQ-COM-013",
+      "description": "Merchant Data Export",
+      "domain": "Compliance & Legal",
+      "preconditions": [
+        "Authorized merchant administrator requests data export."
+      ],
+      "data_invariants": [
+        "Export strictly scoped to merchant's tenant ID.",
+        "Export payload must not include raw PANs or secure cryptographic materials."
+      ],
+      "postconditions": [
+        "System generates a secure, signed CSV/JSON archive.",
+        "Export action is permanently recorded in the audit ledger."
+      ],
+      "error_states": [
+        "ERR-COM-004: Export payload size exceeds memory buffer.",
+        "ERR-COM-005: Unauthorized export attempt blocked."
+      ]
+    },
+    {
+      "id": "REQ-COM-014",
+      "description": "PCI DSS SAQ-A Compliance",
+      "domain": "Compliance & Legal",
+      "preconditions": [
+        "Merchant processes card-not-present transactions via platform."
+      ],
+      "data_invariants": [
+        "Platform strictly utilizes iframe/redirects for all raw PAN capture.",
+        "No core application servers ever process or store raw PANs."
+      ],
+      "postconditions": [
+        "PCI SAQ-A requirements are automatically satisfied for the merchant.",
+        "Card tokens are safely utilized for subsequent transactions."
+      ],
+      "error_states": [
+        "ERR-COM-006: PAN data detected in application memory dump."
+      ]
+    },
+    {
+      "id": "REQ-SEC-002",
+      "description": "Secrets Management",
+      "domain": "Security",
+      "preconditions": [
+        "Application service boots and requests environment variables."
+      ],
+      "data_invariants": [
+        "All database credentials, API keys, and encryption keys are injected at runtime via a secure vault.",
+        "Secrets are never hardcoded or logged to standard output."
+      ],
+      "postconditions": [
+        "Service successfully connects to dependencies using injected secrets.",
+        "Secret rotation executes without dropping active connections."
+      ],
+      "error_states": [
+        "ERR-SEC-003: Vault access denied for service identity.",
+        "ERR-SEC-004: Secret injection failed during boot."
+      ]
+    },
+    {
+      "id": "REQ-SEC-003",
+      "description": "PAN (Payment Card) Zero-Tolerance",
+      "domain": "Security",
+      "preconditions": [
+        "Any input field or API payload is processed by the system."
+      ],
+      "data_invariants": [
+        "Regex and DLP scanners actively block any 16-digit string passing Luhn validation in non-PCI-vault environments.",
+        "Logs are strictly scrubbed of any potential PAN data."
+      ],
+      "postconditions": [
+        "System remains definitively out of PCI DSS SAQ-D scope.",
+        "All card data exists purely as opaque vault tokens."
+      ],
+      "error_states": [
+        "ERR-SEC-005: Potential PAN string detected and purged from payload."
+      ]
+    },
+    {
+      "id": "REQ-SEC-004",
+      "description": "Security Headers & Network Controls",
+      "domain": "Security",
+      "preconditions": [
+        "HTTP response is formulated by the edge gateway."
+      ],
+      "data_invariants": [
+        "Strict-Transport-Security (HSTS) must be enforced with includeSubDomains.",
+        "Content-Security-Policy (CSP) must strictly block unsafe-inline scripts."
+      ],
+      "postconditions": [
+        "Response headers enforce browser-side security guardrails.",
+        "Any non-HTTPS traffic is immediately dropped or upgraded."
+      ],
+      "error_states": [
+        "ERR-SEC-006: Missing required security header in gateway configuration."
+      ]
+    },
+    {
+      "id": "REQ-POSR-002",
+      "description": "Kitchen Display System (KDS) Integration",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Order items must be mapped to valid KDS station routing rules",
+        "KDS socket connection must be active"
+      ],
+      "data_invariants": [
+        "OrderItem.kds_status ∈ {UNFIRED, FIRED, PREPARING, READY, VOIDED}",
+        "sum(fired_items) <= sum(total_order_items)"
+      ],
+      "postconditions": [
+        "Order items are transmitted to respective KDS stations",
+        "OrderItem.kds_status updates to FIRED",
+        "Fire time is recorded precisely"
+      ],
+      "error_states": [
+        "KDS_ROUTING_FAILED",
+        "KDS_SOCKET_DISCONNECTED",
+        "ITEM_ALREADY_FIRED"
+      ]
+    },
+    {
+      "id": "REQ-POSR-003",
+      "description": "Menu & Modifier Management",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Menu payload must validate against structural schema constraints",
+        "Modifiers must belong to active modifier groups"
+      ],
+      "data_invariants": [
+        "MenuItem.price >= 0",
+        "ModifierGroup.min_selections <= ModifierGroup.max_selections",
+        "For each selection, count(Modifier) >= ModifierGroup.min_selections"
+      ],
+      "postconditions": [
+        "Menu hierarchy is synchronized to memory cache",
+        "POS clients receive delta updates via websocket"
+      ],
+      "error_states": [
+        "INVALID_MODIFIER_DEPENDENCY",
+        "PRICE_NEGATIVE",
+        "CYCLIC_MENU_REFERENCE"
+      ]
+    },
+    {
+      "id": "REQ-POSR-004",
+      "description": "Server & Staff Management",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Staff entity must exist in HR/Payroll context",
+        "Shift must be explicitly started (clocked in)"
+      ],
+      "data_invariants": [
+        "Staff.active_shift_id != NULL <=> Staff.status == CLOCKED_IN",
+        "Staff.role limits accessible UI modules"
+      ],
+      "postconditions": [
+        "Staff member assigned to designated revenue center",
+        "Shift duration tracking initiated"
+      ],
+      "error_states": [
+        "INVALID_PIN",
+        "ALREADY_CLOCKED_IN",
+        "SHIFT_MISMATCH"
+      ]
+    },
+    {
+      "id": "REQ-POSR-005",
+      "description": "Multi-Channel Order Aggregation (AGG Integration)",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "External channel webhook signature is valid",
+        "External channel payload conforms to standard order DTO"
+      ],
+      "data_invariants": [
+        "AggregatedOrder.source ∈ {UBEREATS, DOORDASH, ONLINE, MICROSITE}",
+        "AggregatedOrder.external_id is unique per source"
+      ],
+      "postconditions": [
+        "External order normalized and inserted into unified Order table",
+        "Order auto-fired to KDS if configured for auto-accept"
+      ],
+      "error_states": [
+        "WEBHOOK_SIGNATURE_MISMATCH",
+        "UNMAPPED_EXTERNAL_ITEM",
+        "CHANNEL_RATE_LIMIT_EXCEEDED"
+      ]
+    },
+    {
+      "id": "REQ-POSR-006",
+      "description": "Payment Processing & Tip Management",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Order state is OPEN or PENDING_PAYMENT",
+        "Payment amount must equal or be less than remaining order balance"
+      ],
+      "data_invariants": [
+        "Order.balance_due = Order.total_amount - sum(Payment.amount)",
+        "Tip.amount >= 0"
+      ],
+      "postconditions": [
+        "Payment ledger entry recorded",
+        "If balance_due == 0, Order state mutated to CLOSED",
+        "Tip distributed to shift pool or server ledger"
+      ],
+      "error_states": [
+        "PAYMENT_DECLINED",
+        "AMOUNT_EXCEEDS_BALANCE",
+        "TIP_EXCEEDS_THRESHOLD"
+      ]
+    },
+    {
+      "id": "REQ-POSR-007",
+      "description": "Reporting & End-of-Shift Close",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "All active orders for the shift must be CLOSED or REASSIGNED",
+        "Expected cash drawer count must be provided"
+      ],
+      "data_invariants": [
+        "Shift.total_sales = sum(Order.total_amount where shift_id = Shift.id)",
+        "Cash.variance = Cash.actual_count - Cash.expected_count"
+      ],
+      "postconditions": [
+        "Shift state mutated to CLOSED",
+        "Z-Report generated and securely archived",
+        "Journal entries staged for ERP ingestion"
+      ],
+      "error_states": [
+        "UNCLOSED_ORDERS_EXIST",
+        "EXCESSIVE_CASH_VARIANCE",
+        "SHIFT_ALREADY_CLOSED"
+      ]
+    },
+    {
+      "id": "REQ-POSR-008",
+      "description": "Loyalty Integration at POS",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Customer identifier (phone, QR, member ID) resolved to active Loyalty profile",
+        "Order contains qualifying items"
+      ],
+      "data_invariants": [
+        "Points.earned = floor((Order.subtotal - ExcludedItems.subtotal) * Points.multiplier)",
+        "Points.balance >= Points.redeemed"
+      ],
+      "postconditions": [
+        "Loyalty points credited to user account asynchronously",
+        "Applied rewards reflect as exact line-item discounts"
+      ],
+      "error_states": [
+        "INVALID_LOYALTY_ID",
+        "INSUFFICIENT_POINTS",
+        "REWARD_NOT_APPLICABLE"
+      ]
+    },
+    {
+      "id": "REQ-POSR-009",
+      "description": "Offline Resilience",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Local database cache is initialized",
+        "Network connectivity is degraded or lost"
+      ],
+      "data_invariants": [
+        "OfflineTransaction.sync_status == PENDING",
+        "Local transaction sequence numbers are monotonic"
+      ],
+      "postconditions": [
+        "Transactions queued in durable local storage",
+        "Background synchronization daemon initiated upon network restoration"
+      ],
+      "error_states": [
+        "LOCAL_STORAGE_FULL",
+        "SYNC_CONFLICT",
+        "STALE_CACHE_READ"
+      ]
+    },
+    {
+      "id": "REQ-POSR-010",
+      "description": "Receipt & Guest Communication",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Order must be settled or explicitly requested as an interim bill",
+        "Communication preference (Print, SMS, Email) must be specified"
+      ],
+      "data_invariants": [
+        "Receipt.total matches Order.total",
+        "Digital receipt URL is cryptographically unguessable"
+      ],
+      "postconditions": [
+        "Print job spooled to thermal printer OR payload dispatched to Notification API",
+        "Receipt issuance logged in audit trail"
+      ],
+      "error_states": [
+        "PRINTER_UNREACHABLE",
+        "INVALID_PHONE_NUMBER",
+        "EMAIL_BOUNCED"
+      ]
+    },
+    {
+      "id": "REQ-POSR-011",
+      "description": "Tip Management",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Payment transaction is complete and allows tip adjustment",
+        "Tip pooling rules are actively configured"
+      ],
+      "data_invariants": [
+        "Tip.amount <= max_tip_threshold(Order.amount)",
+        "sum(TipPool.allocations) == Tip.total_pool"
+      ],
+      "postconditions": [
+        "Tip amount securely appended to original card authorization",
+        "Tip allocations mapped to specific employee ledgers"
+      ],
+      "error_states": [
+        "TIP_ADJUSTMENT_WINDOW_CLOSED",
+        "CARD_PREAUTH_EXPIRED",
+        "NEGATIVE_TIP_AMOUNT"
+      ]
+    },
+    {
+      "id": "REQ-POSR-012",
+      "description": "Table & Seating Management",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Physical floor plan coordinates mapped in database",
+        "Role >= Host/Manager"
+      ],
+      "data_invariants": [
+        "Table.capacity > 0",
+        "GuestCount <= Table.capacity",
+        "No overlapping table coordinates on the same floor"
+      ],
+      "postconditions": [
+        "Table properties (shape, size, location) updated",
+        "Floor plan layout synchronized to all active POS terminals"
+      ],
+      "error_states": [
+        "TABLE_ID_COLLISION",
+        "INVALID_COORDINATES",
+        "CANNOT_DELETE_OCCUPIED_TABLE"
+      ]
+    },
+    {
+      "id": "REQ-POSR-013",
+      "description": "Z-Report & Shift Close",
+      "domain": "Restaurant POS",
+      "preconditions": [
+        "Shift clock is active",
+        "No pending orders assigned to the shift operator"
+      ],
+      "data_invariants": [
+        "ZReport.gross_sales == sum(all receipts in shift)",
+        "ZReport.net_sales == ZReport.gross_sales - ZReport.refunds - ZReport.discounts"
+      ],
+      "postconditions": [
+        "Financial totals aggregated across all tenders",
+        "Shift locked to prevent further transactions",
+        "Z-Report printed and stored in cloud archive"
+      ],
+      "error_states": [
+        "PENDING_TRANSACTIONS",
+        "NETWORK_REQUIRED_FOR_Z_REPORT",
+        "UNRECONCILED_TIPS"
+      ]
+    },
+    {
+      "id": "REQ-POSR2-001",
+      "description": "Returns & Exchanges",
+      "domain": "Retail/Restaurant POS",
+      "preconditions": [
+        "Original transaction receipt or ID is presented",
+        "Items to return are eligible per merchant return policy"
+      ],
+      "data_invariants": [
+        "Refund.amount <= OriginalTransaction.item_price_paid",
+        "Returned quantity <= OriginalTransaction.quantity_sold"
+      ],
+      "postconditions": [
+        "Original order marked with RETURNED/PARTIALLY_RETURNED status",
+        "Funds routed to original payment tender or store credit",
+        "Inventory quantities incremented appropriately"
+      ],
+      "error_states": [
+        "ITEM_NOT_RETURNABLE",
+        "TRANSACTION_NOT_FOUND",
+        "REFUND_EXCEEDS_ORIGINAL"
+      ]
+    },
+    {
+      "id": "REQ-POSR2-002",
+      "description": "Gift Cards",
+      "domain": "Retail/Restaurant POS",
+      "preconditions": [
+        "Gift card PAN is cryptographically valid",
+        "Gift card system is reachable"
+      ],
+      "data_invariants": [
+        "GiftCard.balance >= 0",
+        "Redemption.amount <= GiftCard.balance"
+      ],
+      "postconditions": [
+        "Gift card balance debited by redemption amount",
+        "Transaction recorded in gift card ledger",
+        "Remaining balance printed on receipt"
+      ],
+      "error_states": [
+        "INVALID_GIFT_CARD",
+        "INSUFFICIENT_GC_BALANCE",
+        "GC_EXPIRED"
+      ]
+    },
+    {
+      "id": "REQ-POS-011",
+      "description": "Receipt — Print, Email, SMS, Gift, Return",
+      "domain": "Retail/Restaurant POS",
+      "preconditions": [
+        "Transaction successfully completed",
+        "Customer provides valid contact info for digital receipts"
+      ],
+      "data_invariants": [
+        "Receipt items EXACTLY match Transaction items",
+        "Gift receipt hides item prices"
+      ],
+      "postconditions": [
+        "Receipt dispatched to specified channel",
+        "Return barcode embedded on physical/digital receipt"
+      ],
+      "error_states": [
+        "DELIVERY_CHANNEL_FAILED",
+        "INVALID_CONTACT_FORMAT",
+        "PRINTER_OUT_OF_PAPER"
+      ]
+    },
+    {
+      "id": "REQ-POS-012",
+      "description": "Cash Drawer Operations",
+      "domain": "Retail/Restaurant POS",
+      "preconditions": [
+        "User holds Cashier or Manager permissions",
+        "Peripheral connection to cash drawer is active"
+      ],
+      "data_invariants": [
+        "CashDrawer.balance = CashDrawer.starting_balance + sum(cash_in) - sum(cash_out)",
+        "Every drawer open event maps to a distinct transaction or explicit NO_SALE event"
+      ],
+      "postconditions": [
+        "Drawer kick signal transmitted via ESC/POS protocol",
+        "Drawer operation logged securely with timestamp and user ID"
+      ],
+      "error_states": [
+        "DRAWER_DISCONNECTED",
+        "UNAUTHORIZED_OPEN",
+        "HARDWARE_FAILURE"
+      ]
+    },
+    {
+      "id": "REQ-POSG-001",
+      "description": "Barcode Scan & Item Lookup",
+      "domain": "Grocery POS",
+      "preconditions": [
+        "Product catalog loaded into fast-access memory",
+        "Scanner peripheral is active and properly mapped as keyboard wedge or serial"
+      ],
+      "data_invariants": [
+        "Scanned UPC/EAN strictly resolves to 0 or 1 active CatalogItem",
+        "Weighted items calculate price dynamically: price = weight * unit_price"
+      ],
+      "postconditions": [
+        "Resolved item appended to active transaction cart",
+        "Price accurately reflects currently active promotions"
+      ],
+      "error_states": [
+        "ITEM_NOT_FOUND",
+        "INVALID_BARCODE_FORMAT",
+        "SCANNER_COMMUNICATION_ERROR"
+      ]
+    },
+    {
+      "id": "REQ-POSG-002",
+      "description": "EBT/SNAP & WIC Payments",
+      "domain": "Grocery POS",
+      "preconditions": [
+        "Transaction contains EBT/WIC eligible items",
+        "Merchant EBT processor integration is active"
+      ],
+      "data_invariants": [
+        "EBT_Payment.amount <= sum(EBT_Eligible_Item.price)",
+        "WIC_Payment adheres strictly to approved product lists (APL)"
+      ],
+      "postconditions": [
+        "Eligible subtotal split and routed to EBT network",
+        "Remaining ineligible subtotal prompted for secondary tender"
+      ],
+      "error_states": [
+        "EBT_NETWORK_DOWN",
+        "INELIGIBLE_ITEMS_ONLY",
+        "INSUFFICIENT_EBT_FUNDS"
+      ]
+    },
+    {
+      "id": "REQ-POSG-003",
+      "description": "Speed Checkout",
+      "domain": "Grocery POS",
+      "preconditions": [
+        "Terminal configured for rapid scanning mode",
+        "Receipt printing set to auto-print or skip"
+      ],
+      "data_invariants": [
+        "Transaction processing latency <= 500ms per scan",
+        "UI renders delta updates without blocking event loop"
+      ],
+      "postconditions": [
+        "Transaction successfully queued and completed with minimal interaction",
+        "Next transaction instantly initialized upon close"
+      ],
+      "error_states": [
+        "UI_THREAD_BLOCKED",
+        "LOCAL_CACHE_MISS"
+      ]
+    },
+    {
+      "id": "REQ-POSG-004",
+      "description": "Inventory Integration",
+      "domain": "Grocery POS",
+      "preconditions": [
+        "Item exists in inventory catalog",
+        "Location identifier matches store location"
+      ],
+      "data_invariants": [
+        "Inventory.stock_level = Inventory.previous_level - Transaction.quantity",
+        "Inventory levels never update if transaction fails/voids"
+      ],
+      "postconditions": [
+        "Real-time inventory deduction event dispatched to ERP/Inventory engine",
+        "Low-stock alert triggered if threshold breached"
+      ],
+      "error_states": [
+        "INVENTORY_SERVICE_UNREACHABLE",
+        "NEGATIVE_INVENTORY_WARNING"
+      ]
+    },
+    {
+      "id": "REQ-POSG-005",
+      "description": "Unified Deli-Retail Checkout",
+      "domain": "Grocery POS",
+      "preconditions": [
+        "Deli scale prints compliant variable-measure barcodes",
+        "POS parser recognizes embedded price/weight format"
+      ],
+      "data_invariants": [
+        "Embedded Price == parsed(Barcode[offset_start:offset_end])",
+        "Item PLU == parsed(Barcode[plu_start:plu_end])"
+      ],
+      "postconditions": [
+        "Variable weight item accurately added to cart using embedded price",
+        "Catalog lookup bypasses base price in favor of barcode price"
+      ],
+      "error_states": [
+        "BARCODE_CHECKSUM_FAILED",
+        "PLU_NOT_FOUND",
+        "PRICE_EXCEEDS_MAX_SAFE_VALUE"
+      ]
+    },
+    {
+      "id": "REQ-POSG-015",
+      "description": "Age-Restricted Product Compliance",
+      "domain": "Grocery POS",
+      "preconditions": [
+        "Cart contains item flagged with age_restricted = true",
+        "Cashier present to verify identification"
+      ],
+      "data_invariants": [
+        "Transaction.checkout_allowed == true <=> verified_age >= Item.min_age_required",
+        "DOB entry strictly formatted as valid date"
+      ],
+      "postconditions": [
+        "Age verification legally recorded against transaction",
+        "Checkout flow unblocked for restricted items"
+      ],
+      "error_states": [
+        "AGE_VERIFICATION_FAILED",
+        "UNDERAGE_CUSTOMER",
+        "ID_EXPIRED"
+      ]
+    },
+    {
+      "id": "REQ-OPS-001",
+      "description": "AI Daily Operations Brief",
+      "domain": "Internal Ops",
+      "preconditions": [
+        "Sufficient daily transaction, alert, and metric data aggregated",
+        "LLM processing pipeline active"
+      ],
+      "data_invariants": [
+        "Summary data boundaries strictly constrained to [T-24h, T-0h]",
+        "Financial metrics aggregated without hallucination (strict data binding)"
+      ],
+      "postconditions": [
+        "Daily brief document generated and stored",
+        "Notification dispatched to designated administrative channels"
+      ],
+      "error_states": [
+        "LLM_TIMEOUT",
+        "DATA_AGGREGATION_FAILURE",
+        "NO_DATA_AVAILABLE"
+      ]
+    },
+    {
+      "id": "REQ-OPS-002",
+      "description": "Automated Alert System",
+      "domain": "Internal Ops",
+      "preconditions": [
+        "System telemetry exceeds defined anomalous threshold",
+        "Alert routing rules are configured"
+      ],
+      "data_invariants": [
+        "Alert priority strictly mapped to predefined criticality matrix",
+        "Alert suppression prevents duplicate dispatches within cooldown window"
+      ],
+      "postconditions": [
+        "Alert payload delivered to PagerDuty/Slack/Email",
+        "Incident record created in internal tracker"
+      ],
+      "error_states": [
+        "ROUTING_UNRESOLVED",
+        "DELIVERY_CHANNEL_DOWN",
+        "THRESHOLD_EVALUATION_ERROR"
+      ]
+    },
+    {
+      "id": "REQ-OPS-003",
+      "description": "Operations Dashboard UI",
+      "domain": "Internal Ops",
+      "preconditions": [
+        "Admin authenticated with OPS_VIEWER role",
+        "Data aggregation layer is responsive"
+      ],
+      "data_invariants": [
+        "Dashboard metrics represent real-time state with max latency of 60s",
+        "Tenant data strictly segregated unless explicitly queried globally"
+      ],
+      "postconditions": [
+        "UI renders live operational telemetry",
+        "WebSocket connects for real-time widget updates"
+      ],
+      "error_states": [
+        "UNAUTHORIZED_ACCESS",
+        "WIDGET_TIMEOUT",
+        "WEBSOCKET_DISCONNECTED"
+      ]
+    },
+    {
+      "id": "REQ-OPS-004",
+      "description": "Human-in-the-Loop (HITL) Triggers",
+      "domain": "Internal Ops",
+      "preconditions": [
+        "Automated system encounters an ambiguous decision or high-risk action",
+        "Relevant human operator is on-call"
+      ],
+      "data_invariants": [
+        "Action execution paused indefinitely until explicit human approval or rejection is captured",
+        "HITL request includes complete contextual payload"
+      ],
+      "postconditions": [
+        "Human decision securely logged with identity",
+        "Action state unblocked and executed/aborted based on decision"
+      ],
+      "error_states": [
+        "OPERATOR_TIMEOUT",
+        "INVALID_DECISION_PAYLOAD",
+        "CONTEXT_DATA_CORRUPT"
+      ]
+    },
+    {
+      "id": "REQ-AGG-001",
+      "description": "Handles inbound webhooks from external food delivery/ordering aggregators and normalizes the payload into a standard order model.",
+      "domain": "AggregatorIntegration",
+      "preconditions": [
+        "Aggregator API key is valid",
+        "Webhook signature is verified"
+      ],
+      "data_invariants": [
+        "Order ID must be globally unique across aggregators",
+        "Normalized order must map exactly to internal SKU IDs"
+      ],
+      "postconditions": [
+        "Order is inserted into the generalized order queue",
+        "HTTP 200/202 is returned to the aggregator"
+      ],
+      "error_states": [
+        "Invalid webhook signature (401)",
+        "Malformed payload (400)",
+        "Unmapped external SKU (422)"
+      ]
+    },
+    {
+      "id": "REQ-AGG-002",
+      "description": "Ensures that the local POS menu items, prices, and modifiers are synced accurately to all connected third-party aggregators.",
+      "domain": "AggregatorIntegration",
+      "preconditions": [
+        "Merchant has connected aggregator accounts",
+        "Menu changes are committed in the central POS"
+      ],
+      "data_invariants": [
+        "Aggregator prices = Base Price * (1 + Aggregator Markup %)",
+        "All published items must have a mapped external ID"
+      ],
+      "postconditions": [
+        "Aggregator menus are updated via API",
+        "Sync audit log is written"
+      ],
+      "error_states": [
+        "Aggregator API timeout",
+        "Price validation failure",
+        "Missing required aggregator category"
+      ]
+    },
+    {
+      "id": "REQ-AGG-003",
+      "description": "Tracks the status of delivery drivers assigned by external aggregators and updates the order status locally.",
+      "domain": "AggregatorIntegration",
+      "preconditions": [
+        "Order state is In Progress or Ready",
+        "Order originated from an aggregator with driver tracking support"
+      ],
+      "data_invariants": [
+        "Driver ETA must be >= current time or null",
+        "Delivery status transitions must follow a strictly linear DAG (e.g., Assigned -> Arrived -> Picked Up -> Delivered)"
+      ],
+      "postconditions": [
+        "Local KDS is updated with driver ETA",
+        "Order state transitions to Picked Up when driver confirms"
+      ],
+      "error_states": [
+        "Driver reassignment payload mismatch",
+        "Out-of-order status update"
+      ]
+    },
+    {
+      "id": "REQ-AGG-004",
+      "description": "Aggregates revenue, commissions, and order volumes grouped by origin channel for financial reporting.",
+      "domain": "Reporting",
+      "preconditions": [
+        "Settlement batch has closed for the day",
+        "Aggregator commission rates are configured"
+      ],
+      "data_invariants": [
+        "Net Revenue = Gross Sales - (Refunds + Discounts + Aggregator Commissions)",
+        "Sum of channel revenues must equal total daily gross revenue"
+      ],
+      "postconditions": [
+        "Daily analytics view materialized",
+        "Financial ledger entries tagged with Channel ID"
+      ],
+      "error_states": [
+        "Commission rate missing for channel",
+        "Revenue reconciliation mismatch"
+      ]
+    },
+    {
+      "id": "REQ-AI-001",
+      "description": "AI correctly identifies a user session across languages and resolves them to an existing customer profile based on device or authentication tokens.",
+      "domain": "ArtificialIntelligence",
+      "preconditions": [
+        "User initiates a session",
+        "AI subsystem is responsive"
+      ],
+      "data_invariants": [
+        "Session ID must securely map to exactly one User ID or remain anonymous",
+        "Language preference is strictly bounded to supported ISO-639 codes"
+      ],
+      "postconditions": [
+        "Session context is initialized in the target language",
+        "User profile data is attached to the session context"
+      ],
+      "error_states": [
+        "Identity resolution timeout",
+        "Language detection failure"
+      ]
+    },
+    {
+      "id": "REQ-AI-002",
+      "description": "AI assistant successfully transitions a user from conversational interaction into a structured cart and checkout process.",
+      "domain": "ArtificialIntelligence",
+      "preconditions": [
+        "User has items proposed in context",
+        "User expresses intent to purchase"
+      ],
+      "data_invariants": [
+        "Extracted intent must map to existing SKUs",
+        "Cart total must be mathematically derived from unit prices * quantities"
+      ],
+      "postconditions": [
+        "Structured Cart object is populated",
+        "Checkout UI is triggered with the populated Cart"
+      ],
+      "error_states": [
+        "SKU disambiguation failure",
+        "Intent parsing confidence below threshold",
+        "Pricing calculation mismatch"
+      ]
+    },
+    {
+      "id": "REQ-AI-003",
+      "description": "Seamlessly transfers an AI conversation to a human operator when confidence drops, sentiment is highly negative, or user explicitly requests it.",
+      "domain": "ArtificialIntelligence",
+      "preconditions": [
+        "Active AI session",
+        "Human operator is online in the escalation queue"
+      ],
+      "data_invariants": [
+        "Conversation context history must be immutably preserved and attached to the escalation ticket"
+      ],
+      "postconditions": [
+        "Session control is revoked from AI",
+        "Session control is granted to Human Operator",
+        "User is notified of the transfer"
+      ],
+      "error_states": [
+        "No human operators available",
+        "Context payload exceeds limit"
+      ]
+    },
+    {
+      "id": "REQ-ECO-002",
+      "description": "Identifies stalled checkout sessions and automatically schedules recovery communications.",
+      "domain": "ECommerce",
+      "preconditions": [
+        "User is identifiable",
+        "Cart has been inactive for T > Threshold"
+      ],
+      "data_invariants": [
+        "Recovery notification cannot be sent if an order was completed by the same user within T",
+        "Max 1 recovery notification per session"
+      ],
+      "postconditions": [
+        "Recovery campaign event scheduled",
+        "Unique recovery link generated"
+      ],
+      "error_states": [
+        "Contact info missing",
+        "User opted out of marketing"
+      ]
+    },
+    {
+      "id": "REQ-ERP-001",
+      "description": "Translates daily POS activity into standard double-entry accounting journal entries for external ERPs.",
+      "domain": "EnterpriseResourcePlanning",
+      "preconditions": [
+        "Daily Z-Report is generated",
+        "Chart of Accounts mapping is configured"
+      ],
+      "data_invariants": [
+        "Sum of Debits must equal Sum of Credits for every generated entry",
+        "All POS transaction types must map to a valid ledger account"
+      ],
+      "postconditions": [
+        "Journal entry batch is staged for ERP export",
+        "Batch status marked as Pending Sync"
+      ],
+      "error_states": [
+        "Unmapped transaction category",
+        "Debit/Credit imbalance detected"
+      ]
+    },
+    {
+      "id": "REQ-ERP-002",
+      "description": "Manages the movement of inventory items between different physical locations or warehouses.",
+      "domain": "Inventory",
+      "preconditions": [
+        "Source warehouse has sufficient available stock",
+        "Target warehouse is active"
+      ],
+      "data_invariants": [
+        "System-wide aggregate stock for the item remains constant during transfer creation",
+        "Transferred quantity > 0"
+      ],
+      "postconditions": [
+        "Stock is deducted from Source warehouse",
+        "Transfer Manifest is generated"
+      ],
+      "error_states": [
+        "Insufficient stock at source",
+        "Invalid SKU"
+      ]
+    },
+    {
+      "id": "REQ-ERP-003",
+      "description": "Automatically parses and ingests supplier invoices and Advance Ship Notices (ASN) via Electronic Data Interchange (EDI).",
+      "domain": "EnterpriseResourcePlanning",
+      "preconditions": [
+        "Valid EDI file received",
+        "Supplier is mapped in the system"
+      ],
+      "data_invariants": [
+        "Ingested PO items must match expected catalog SKUs or flag for review",
+        "Total invoice amount must equal sum of line items + taxes + freight"
+      ],
+      "postconditions": [
+        "Draft Purchase Order/Invoice is created",
+        "Inventory quantities are staged for receiving"
+      ],
+      "error_states": [
+        "EDI format parsing error",
+        "Unknown supplier ID",
+        "Line item total mismatch"
+      ]
+    },
+    {
+      "id": "REQ-ERP-004",
+      "description": "Tracks inventory at the batch/lot level to monitor expiration dates and trigger alerts for near-expired goods.",
+      "domain": "Inventory",
+      "preconditions": [
+        "Item is configured for batch tracking",
+        "Batch has an explicit expiration date"
+      ],
+      "data_invariants": [
+        "Expiration Date must be > Manufacturing Date",
+        "Depletion strictly follows FEFO unless manually overridden"
+      ],
+      "postconditions": [
+        "Items past threshold trigger Near Expiry alert",
+        "Expired items are locked from sale"
+      ],
+      "error_states": [
+        "Missing expiration date on tracked item",
+        "Negative stock deduction attempted on batch"
+      ]
+    },
+    {
+      "id": "REQ-FRN-002",
+      "description": "Allows Enterprise/Brand admins to lock menu items, prices, or ingredients globally while allowing specific overrides at the Region/Location level.",
+      "domain": "FranchiseManagement",
+      "preconditions": [
+        "Brand admin pushes a menu update",
+        "Target locations are active"
+      ],
+      "data_invariants": [
+        "Locked properties cannot be modified by Location admins",
+        "Location price overrides are only valid if price lock = false"
+      ],
+      "postconditions": [
+        "Menu updates are cascaded to target locations",
+        "Local overrides are preserved if valid"
+      ],
+      "error_states": [
+        "Attempt to edit locked property by location admin",
+        "Cyclic inheritance chain"
+      ]
+    },
+    {
+      "id": "REQ-FRN-003",
+      "description": "Aggregates financial data across multiple locations and regions into a unified Profit & Loss statement for the Brand/Enterprise.",
+      "domain": "Reporting",
+      "preconditions": [
+        "Locations have submitted daily close data",
+        "User has Brand or Enterprise level access"
+      ],
+      "data_invariants": [
+        "Consolidated Revenue = Sum of Location Revenues",
+        "Inter-company transfers are zeroed out in consolidation"
+      ],
+      "postconditions": [
+        "Consolidated P&L report is generated",
+        "Currency conversion is applied if cross-border"
+      ],
+      "error_states": [
+        "Missing location data for requested period",
+        "Currency exchange rate unavailable"
+      ]
+    },
+    {
+      "id": "REQ-FRN-004",
+      "description": "Automatically calculates franchise royalties based on location gross sales and custom royalty tier percentages.",
+      "domain": "FranchiseManagement",
+      "preconditions": [
+        "Location settlement batch is closed",
+        "Location has an active royalty contract"
+      ],
+      "data_invariants": [
+        "Royalty Amount = Gross Eligible Sales * Contracted Percentage",
+        "Deductions strictly follow contract rules"
+      ],
+      "postconditions": [
+        "Royalty fee is calculated and posted to the ledger",
+        "ACH draft payload is staged"
+      ],
+      "error_states": [
+        "Missing royalty contract",
+        "Calculation precision loss"
+      ]
+    },
+    {
+      "id": "REQ-FRN-005",
+      "description": "Analyzes KPIs across the entire brand footprint to identify underperforming or overperforming regions.",
+      "domain": "Reporting",
+      "preconditions": [
+        "Aggregated metrics pipeline has run for the period"
+      ],
+      "data_invariants": [
+        "Aggregate KPIs must mathematically match the weighted average of location KPIs"
+      ],
+      "postconditions": [
+        "Brand Intelligence dashboard is populated",
+        "Outlier locations flagged"
+      ],
+      "error_states": [
+        "Data warehouse latency timeout",
+        "Statistical variance calculation failure"
+      ]
+    },
+    {
+      "id": "REQ-FRN-006",
+      "description": "Allows staff to work and clock-in across multiple franchise locations while accurately attributing labor costs.",
+      "domain": "WorkforceManagement",
+      "preconditions": [
+        "Employee is assigned to a multi-location access group",
+        "Employee clocks in at a specific Location ID"
+      ],
+      "data_invariants": [
+        "Overtime rules must be evaluated across the aggregate hours of all locations",
+        "Labor cost is billed exactly to the location where hours were worked"
+      ],
+      "postconditions": [
+        "Timesheet entry created and linked to specific location",
+        "Aggregate weekly hours updated"
+      ],
+      "error_states": [
+        "Clock-in rejected: Location not in access group",
+        "Concurrent clock-in at different locations"
+      ]
+    },
+    {
+      "id": "REQ-FRN-007",
+      "description": "Enables a customer to earn and redeem loyalty points across different concepts/brands under the same Enterprise umbrella.",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Customer profile is linked to an Enterprise ID",
+        "Enterprise loyalty program is active"
+      ],
+      "data_invariants": [
+        "Points ledger must maintain global integrity across all redemptions",
+        "1 Point earned at Brand A has identical value at Brand B"
+      ],
+      "postconditions": [
+        "Points are credited/debited on the unified ledger",
+        "Inter-brand financial reconciliation entry is staged for the point value"
+      ],
+      "error_states": [
+        "Insufficient unified points balance",
+        "Brand is opted out of unified loyalty"
+      ]
+    },
+    {
+      "id": "REQ-FRN-008",
+      "description": "Generates necessary tax documentation and calculates liabilities strictly separated by the legal entity (FEIN) of each franchisee.",
+      "domain": "Compliance",
+      "preconditions": [
+        "Franchisee entity configuration includes valid FEIN",
+        "Transaction volume exceeds IRS reporting thresholds"
+      ],
+      "data_invariants": [
+        "Tax records must strictly aggregate only transactions belonging to the specific FEIN",
+        "Sales tax calculations must use the nexus coordinates of the physical location"
+      ],
+      "postconditions": [
+        "1099-K report generated per FEIN",
+        "Sales tax liability report generated per location"
+      ],
+      "error_states": [
+        "Missing or invalid FEIN",
+        "Location missing tax nexus mapping"
+      ]
+    },
+    {
+      "id": "REQ-FRN-009",
+      "description": "Manages the offboarding of a franchisee, ensuring their historical customer and transaction data is exported and their access to the Brand network is severed.",
+      "domain": "FranchiseManagement",
+      "preconditions": [
+        "Franchise agreement termination is approved by Brand Admin",
+        "Delink request initiated"
+      ],
+      "data_invariants": [
+        "Enterprise shared data is retained by the Brand, localized transactional data is exported to the franchisee",
+        "Location access is fully revoked upon completion"
+      ],
+      "postconditions": [
+        "Data export archive generated",
+        "Location status set to Delinked",
+        "API keys revoked"
+      ],
+      "error_states": [
+        "Active unsettled batches prevent delink",
+        "Data export size exceeds synchronous limits"
+      ]
+    },
+    {
+      "id": "REQ-FRN-010",
+      "description": "Orchestrates the multi-stage deployment of new Enterprise clients, encompassing contract signing, hardware provisioning, data migration, and training.",
+      "domain": "Onboarding",
+      "preconditions": [
+        "Enterprise contract executed",
+        "Client Admin created"
+      ],
+      "data_invariants": [
+        "Phase N+1 cannot start until all mandatory tasks in Phase N are marked Complete",
+        "Hardware allocation must match requested location count"
+      ],
+      "postconditions": [
+        "Onboarding state machine advances",
+        "Notifications dispatched to deployment teams"
+      ],
+      "error_states": [
+        "Invalid state transition attempted",
+        "Hardware inventory shortage"
+      ]
+    },
+    {
+      "id": "REQ-FRN-011",
+      "description": "Maintains an immutable log of all critical configuration changes made across the hierarchy, identifying Who, What, When, and Where.",
+      "domain": "Security",
+      "preconditions": [
+        "A state-mutating action occurs on a sensitive entity (Menu, Price, Role, Settings)"
+      ],
+      "data_invariants": [
+        "Audit log entries are append-only and cryptographically hashed",
+        "Previous State and New State are fully serialized in the payload"
+      ],
+      "postconditions": [
+        "Audit event is persisted to cold storage / audit DB"
+      ],
+      "error_states": [
+        "Audit log write failure"
+      ]
+    },
+    {
+      "id": "REQ-ORC-013",
+      "description": "Void vs Refund Auto-Determination",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "A completed or in-flight transaction record must exist",
+        "The requesting actor must hold VOID or REFUND permission for the given merchant context",
+        "Settlement batch status must be deterministically resolved before decision logic executes"
+      ],
+      "data_invariants": [
+        "VOID is only permissible if the transaction settlement batch has NOT yet been submitted to the acquiring bank",
+        "REFUND is only permissible if the batch has been settled and funds have cleared",
+        "A transaction cannot be simultaneously voided and refunded",
+        "Partial refund amount must be <= original captured amount"
+      ],
+      "postconditions": [
+        "VOID path: Authorization hold released; transaction status set to VOIDED; no financial entry created",
+        "REFUND path: Credit memo created; ACH credit initiated to original payment instrument; transaction status set to REFUNDED",
+        "Audit record created capturing actor, timestamp, and determination path"
+      ],
+      "error_states": [
+        "VOID_WINDOW_CLOSED: Batch already submitted; system auto-routes to REFUND flow",
+        "REFUND_EXCEEDS_CAPTURE: Requested refund amount exceeds total captured amount",
+        "TRANSACTION_NOT_FOUND: Provided transaction ID does not exist in the ledger"
+      ]
+    },
+    {
+      "id": "REQ-ORC-014",
+      "description": "Multi-Tender Payment",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "Order must have a positive outstanding balance",
+        "At least one valid payment method token is attached to the transaction",
+        "Sum of all tendered amounts must be validated before any authorization is submitted"
+      ],
+      "data_invariants": [
+        "Sum of all tender amounts must equal the order total (no over-collection permitted)",
+        "Each individual tender authorization must succeed before the next is attempted in sequence",
+        "A rollback plan must exist for every successfully authorized tender in the event a subsequent tender fails",
+        "Tip allocation must be distributed proportionally across all cash-equivalent tenders"
+      ],
+      "postconditions": [
+        "Order marked PAID only when all tender amounts sum to the total and all authorizations succeed",
+        "Each tender leg recorded as a discrete ledger entry linked to the parent order ID",
+        "Receipt reflects itemized tender breakdown"
+      ],
+      "error_states": [
+        "PARTIAL_TENDER_FAILURE: One leg authorized, subsequent leg declined; prior authorized leg must be voided",
+        "TENDER_SUM_MISMATCH: Sum of tenders does not equal order total",
+        "INVALID_PAYMENT_METHOD: One or more tender tokens are expired or invalid"
+      ]
+    },
+    {
+      "id": "REQ-NFR-009",
+      "description": "Offline POS Operation",
+      "domain": "Non-Functional Requirements",
+      "preconditions": [
+        "POS terminal must be running a capable local agent with an offline data store",
+        "Terminal must have completed a successful sync within the last configurable grace period (default: 24h)",
+        "Offline mode is triggered automatically upon network connectivity loss detection"
+      ],
+      "data_invariants": [
+        "Offline transactions are queued in a local append-only log with a device-local UUID",
+        "No new payment authorization is allowed in fully offline mode; only cash and pre-authorized methods are accepted",
+        "Local menu cache must not be older than the last successful sync timestamp",
+        "Conflict resolution upon reconnect follows last-write-wins with server-authoritative override for financial data"
+      ],
+      "postconditions": [
+        "Upon reconnection, all queued transactions are synced to the central ledger in chronological order",
+        "Duplicate prevention enforced via idempotency key per offline transaction",
+        "Sync conflict report generated and surfaced to the Location Manager"
+      ],
+      "error_states": [
+        "SYNC_CONFLICT: A queued offline transaction conflicts with a server-side state change",
+        "OFFLINE_CASH_OVERFLOW: Drawer balance exceeds configured offline cash limit",
+        "STALE_MENU_CACHE: Cached menu is older than the maximum permissible age; operator notified"
+      ]
+    },
+    {
+      "id": "REQ-MER-012",
+      "description": "Accounting Integration",
+      "domain": "Merchant Services",
+      "preconditions": [
+        "Merchant must have an active accounting integration configured (e.g., QuickBooks, Xero, NetSuite)",
+        "OAuth2 authorization tokens for the target accounting platform must be valid and not expired",
+        "Settlement and reconciliation data for the export period must be finalized"
+      ],
+      "data_invariants": [
+        "Every exported journal entry must balance (debits == credits) per the double-entry accounting invariant",
+        "Chart of Accounts mapping must be defined before export (POS revenue account, tax liability account, etc.)",
+        "Exported data is idempotent: re-exporting the same period must produce identical entries without duplication"
+      ],
+      "postconditions": [
+        "Journal entries pushed to the target accounting system with a PaySurity reference ID",
+        "Export log created with record count, period, and destination platform",
+        "Merchant notified via email/webhook upon successful or failed export"
+      ],
+      "error_states": [
+        "OAUTH_TOKEN_EXPIRED: Re-authorization required before export can proceed",
+        "CHART_OF_ACCOUNTS_UNMAPPED: A transaction category has no mapped GL account",
+        "DUPLICATE_JOURNAL_ENTRY: Export detected an existing entry for the same period in the target system"
+      ]
+    },
+    {
+      "id": "REQ-ORC-015",
+      "description": "Gateway Error Taxonomy",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "A payment authorization or capture request has been submitted to a payment gateway",
+        "The gateway has returned a response code (success or error)"
+      ],
+      "data_invariants": [
+        "All gateway response codes must be normalized to the PaySurity canonical error taxonomy before being surfaced",
+        "Each error category must map to a defined retry policy (RETRYABLE, NON_RETRYABLE, REQUIRES_NEW_INSTRUMENT)",
+        "Raw gateway error codes must be logged internally but never exposed to the end consumer UI"
+      ],
+      "postconditions": [
+        "Canonical error code returned to the calling service with retry guidance",
+        "Error event emitted to the observability pipeline for alerting and analytics",
+        "Appropriate user-facing message selected from the localized error message registry"
+      ],
+      "error_states": [
+        "GATEWAY_TIMEOUT: No response received within SLA threshold; classified as RETRYABLE",
+        "CARD_DECLINED_DO_NOT_RETRY: Issuer has flagged card as permanently blocked; classified as NON_RETRYABLE",
+        "UNKNOWN_GATEWAY_CODE: Received a code outside the known taxonomy; escalated to engineering alert"
+      ]
+    },
+    {
+      "id": "REQ-ORC-016",
+      "description": "Payment Gateway Resilience",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "Primary payment gateway must be configured with at least one designated fallback gateway",
+        "Health check endpoint for each gateway must be registered and actively polled",
+        "Retry and circuit breaker thresholds must be defined per gateway"
+      ],
+      "data_invariants": [
+        "Gateway failover must be transparent to the merchant and consumer (no double charges)",
+        "Circuit breaker must open after a configurable consecutive failure threshold and remain open for a cool-down period",
+        "Idempotency keys must be propagated across failover attempts to prevent duplicate authorizations"
+      ],
+      "postconditions": [
+        "On primary gateway failure, request is automatically routed to the designated fallback within the same transaction context",
+        "Failover event logged with both gateway identifiers, timestamps, and error code that triggered failover",
+        "Circuit breaker state transitions (CLOSED -> OPEN -> HALF_OPEN -> CLOSED) recorded in system health store"
+      ],
+      "error_states": [
+        "ALL_GATEWAYS_DOWN: All configured gateways are unavailable; transaction queued for manual retry",
+        "FAILOVER_IDEMPOTENCY_BREACH: Duplicate authorization detected on fallback; second auth immediately voided",
+        "CIRCUIT_BREAKER_OPEN: Primary gateway circuit is open; direct routing to fallback without attempting primary"
+      ]
+    },
+    {
+      "id": "REQ-NFR-010",
+      "description": "Internationalization Infrastructure",
+      "domain": "Non-Functional Requirements",
+      "preconditions": [
+        "Application locale is resolved from user preference, browser header, or tenant configuration (in precedence order)",
+        "Translation files for the target locale must be present in the i18n resource bundle"
+      ],
+      "data_invariants": [
+        "All user-facing strings must be externalized into locale resource files; no hardcoded strings in UI components",
+        "Currency amounts must be formatted using the locale-specific number format (e.g., 1.234,56 for de-DE)",
+        "Date/time values must be stored in UTC and formatted in local time using the resolved locale",
+        "RTL (right-to-left) layout must be automatically applied for locales such as ar-SA and he-IL"
+      ],
+      "postconditions": [
+        "All UI text, error messages, and receipts rendered in the resolved locale",
+        "Missing translation keys fall back to the default locale (en-US) with a non-blocking warning log",
+        "Locale resolution context attached to every API request for downstream service consumption"
+      ],
+      "error_states": [
+        "LOCALE_NOT_FOUND: Requested locale has no resource bundle; fallback to en-US applied",
+        "CURRENCY_FORMATTING_FAILURE: Locale-specific formatter encountered an unsupported currency code",
+        "RTL_LAYOUT_CONFLICT: RTL locale applied to a component that does not support bidirectional rendering"
+      ]
+    },
+    {
+      "id": "REQ-WAL-004",
+      "description": "Peer-to-Peer Requests",
+      "domain": "Digital Wallet",
+      "preconditions": [
+        "Both sender and recipient must have active, KYC-verified wallet accounts",
+        "Sender's available balance must be >= requested amount (or sufficient credit line)",
+        "Transaction amount must be within the configured daily P2P transfer limit"
+      ],
+      "data_invariants": [
+        "P2P transfer creates a balanced double-entry: debit sender wallet, credit recipient wallet",
+        "Transfer is atomic; partial execution is not permitted",
+        "Transfer limits are enforced per sender per 24-hour rolling window"
+      ],
+      "postconditions": [
+        "Sender's available balance decremented; recipient's balance incremented atomically",
+        "Both parties notified via push notification and in-app notification",
+        "Transfer record created with unique transfer ID, timestamp, and both wallet identifiers"
+      ],
+      "error_states": [
+        "INSUFFICIENT_BALANCE: Sender wallet balance is below the requested transfer amount",
+        "RECIPIENT_NOT_FOUND: Target wallet identifier does not resolve to an active account",
+        "DAILY_LIMIT_EXCEEDED: Sender has reached the maximum P2P transfer volume for the rolling 24h window"
+      ]
+    },
+    {
+      "id": "REQ-WAL-005",
+      "description": "QR & Deep Link Payments",
+      "domain": "Digital Wallet",
+      "preconditions": [
+        "Payer must have an active wallet session with sufficient balance or payment method",
+        "QR code or deep link must encode a valid, non-expired payment request object",
+        "Merchant or payee endpoint must be registered and active in the system"
+      ],
+      "data_invariants": [
+        "QR payment requests must have an expiry timestamp (default: 5 minutes from generation)",
+        "A payment request can only be consumed once; subsequent scans after completion return ALREADY_PAID",
+        "Deep link parameters must be cryptographically signed to prevent tampering"
+      ],
+      "postconditions": [
+        "Payment processed and funds transferred from payer wallet to payee account",
+        "QR/deep link marked as CONSUMED and invalidated",
+        "Both payer and payee receive real-time payment confirmation"
+      ],
+      "error_states": [
+        "QR_EXPIRED: Payment request has passed its expiry timestamp",
+        "QR_ALREADY_CONSUMED: Payment request was already fulfilled",
+        "INVALID_QR_SIGNATURE: Deep link or QR payload signature verification failed"
+      ]
+    },
+    {
+      "id": "REQ-WAL-006",
+      "description": "Sub-accounts & Micro-savings",
+      "domain": "Digital Wallet",
+      "preconditions": [
+        "Parent wallet account must be active and in good standing",
+        "Sub-account purpose label must be provided at creation (e.g., 'Vacation Fund', 'Emergency')",
+        "Parent account holder must be the authorized owner of all sub-accounts"
+      ],
+      "data_invariants": [
+        "Sub-account balances are segregated from the main wallet's available balance",
+        "Transfers between sub-accounts and the main wallet are immediate and zero-fee",
+        "Auto-save rules (round-up, percentage of deposit) must be evaluated atomically with each triggering transaction"
+      ],
+      "postconditions": [
+        "Sub-account created with zero balance and the specified purpose label",
+        "Auto-save rule (if configured) is persisted and applied to subsequent qualifying transactions",
+        "All sub-account movements reflected in the main wallet's statement under the sub-account label"
+      ],
+      "error_states": [
+        "INSUFFICIENT_PARENT_BALANCE: Auto-save transfer cannot execute due to insufficient parent funds",
+        "MAX_SUBACCOUNTS_REACHED: Wallet has reached the maximum permitted number of sub-accounts",
+        "INVALID_AUTO_SAVE_RULE: Configured rule parameters (e.g., negative percentage) are logically invalid"
+      ]
+    },
+    {
+      "id": "REQ-WAL-007",
+      "description": "Automated Money Movement",
+      "domain": "Digital Wallet",
+      "preconditions": [
+        "User has configured at least one automated rule (scheduled transfer, bill pay, or sweep)",
+        "Target account or bill payee must be registered and verified",
+        "Sufficient balance or funding source must exist at the time of execution"
+      ],
+      "data_invariants": [
+        "Scheduled transfers execute at the configured time within a ±5 minute execution window",
+        "All automated movements are logged in the transaction history as type AUTOMATED",
+        "Failed automated movements trigger a retry exactly once after a configurable delay before marking as FAILED"
+      ],
+      "postconditions": [
+        "Funds moved from source to target account per the scheduled rule",
+        "User notified of successful or failed execution via push notification",
+        "Execution log entry created with rule ID, execution timestamp, amount, and status"
+      ],
+      "error_states": [
+        "INSUFFICIENT_FUNDS_AT_EXECUTION: Balance dropped below required amount before scheduled execution",
+        "PAYEE_ACCOUNT_CLOSED: The registered bill pay target account is no longer active",
+        "RULE_EXECUTION_CONFLICT: Two overlapping automated rules attempted to move the same funds simultaneously"
+      ]
+    },
+    {
+      "id": "REQ-WAL-008",
+      "description": "Parental Controls & Dependent Accounts",
+      "domain": "Digital Wallet",
+      "preconditions": [
+        "Primary account holder (parent) must be 18+ with a verified, active account",
+        "Dependent must be linked to the parent account via guardian consent flow",
+        "Spending limits and category restrictions must be configured before dependent account is activated"
+      ],
+      "data_invariants": [
+        "Dependent accounts cannot initiate P2P transfers outside the approved contact list",
+        "Spending category restrictions are enforced at the MCC (Merchant Category Code) level",
+        "Daily spending limits are hard-capped and cannot be overridden by the dependent",
+        "Parent retains the authority to freeze the dependent account at any time with immediate effect"
+      ],
+      "postconditions": [
+        "Dependent account created and linked to parent account with configured restrictions",
+        "Parent receives real-time notifications for all dependent transactions",
+        "Dependent's transaction history is visible in the parent's account dashboard"
+      ],
+      "error_states": [
+        "CATEGORY_RESTRICTED: Dependent attempted a transaction at a merchant with a restricted MCC",
+        "DAILY_LIMIT_EXCEEDED: Dependent's spending has reached the parent-configured daily cap",
+        "GUARDIAN_CONSENT_MISSING: Dependent account activation attempted without completed guardian consent"
+      ]
+    },
+    {
+      "id": "REQ-LOY-001",
+      "description": "Points Earning Engine",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Customer must have an active loyalty account linked to their identity (phone, email, or card)",
+        "The merchant must have an active loyalty program configured with defined earning rules",
+        "Transaction must qualify under the program's earning criteria (minimum spend, eligible items)"
+      ],
+      "data_invariants": [
+        "Points are awarded only after payment is successfully captured (not at authorization)",
+        "Earning rate must be applied strictly per the active program configuration at transaction time (no retroactive rate changes)",
+        "Bonus point promotions are additive to the base earning rate, not multiplicative, unless explicitly configured otherwise",
+        "Points must be stored as integers (no fractional points in the ledger)"
+      ],
+      "postconditions": [
+        "Points ledger updated with a credit entry tied to the originating transaction ID",
+        "Customer's running point balance updated atomically",
+        "Push/email notification dispatched to customer with points earned and new balance"
+      ],
+      "error_states": [
+        "LOYALTY_ACCOUNT_NOT_FOUND: Transaction completed but no linked loyalty account resolved",
+        "PROGRAM_INACTIVE: Merchant's loyalty program is suspended; no points awarded",
+        "DUPLICATE_AWARD: Points for this transaction ID have already been credited (idempotency guard)"
+      ]
+    },
+    {
+      "id": "REQ-LOY-002",
+      "description": "Redemption Engine",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Customer must have a loyalty account with a sufficient point balance for the redemption",
+        "Merchant must have redemption rules defined (e.g., 100 points = $1.00 discount)",
+        "Redemption amount must not exceed the outstanding order total"
+      ],
+      "data_invariants": [
+        "Points deducted from the ledger exactly match the redeemed value per the active redemption rate",
+        "Redemption is atomic with the associated payment transaction; if payment fails, points are restored",
+        "Points cannot be redeemed for cash; only applied as order discounts or specific reward categories"
+      ],
+      "postconditions": [
+        "Points ledger updated with a debit entry tied to the originating redemption order ID",
+        "Order total reduced by the redemption value; remaining balance processed via standard payment",
+        "Receipt reflects both points redeemed and remaining point balance"
+      ],
+      "error_states": [
+        "INSUFFICIENT_POINTS: Customer balance is below the minimum required for any redemption",
+        "REDEMPTION_EXCEEDS_ORDER: Calculated redemption value would exceed the order total",
+        "REDEMPTION_PROGRAM_INACTIVE: Merchant has disabled redemption while earning remains active"
+      ]
+    },
+    {
+      "id": "REQ-LOY-003",
+      "description": "Customer Tier Program",
+      "domain": "Loyalty",
+      "preconditions": [
+        "An active tier program must be configured for the merchant or brand",
+        "Customer must have a loyalty account with a calculable lifetime spend or point total",
+        "Tier evaluation must be triggered by a qualifying event (new transaction, period close)"
+      ],
+      "data_invariants": [
+        "Tier thresholds must be ordered and non-overlapping (e.g., Silver: 0-499 pts, Gold: 500-999 pts, Platinum: 1000+)",
+        "Tier upgrades are immediate upon threshold breach; tier downgrades only occur at the defined evaluation period boundary",
+        "Tier benefits (multiplier, perks) are stored per-tier and applied only to customers currently at that tier"
+      ],
+      "postconditions": [
+        "Customer tier field updated to reflect new status",
+        "Customer notified of tier change with new benefits summary",
+        "Tier change event logged for marketing analytics"
+      ],
+      "error_states": [
+        "TIER_CONFIG_INVALID: Tier thresholds overlap or are not monotonically increasing",
+        "TIER_EVALUATION_FAILED: Error in lifetime spend aggregation prevents accurate tier calculation",
+        "BENEFIT_APPLICATION_ERROR: New tier benefit could not be applied to the customer profile"
+      ]
+    },
+    {
+      "id": "REQ-LOY-004",
+      "description": "Loyalty Account Management & Identity",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Customer must provide at least one unique identifier for account creation (phone, email, or payment card)"
+      ],
+      "data_invariants": [
+        "A single customer may not hold two active loyalty accounts at the same merchant brand (de-duplication enforced)",
+        "Identity resolution must check for existing accounts across all registered identifiers before creating a new account",
+        "Account merge is permissible only by a manager-level actor with explicit customer consent documented"
+      ],
+      "postconditions": [
+        "Loyalty account created with unique ID and linked identifier(s)",
+        "Welcome communication dispatched with account summary and enrollment bonus (if configured)",
+        "Account discoverable at POS via phone lookup, card swipe, or QR scan"
+      ],
+      "error_states": [
+        "DUPLICATE_ACCOUNT_DETECTED: An account with the provided identifier already exists",
+        "IDENTIFIER_INVALID: The provided phone number or email fails format validation",
+        "MERGE_CONSENT_MISSING: Account merge attempted without verifiable customer consent record"
+      ]
+    },
+    {
+      "id": "REQ-LOY-005",
+      "description": "Points Expiry & Breakage Management",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Merchant must have a points expiry policy configured (e.g., points expire after 12 months of account inactivity)",
+        "Expiry evaluation batch job must be scheduled and operational"
+      ],
+      "data_invariants": [
+        "Points expiry is evaluated per-batch and per-earning-event, not on the total account balance",
+        "Expired points are journaled as BREAKAGE in the loyalty ledger and recognized as revenue per accounting rules",
+        "Expiry must not be applied retroactively to points that were active during the old policy period"
+      ],
+      "postconditions": [
+        "Expired points deducted from customer balance via a BREAKAGE ledger entry",
+        "Customer notified 30 days before expiry with remaining balance and expiry date",
+        "Breakage report generated for accounting reconciliation"
+      ],
+      "error_states": [
+        "EXPIRY_JOB_FAILED: Batch expiry evaluation could not complete; re-queued for next cycle",
+        "BREAKAGE_JOURNAL_ERROR: Accounting entry for expired points could not be written",
+        "NOTIFICATION_UNDELIVERABLE: Pre-expiry warning could not be sent due to invalid contact info"
+      ]
+    },
+    {
+      "id": "REQ-LOY-006",
+      "description": "Loyalty Fraud Prevention",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Loyalty transaction is being submitted for earning or redemption",
+        "Fraud detection rules must be configured and active for the merchant program"
+      ],
+      "data_invariants": [
+        "Velocity checks enforce maximum earning events per customer per hour and per day",
+        "Redemption pattern analysis flags accounts redeeming more than a configurable percentage of balance per session",
+        "Structuring detection alerts on accounts earning points via multiple split transactions below a single-transaction threshold",
+        "Flagged accounts are placed in a REVIEW state; points are held, not forfeited, pending investigation"
+      ],
+      "postconditions": [
+        "Suspicious transactions are flagged and queued for compliance review",
+        "Affected customer account status updated to UNDER_REVIEW",
+        "Internal alert dispatched to the fraud team with full transaction context"
+      ],
+      "error_states": [
+        "VELOCITY_LIMIT_EXCEEDED: Earning event rate exceeds fraud threshold; transaction blocked pending review",
+        "REDEMPTION_PATTERN_FLAGGED: Redemption volume triggers anomaly alert",
+        "ACCOUNT_UNDER_REVIEW: All new earning and redemption blocked for this account during investigation"
+      ]
+    },
+    {
+      "id": "REQ-LOY-007",
+      "description": "Merchant Configuration & Loyalty Analytics",
+      "domain": "Loyalty",
+      "preconditions": [
+        "Authenticated merchant admin with LOYALTY_ADMIN role",
+        "An active loyalty program exists for the merchant"
+      ],
+      "data_invariants": [
+        "Program configuration changes (earning rate, tier thresholds) are versioned and take effect only for new transactions",
+        "Historical earning rates are preserved for retroactive audit",
+        "Analytics data is aggregated and anonymized at the customer level before being surfaced in the dashboard"
+      ],
+      "postconditions": [
+        "Updated configuration published and active for new transactions immediately",
+        "Analytics dashboard reflects data up to the last ETL refresh cycle (max staleness: 1 hour)",
+        "Configuration change event logged in the merchant audit trail"
+      ],
+      "error_states": [
+        "INVALID_EARNING_RATE: Configured points-per-dollar rate is outside permissible bounds (0.01 to 100)",
+        "TIER_OVERLAP_DETECTED: Tier threshold ranges are not mutually exclusive",
+        "ANALYTICS_STALE: ETL pipeline failure; dashboard data exceeds maximum staleness threshold"
+      ]
+    },
+    {
+      "id": "REQ-MOB-001",
+      "description": "Consumer Wallet Mobile App (iOS/Android/PWA)",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "App is installed and launched on a supported OS version (iOS 16+, Android 10+)",
+        "User has completed registration and identity verification"
+      ],
+      "data_invariants": [
+        "Sensitive data (tokens, keys) must be stored in the platform Secure Enclave (iOS Keychain / Android Keystore)",
+        "All API communication must use HTTPS with certificate pinning",
+        "Biometric authentication (FaceID/TouchID/Fingerprint) must be used for transaction confirmation when available"
+      ],
+      "postconditions": [
+        "User can view wallet balance, transaction history, and loyalty points",
+        "User can initiate payments, P2P transfers, and QR scans",
+        "App state is synchronized with the server upon each foreground session"
+      ],
+      "error_states": [
+        "BIOMETRIC_NOT_AVAILABLE: Device does not support biometric auth; falls back to PIN",
+        "CERTIFICATE_PIN_MISMATCH: API SSL certificate does not match pinned hash; connection aborted",
+        "SESSION_EXPIRED: Access token expired during background; user prompted to re-authenticate"
+      ]
+    },
+    {
+      "id": "REQ-MOB-002",
+      "description": "Tap-to-Phone Payment (Merchant NFC Acceptance)",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "Merchant device must be NFC-enabled and running the PaySurity merchant app",
+        "Merchant account must be approved for card-present NFC acceptance",
+        "Consumer payment instrument must support contactless (NFC/EMV)"
+      ],
+      "data_invariants": [
+        "NFC transaction data must never be stored in application memory beyond the duration of the transaction",
+        "EMV cryptogram must be validated before transaction is submitted for authorization",
+        "Fallback to manual entry is only permitted if NFC read fails after 3 attempts"
+      ],
+      "postconditions": [
+        "Transaction authorized and funds captured via the payment network",
+        "Digital receipt generated and offered to consumer",
+        "Transaction recorded in merchant dashboard under card-present channel"
+      ],
+      "error_states": [
+        "NFC_READ_FAILURE: Consumer card/device could not be read after maximum attempts",
+        "EMV_CRYPTOGRAM_INVALID: Security validation of the card response failed",
+        "MERCHANT_NOT_APPROVED_FOR_NFC: Merchant account missing card-present processing permission"
+      ]
+    },
+    {
+      "id": "REQ-MOB-003",
+      "description": "Merchant Mobile Dashboard",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "Authenticated merchant admin or manager with dashboard access permission",
+        "At least one active location assigned to the account"
+      ],
+      "data_invariants": [
+        "Dashboard data reflects real-time or near-real-time (< 60s lag) transaction summaries",
+        "Location selector scope strictly enforces the actor's permitted location hierarchy",
+        "Financial totals displayed must match the authoritative ledger aggregate to within 1 cent"
+      ],
+      "postconditions": [
+        "Dashboard renders key metrics: daily sales, transaction count, average ticket, top items",
+        "Manager can initiate a refund from the dashboard with appropriate RBAC permission",
+        "Alert feed shows unresolved flags requiring merchant attention"
+      ],
+      "error_states": [
+        "DATA_FEED_STALE: Dashboard metrics have not refreshed within the maximum latency SLA",
+        "LOCATION_ACCESS_DENIED: Actor attempted to view a location outside their RBAC scope",
+        "REFUND_PERMISSION_DENIED: Actor lacks the required permission to process refunds from the dashboard"
+      ]
+    },
+    {
+      "id": "REQ-MOB-004",
+      "description": "AI-Driven Personalized Push Notifications",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "Consumer has granted push notification permission to the app",
+        "Consumer has an active wallet or loyalty account with sufficient transaction history for AI modeling",
+        "AI personalization model has been trained and is available for inference"
+      ],
+      "data_invariants": [
+        "Notification content must be personalized based on the consumer's own transaction data only (strict data isolation per tenant)",
+        "Notification frequency is capped per consumer per day to prevent alert fatigue (configurable max: default 3/day)",
+        "A/B testing assignment is deterministic per user ID to ensure consistent experience within a test group"
+      ],
+      "postconditions": [
+        "Notification delivered to the consumer's device via the platform push service (APNs/FCM)",
+        "Notification open and conversion events tracked for model feedback",
+        "Consumer can opt out of personalized notifications from in-app settings"
+      ],
+      "error_states": [
+        "PUSH_TOKEN_INVALID: Consumer device token has been recycled or revoked; token must be refreshed",
+        "PERSONALIZATION_MODEL_UNAVAILABLE: AI inference service is down; falls back to rule-based generic notification",
+        "DAILY_CAP_REACHED: No further notifications are sent for this consumer for the remainder of the calendar day"
+      ]
+    },
+    {
+      "id": "REQ-MOB-005",
+      "description": "AI Budgeting & Spend Insights",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "Consumer has an active wallet account with at least 30 days of transaction history",
+        "Consumer has opted in to AI spend analysis in privacy settings"
+      ],
+      "data_invariants": [
+        "Spend categorization uses the merchant MCC and transaction description as primary signals",
+        "Budget recommendations are derived solely from the consumer's own historical data",
+        "Predicted spend amounts are presented with a confidence interval, not as a point estimate"
+      ],
+      "postconditions": [
+        "Spending categories, totals, and trends displayed in the Insights tab",
+        "Budget alert triggered when consumer reaches a configurable percentage of their budget category limit",
+        "Monthly spend summary generated and pushed at the start of each new calendar month"
+      ],
+      "error_states": [
+        "INSUFFICIENT_HISTORY: < 30 days of data available; insights feature displays onboarding state",
+        "CATEGORIZATION_FAILED: Transaction could not be assigned to a category; displayed as 'Uncategorized'",
+        "OPT_IN_REQUIRED: Consumer attempts to view insights before enabling the feature in privacy settings"
+      ]
+    },
+    {
+      "id": "REQ-MOB-006",
+      "description": "Offline Capability & Data Sync",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "Consumer app has previously completed a successful online session and seeded the local cache",
+        "Device network connectivity has been lost or is unreliable"
+      ],
+      "data_invariants": [
+        "Balance displayed in offline mode reflects the last synced value with a clear 'CACHED' indicator",
+        "Offline-initiated actions are queued locally and cannot include new payment authorizations",
+        "Sync upon reconnection is ordered chronologically and uses idempotency keys to prevent duplication"
+      ],
+      "postconditions": [
+        "Core app screens (balance, recent transactions, loyalty points) are accessible without network",
+        "Upon reconnection, all queued actions are synced and the local cache is refreshed",
+        "Consumer notified of sync completion and any actions that failed during offline period"
+      ],
+      "error_states": [
+        "CACHE_CORRUPTED: Local data store integrity check fails; consumer prompted to force-sync",
+        "SYNC_CONFLICT: Queued action conflicts with server state; consumer shown a resolution prompt",
+        "OFFLINE_ACTION_EXPIRED: A queued action's validity window elapsed before sync; action discarded and consumer notified"
+      ]
+    },
+    {
+      "id": "REQ-SAV-001",
+      "description": "Statement Upload & AI-Powered OCR Extraction",
+      "domain": "Savings Intelligence",
+      "preconditions": [
+        "User (merchant prospect) has uploaded a processing statement in a supported format (PDF, CSV, image)",
+        "OCR and AI extraction service is available and operational"
+      ],
+      "data_invariants": [
+        "Uploaded files must be processed in an isolated, tenant-scoped storage bucket with no cross-tenant access",
+        "PAN (card numbers) detected in uploaded statements must be immediately masked before any storage",
+        "Extracted data fields (rate, volume, fees) must be validated against known processing statement schemas"
+      ],
+      "postconditions": [
+        "Structured data extracted from statement and stored as a JSON processing profile",
+        "User proceeds to the savings calculation step with pre-populated data",
+        "Uploaded file is flagged for deletion after a configurable retention period (default: 24h)"
+      ],
+      "error_states": [
+        "OCR_EXTRACTION_FAILED: Document could not be parsed; user prompted to enter data manually",
+        "UNSUPPORTED_FILE_FORMAT: Uploaded file type is not in the supported list",
+        "PAN_DETECTED_AND_BLOCKED: File contains raw card numbers; upload rejected with privacy notice"
+      ]
+    },
+    {
+      "id": "REQ-SAV-002",
+      "description": "Savings Calculation Engine",
+      "domain": "Savings Intelligence",
+      "preconditions": [
+        "A valid processing profile (from OCR or manual entry) with at minimum: monthly volume, effective rate, and primary card mix"
+      ],
+      "data_invariants": [
+        "Calculation uses the PaySurity interchange-plus pricing model as the comparison benchmark",
+        "All fee comparisons must use the same monthly volume base to ensure mathematical fairness",
+        "Savings projections must clearly disclose assumptions (e.g., assumed card mix, processing scenario)"
+      ],
+      "postconditions": [
+        "Projected monthly savings amount calculated and presented to the user",
+        "Comparison table generated: current processor fees vs. PaySurity fees line-by-line",
+        "Calculation result stored as a named 'Savings Estimate' linked to the user's session"
+      ],
+      "error_states": [
+        "INVALID_VOLUME_INPUT: Monthly volume is zero or negative",
+        "RATE_OUT_OF_BOUNDS: Provided effective rate exceeds the maximum plausible rate (5%); user prompted to verify",
+        "MODEL_VERSION_MISMATCH: Pricing model version used for calculation does not match the current published version"
+      ]
+    },
+    {
+      "id": "REQ-SAV-003",
+      "description": "Results Gating & Lead Capture",
+      "domain": "Savings Intelligence",
+      "preconditions": [
+        "Savings calculation has been successfully computed",
+        "User has not yet provided contact information (ungated state)"
+      ],
+      "data_invariants": [
+        "Full savings result is withheld until the lead capture form is completed",
+        "Teaser savings data (e.g., 'You could save up to XX%') is displayed without gating to incentivize conversion",
+        "Lead data collected must include at minimum: name, business email, phone, and monthly volume"
+      ],
+      "postconditions": [
+        "Full savings report unlocked and displayed to the user",
+        "Lead record created in CRM with source attribution (UTM, referral code)",
+        "Sales team notified of new high-intent lead via CRM workflow trigger"
+      ],
+      "error_states": [
+        "INVALID_EMAIL_FORMAT: Lead email fails RFC 5322 validation",
+        "DUPLICATE_LEAD: Email already exists in CRM; lead updated rather than duplicated",
+        "CRM_INTEGRATION_DOWN: Lead capture succeeds locally but CRM push queued for retry"
+      ]
+    },
+    {
+      "id": "REQ-SAV-004",
+      "description": "Embeddable Widget for Partner/Reseller Sites",
+      "domain": "Savings Intelligence",
+      "preconditions": [
+        "Partner/reseller must have an active affiliate or reseller account with a registered domain whitelist",
+        "Widget embed code must include the partner's unique attribution ID"
+      ],
+      "data_invariants": [
+        "Widget may only be served from the registered whitelisted domains (CSP frame-ancestors enforcement)",
+        "All lead data captured through partner widgets is attributed to the partner's affiliate ID",
+        "Widget configuration (color scheme, logo) is isolated per partner and cannot be modified by the embedding site's scripts"
+      ],
+      "postconditions": [
+        "Widget renders the full savings calculator experience in an iframe on the partner site",
+        "Lead captured through the widget is tagged with the partner attribution ID in the CRM",
+        "Partner dashboard reflects the new lead conversion in near-real-time"
+      ],
+      "error_states": [
+        "DOMAIN_NOT_WHITELISTED: Widget load blocked by CSP policy; security event logged",
+        "INVALID_PARTNER_ID: Embed code contains an unrecognized or suspended partner ID",
+        "WIDGET_LOAD_TIMEOUT: Embed script fails to render within 3 seconds; fallback static link displayed"
+      ]
+    },
+    {
+      "id": "REQ-SAV-005",
+      "description": "Analytics & Conversion Funnel Reporting",
+      "domain": "Savings Intelligence",
+      "preconditions": [
+        "Analytics event tracking must be instrumented on every funnel step (upload, calculate, gate, submit)",
+        "User has not opted out of analytics tracking"
+      ],
+      "data_invariants": [
+        "Funnel drop-off is calculated per session, not per user, to accommodate anonymous users",
+        "Conversion rate is defined as (submitted leads) / (total sessions reaching calculation step)",
+        "Partner-attributed sessions are broken out separately from direct sessions in all reports"
+      ],
+      "postconditions": [
+        "Dashboard shows funnel metrics: sessions, calculations, leads, conversion rate",
+        "Cohort breakdowns available by: source channel, partner, monthly volume band, date range",
+        "Exportable CSV report available for offline analysis"
+      ],
+      "error_states": [
+        "ANALYTICS_PIPELINE_LAG: Reporting data is more than 2 hours stale; banner displayed on dashboard",
+        "EXPORT_SIZE_EXCEEDED: Report export exceeds maximum row limit; user prompted to reduce date range",
+        "TRACKING_DISABLED: Session opted out of analytics; funnel data for this session not recorded"
+      ]
+    },
+    {
+      "id": "REQ-NFR-001",
+      "description": "Availability Architecture",
+      "domain": "Non-Functional Requirements",
+      "preconditions": [
+        "Infrastructure deployed across a minimum of 2 geographically separated availability zones",
+        "Health checks and load balancer routing rules are configured and active"
+      ],
+      "data_invariants": [
+        "SLA target: 99.99% monthly uptime for payment-critical paths (< 4.38 minutes downtime/month)",
+        "SLA target: 99.9% monthly uptime for non-critical paths (analytics, reporting)",
+        "No single point of failure permitted in the payment processing or ledger write paths",
+        "Database read replicas must be in a separate AZ from the primary write node"
+      ],
+      "postconditions": [
+        "Failover to secondary AZ completes within the defined RTO (default: < 30 seconds for payment paths)",
+        "Availability metrics tracked per service and per endpoint in the observability stack",
+        "SLA breach automatically triggers a P1 incident and on-call page"
+      ],
+      "error_states": [
+        "AZ_FAILURE: Primary availability zone is unreachable; automatic failover to secondary initiated",
+        "HEALTH_CHECK_FAILURE: Service repeatedly fails health probe; removed from load balancer rotation",
+        "SLA_BREACH_DETECTED: Calculated uptime for the rolling 30-day window falls below the SLA target"
+      ]
+    },
+    {
+      "id": "REQ-NFR-002",
+      "description": "Performance Design Requirements",
+      "domain": "Non-Functional Requirements",
+      "preconditions": [
+        "Services are deployed with appropriate resource allocations (CPU, memory) for projected load",
+        "Performance benchmarks are defined per endpoint category"
+      ],
+      "data_invariants": [
+        "Payment authorization API P99 latency must be < 500ms under 10x normal peak load",
+        "POS order creation API P99 latency must be < 300ms under normal load",
+        "Dashboard page load (LCP) must be < 2.5 seconds on a standard broadband connection",
+        "Database query plans for all hot-path queries must not include sequential table scans on tables > 10k rows"
+      ],
+      "postconditions": [
+        "Performance baselines published and tracked per release",
+        "Load test results attached to every release candidate that touches a hot-path API",
+        "Automated performance regression alert triggered if P99 degrades > 20% from baseline"
+      ],
+      "error_states": [
+        "LATENCY_SLA_BREACH: P99 latency exceeds defined threshold under normal load conditions",
+        "LOAD_TEST_FAILURE: Release candidate does not meet performance gate; deployment blocked",
+        "SEQUENTIAL_SCAN_DETECTED: Query plan analysis identifies a sequential scan on a production table"
+      ]
+    },
+    {
+      "id": "REQ-NFR-003",
+      "description": "Backup & Disaster Recovery",
+      "domain": "Non-Functional Requirements",
+      "preconditions": [
+        "Automated backup jobs must be configured for all stateful data stores (databases, object storage)",
+        "A documented and tested DR runbook must exist"
+      ],
+      "data_invariants": [
+        "RPO (Recovery Point Objective): < 1 hour for all financial ledger data",
+        "RTO (Recovery Time Objective): < 4 hours for full platform restoration from backup",
+        "Backups are encrypted at rest using AES-256 and stored in a geographically separate region",
+        "Backup integrity is verified via automated restore-and-checksum tests on a weekly schedule"
+      ],
+      "postconditions": [
+        "Successful backup creation confirmed and logged with size, duration, and checksum",
+        "DR drill results documented and linked to the runbook after each test",
+        "Backup retention follows the defined policy (daily for 30 days, weekly for 1 year, monthly for 7 years)"
+      ],
+      "error_states": [
+        "BACKUP_JOB_FAILED: Scheduled backup did not complete; on-call alert triggered",
+        "RESTORE_CHECKSUM_MISMATCH: Backup integrity test fails; backup flagged as corrupted",
+        "RPO_BREACH: Data loss window from a failure event exceeds the 1-hour RPO target"
+      ]
+    },
+    {
+      "id": "REQ-NFR-004",
+      "description": "Observability Stack",
+      "domain": "Non-Functional Requirements",
+      "preconditions": [
+        "All services must instrument structured logs, metrics, and distributed traces",
+        "Observability infrastructure (e.g., OpenTelemetry collector, time-series DB, log aggregator) must be operational"
+      ],
+      "data_invariants": [
+        "Every inbound API request must be assigned a globally unique Trace ID propagated through all downstream calls",
+        "Logs must be structured JSON with mandatory fields: trace_id, service, severity, timestamp (UTC ISO8601)",
+        "Business-critical alerts must have a defined SLO burn rate trigger, not just a raw threshold",
+        "Log retention: 90 days hot, 1 year cold (archived)"
+      ],
+      "postconditions": [
+        "End-to-end request trace visible in the distributed tracing UI",
+        "Metrics dashboards show real-time service health, error rates, and saturation",
+        "Alert fires within 60 seconds of an SLO breach event"
+      ],
+      "error_states": [
+        "TRACE_ID_MISSING: Request received without a propagated trace ID; new ID generated and warning logged",
+        "METRICS_PIPELINE_DOWN: Metric ingestion has stopped; alert fires within 5 minutes of gap detection",
+        "LOG_RETENTION_POLICY_BREACH: Logs older than the hot retention window were not archived before deletion"
+      ]
+    },
+    {
+      "id": "REQ-NOT-001",
+      "description": "Multi-Channel Notification Dispatch with Channel Fallback",
+      "domain": "Notification Platform",
+      "preconditions": [
+        "A notification event has been published to the notification service queue",
+        "Recipient has at least one verified contact channel (email, SMS, push token)"
+      ],
+      "data_invariants": [
+        "Channel preference order is: Push > SMS > Email by default, configurable per user",
+        "Fallback to the next channel only occurs after a delivery failure or a configurable timeout on the primary channel",
+        "A single logical notification event must not result in duplicate delivery across multiple channels"
+      ],
+      "postconditions": [
+        "Notification delivered to the highest-priority available channel",
+        "Delivery receipt (success or failure) recorded per channel attempt",
+        "If all channels fail, a dead-letter record is created for manual review"
+      ],
+      "error_states": [
+        "ALL_CHANNELS_FAILED: Notification could not be delivered via any available channel",
+        "PUSH_TOKEN_STALE: Primary push delivery fails; system automatically falls back to SMS",
+        "NOTIFICATION_STORM_THROTTLED: Outbound notification rate exceeds the platform throttle; messages queued"
+      ]
+    },
+    {
+      "id": "REQ-ORC-002",
+      "description": "Dispute (Chargeback) Lifecycle Management",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "A chargeback notification has been received from the acquiring bank",
+        "The original transaction record exists in the PaySurity ledger"
+      ],
+      "data_invariants": [
+        "Dispute response deadline is calculated from the acquiring bank notification date, not the original transaction date",
+        "Evidence submission package must include all mandatory fields for the dispute reason code",
+        "A transaction under active dispute cannot be manually refunded until the dispute is resolved",
+        "Dispute outcome (WON/LOST) is final and authoritative from the network ruling"
+      ],
+      "postconditions": [
+        "Dispute record created and linked to the originating transaction",
+        "Funds provisionally debited from merchant reserve upon chargeback notification",
+        "Merchant notified with response deadline, reason code, and required evidence list"
+      ],
+      "error_states": [
+        "EVIDENCE_DEADLINE_MISSED: Response window elapsed without submission; dispute automatically conceded",
+        "INVALID_REASON_CODE: Chargeback notification contains an unrecognized card network reason code",
+        "DUPLICATE_DISPUTE: A dispute already exists for this transaction ID"
+      ]
+    },
+    {
+      "id": "REQ-ORC-003",
+      "description": "Daily Settlement Processing",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "All transactions for the settlement period must be in a CAPTURED state",
+        "Settlement batch must be opened within the acquiring bank's cut-off window",
+        "Merchant reserve requirements must be validated before net settlement is calculated"
+      ],
+      "data_invariants": [
+        "Net settlement = Gross captured amount - Processing fees - Reserves - Chargebacks",
+        "Settlement batch must balance: sum of all captured transactions = batch total",
+        "ACH credit to the merchant's bank account is initiated only after batch is accepted by the acquirer"
+      ],
+      "postconditions": [
+        "Settlement batch submitted and acknowledged by the acquiring bank",
+        "ACH credit initiated to the merchant's linked bank account",
+        "Settlement report generated and posted to the merchant dashboard and ledger"
+      ],
+      "error_states": [
+        "BATCH_IMBALANCE: Settlement batch total does not match the sum of individual transaction captures",
+        "ACQUIRER_REJECTION: Acquiring bank rejected the settlement batch with an error code",
+        "CUT_OFF_MISSED: Batch was not submitted within the acquirer's daily cut-off window; deferred to next cycle"
+      ]
+    },
+    {
+      "id": "REQ-ORC-004",
+      "description": "Multi-Tender & Split Payments",
+      "domain": "Payment Orchestration",
+      "preconditions": [
+        "Order has an outstanding balance > 0",
+        "At least two distinct payment instruments are specified by the customer",
+        "All payment instrument tokens are validated prior to the split allocation"
+      ],
+      "data_invariants": [
+        "Sum of all split amounts must exactly equal the order total",
+        "Each split leg is an independent authorization; a failure in one leg must trigger voids on all previously authorized legs",
+        "Tip is allocated to a single designated tender (typically the last) unless explicitly split"
+      ],
+      "postconditions": [
+        "All legs authorized and captured successfully",
+        "Receipt reflects full itemized split: each tender amount and method",
+        "All legs linked to the parent order ID in the ledger"
+      ],
+      "error_states": [
+        "SPLIT_SUM_MISMATCH: Declared split amounts do not sum to the order total",
+        "LEG_N_DECLINED: Nth payment leg declined after prior legs authorized; all prior legs voided",
+        "TENDER_TYPE_CONFLICT: Incompatible tender types in the same split (e.g., EBT + Gift Card on non-eligible items)"
+      ]
+    },
+    {
+      "id": "REQ-WEB-001",
+      "description": "Public Marketing Site",
+      "domain": "Public Web",
+      "preconditions": [
+        "CDN and hosting infrastructure are provisioned and operational",
+        "Content for all primary pages is authored and approved"
+      ],
+      "data_invariants": [
+        "Core Web Vitals (LCP < 2.5s, CLS < 0.1, FID < 100ms) must pass on all primary landing pages",
+        "All pages must score >= 90 on Lighthouse accessibility audit",
+        "No third-party tracking scripts may be loaded without explicit cookie consent"
+      ],
+      "postconditions": [
+        "Site is publicly accessible, indexed by search engines, and renders correctly across major browsers",
+        "Lead capture forms are connected to the CRM integration",
+        "Analytics tracking fires on all key conversion events"
+      ],
+      "error_states": [
+        "CDN_ORIGIN_UNREACHABLE: CDN cannot reach the origin server; cached version served with staleness warning",
+        "FORM_SUBMISSION_FAILED: CRM integration is down; lead data queued locally for retry",
+        "CONSENT_BANNER_MISSING: Page loaded without the required cookie consent mechanism"
+      ]
+    },
+    {
+      "id": "REQ-MOB-001C",
+      "description": "Consumer Mobile App Screens",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "User is authenticated in the consumer mobile app",
+        "App has completed initial data sync with the server"
+      ],
+      "data_invariants": [
+        "Screen navigation state must be preserved across app backgrounding and foregrounding",
+        "All screens must implement accessibility labels compliant with WCAG 2.1 AA",
+        "Data displayed on each screen must be scoped strictly to the authenticated user's account"
+      ],
+      "postconditions": [
+        "User can navigate to: Home (balance/activity), Pay (QR/NFC), History, Loyalty, Settings",
+        "All screens render within 300ms of navigation event on reference device",
+        "Deep links from external notifications navigate directly to the relevant in-app screen"
+      ],
+      "error_states": [
+        "SCREEN_LOAD_TIMEOUT: Screen data fails to load within 5 seconds; error state with retry button displayed",
+        "DEEP_LINK_RESOLUTION_FAILED: Deep link target screen not found; user routed to home screen",
+        "ACCESSIBILITY_LABEL_MISSING: Screen fails automated accessibility check (CI gate)"
+      ]
+    },
+    {
+      "id": "REQ-MOB-002C",
+      "description": "Merchant Mobile App",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "Merchant employee is authenticated with an active, location-scoped session",
+        "Device has completed device attestation check"
+      ],
+      "data_invariants": [
+        "All financial actions initiated from the merchant app require a secondary confirmation (PIN or biometric)",
+        "Merchant app data scope is strictly limited to the authenticated employee's assigned location(s)",
+        "Device attestation must pass before any payment acceptance feature is enabled"
+      ],
+      "postconditions": [
+        "Merchant employee can: view live order queue, accept NFC payments, process refunds (with permission), view shift reports",
+        "All actions logged with device ID and session token for audit trail",
+        "App state syncs with the POS backend in real-time via WebSocket"
+      ],
+      "error_states": [
+        "DEVICE_ATTESTATION_FAILED: Device integrity check failed; payment features disabled until re-attestation",
+        "WEBSOCKET_CONNECTION_LOST: Real-time order feed interrupted; app displays reconnection indicator",
+        "UNAUTHORIZED_ACTION: Employee attempts an action outside their assigned permission set"
+      ]
+    },
+    {
+      "id": "REQ-MOB-003C",
+      "description": "Push Notifications",
+      "domain": "Mobile Platform",
+      "preconditions": [
+        "App user has granted push notification permission",
+        "APNs (iOS) or FCM (Android) push token is registered and current"
+      ],
+      "data_invariants": [
+        "Push payloads must not contain sensitive financial data (PAN, full account numbers)",
+        "Silent (background) pushes must not wake the app to perform network calls without user awareness",
+        "Push token rotation must be handled gracefully; stale tokens trigger token refresh, not delivery failure"
+      ],
+      "postconditions": [
+        "Notification delivered to the consumer or merchant device within 60 seconds of the triggering event",
+        "Notification tap opens the relevant in-app screen via deep link",
+        "Delivery status (sent, delivered, opened) tracked in the notification analytics store"
+      ],
+      "error_states": [
+        "TOKEN_REVOKED: APNs/FCM returns a permanent failure; token removed from the registry",
+        "PAYLOAD_TOO_LARGE: Push payload exceeds platform limits (4KB iOS, 4KB FCM); message truncated",
+        "RATE_LIMIT_EXCEEDED: Platform push quota exhausted; messages queued for next window"
+      ]
+    },
+    {
+      "id": "REQ-WEB-001C",
+      "description": "Core Site Structure & SEO Baseline",
+      "domain": "Public Core",
+      "preconditions": [
+        "Domain DNS is configured and propagated",
+        "SSL certificate is provisioned and valid"
+      ],
+      "data_invariants": [
+        "Every page must have a unique <title> and meta description tag",
+        "Structured data (schema.org Organization, LocalBusiness, Product) must be valid per Google Rich Results Test",
+        "Canonical URLs must be explicitly set to prevent duplicate content indexing",
+        "robots.txt must block indexing of internal admin and API paths"
+      ],
+      "postconditions": [
+        "Sitemap.xml generated and submitted to Google Search Console",
+        "All pages indexed and crawlable by major search engines",
+        "Core Web Vitals pass for all indexed pages"
+      ],
+      "error_states": [
+        "DUPLICATE_CANONICAL: Two pages with identical content both have self-referencing canonical tags",
+        "STRUCTURED_DATA_INVALID: schema.org markup fails validation; rich result eligibility lost",
+        "SSL_CERTIFICATE_EXPIRED: HTTPS fails; all traffic served error page until certificate renewed"
+      ]
+    },
+    {
+      "id": "REQ-WEB-002",
+      "description": "Vertical-Specific Landing Pages",
+      "domain": "Public Core",
+      "preconditions": [
+        "Vertical content (copy, imagery, feature list) is authored and approved for each target vertical",
+        "UTM and analytics tracking is configured per page"
+      ],
+      "data_invariants": [
+        "Each vertical landing page must have a unique URL slug (e.g., /restaurant-pos, /grocery-pos)",
+        "Conversion CTA on each page must link to the vertical-specific lead capture or signup flow",
+        "Page content must be semantically scoped to the vertical; generic content is prohibited"
+      ],
+      "postconditions": [
+        "Landing page accessible, indexed, and rendering correct vertical-specific content",
+        "A/B test variants (if configured) are served correctly by the experimentation framework",
+        "Conversion events tracked and attributed to the correct vertical in analytics"
+      ],
+      "error_states": [
+        "CONTENT_NOT_FOUND: Vertical content asset missing; page renders a 404 error",
+        "CTA_LINK_BROKEN: Call-to-action button links to a non-existent or redirecting URL",
+        "AB_TEST_ASSIGNMENT_ERROR: User assigned to multiple conflicting test variants"
+      ]
+    },
+    {
+      "id": "REQ-WEB-003",
+      "description": "Lead Capture & CRM Integration",
+      "domain": "Public Core",
+      "preconditions": [
+        "CRM integration (e.g., HubSpot, Salesforce) is configured with valid API credentials",
+        "Lead capture form is instrumented on all high-intent pages"
+      ],
+      "data_invariants": [
+        "All form submissions are validated client-side and server-side before CRM push",
+        "SPAM submissions are filtered via reCAPTCHA or honeypot before CRM ingestion",
+        "Duplicate leads (same email) trigger a CRM update, not a duplicate record creation"
+      ],
+      "postconditions": [
+        "Lead record created or updated in CRM with source, UTM parameters, and form data",
+        "Sales team notified via CRM workflow within 5 minutes of lead submission",
+        "Confirmation email dispatched to the lead immediately upon form submission"
+      ],
+      "error_states": [
+        "CRM_API_FAILURE: Lead cannot be pushed to CRM; stored locally in retry queue",
+        "DUPLICATE_LEAD_MERGE_FAILED: CRM returns a conflict on duplicate detection; manual review flagged",
+        "SPAM_DETECTED: Honeypot field populated; submission silently discarded, no CRM entry"
+      ]
+    },
+    {
+      "id": "REQ-WEB-004",
+      "description": "AI Blog & Content Engine",
+      "domain": "Public Core",
+      "preconditions": [
+        "AI content generation service is configured with brand voice guidelines and prohibited topics",
+        "Human editorial review workflow is active before any AI-generated content is published"
+      ],
+      "data_invariants": [
+        "All published blog posts must pass a human editorial review gate; autonomous publication is prohibited",
+        "AI-generated content must be clearly labeled for internal tracking (not necessarily consumer-facing)",
+        "Published posts must include author attribution, publication date, and last-updated timestamp"
+      ],
+      "postconditions": [
+        "Approved content published to the blog with correct SEO metadata",
+        "Internal links to relevant product pages included per the editorial content brief",
+        "Social media sharing metadata (Open Graph, Twitter Card) populated correctly"
+      ],
+      "error_states": [
+        "AI_GENERATION_FAILED: Content generation service returned an error; manual content authoring required",
+        "EDITORIAL_REVIEW_EXPIRED: Draft content waited in review queue beyond the SLA; flagged for re-assignment",
+        "SEO_META_MISSING: Published post is missing required SEO fields; publish blocked by validation gate"
+      ]
+    },
+    {
+      "id": "REQ-WEB-005",
+      "description": "Referral QR & UTM Attribution Tracking",
+      "domain": "Public Core",
+      "preconditions": [
+        "Merchant or partner must have a registered referral account with a unique referral code",
+        "Analytics and UTM tracking infrastructure must be operational"
+      ],
+      "data_invariants": [
+        "Each referral code maps to exactly one account in the referral registry",
+        "UTM parameters (source, medium, campaign, content, term) are preserved through all redirects",
+        "QR codes are generated with error correction level H (30% damage tolerance)"
+      ],
+      "postconditions": [
+        "Referral click attributed to the referrer's account in the analytics store",
+        "UTM parameters persisted in the session for subsequent conversion attribution",
+        "QR scan events tracked with device type and timestamp"
+      ],
+      "error_states": [
+        "INVALID_REFERRAL_CODE: QR code or UTM contains an unrecognized referral identifier",
+        "UTM_PARAMETER_LOST: Redirect chain breaks UTM propagation; fallback to direct attribution",
+        "QR_GENERATION_FAILED: QR code image could not be generated; fallback to plain text link"
+      ]
+    },
+    {
+      "id": "REQ-WEB-006",
+      "description": "Savings Calculator Widget (Lead Capture)",
+      "domain": "Public Core",
+      "preconditions": [
+        "The savings calculation engine (REQ-SAV-002) is operational and accessible to the public site",
+        "Lead capture CRM integration is active"
+      ],
+      "data_invariants": [
+        "Widget must function as a standalone component embeddable on any page of the public site",
+        "Widget state (entered data) must persist across a single browser session",
+        "Lead gate is enforced before full results are displayed (consistent with REQ-SAV-003)"
+      ],
+      "postconditions": [
+        "User completes the calculator and receives a savings estimate upon lead capture form submission",
+        "Lead attributed to the page/section the widget was embedded in",
+        "Calculation result pre-populates the full savings report page"
+      ],
+      "error_states": [
+        "CALCULATION_ENGINE_UNAVAILABLE: Widget displays a 'temporarily unavailable' message with a contact link",
+        "LEAD_FORM_VALIDATION_FAILED: Invalid input prevents form submission; inline error messages displayed",
+        "SESSION_EXPIRED: Widget state lost due to session timeout; user prompted to re-enter data"
+      ]
+    },
+    {
+      "id": "REQ-WEB-007",
+      "description": "AI Hero Assistant (Public Site)",
+      "domain": "Public Core",
+      "preconditions": [
+        "AI assistant service is initialized and operational",
+        "Conversation context is scoped to public-site permissible topics (product questions, lead capture, pricing)"
+      ],
+      "data_invariants": [
+        "AI assistant must not access or disclose any merchant-specific or internal operational data",
+        "Conversations are session-scoped and not persisted beyond the browser session without explicit opt-in",
+        "AI responses that cannot be answered must gracefully escalate to a human via a lead capture form"
+      ],
+      "postconditions": [
+        "User receives accurate, brand-voice-compliant responses to product and pricing questions",
+        "High-intent conversations (pricing, demo request) result in a lead capture prompt",
+        "Conversation summary logged (anonymized) for AI model improvement"
+      ],
+      "error_states": [
+        "AI_SERVICE_UNAVAILABLE: Assistant displays a static fallback prompt and routes user to a contact form",
+        "OUT_OF_SCOPE_QUERY: Query falls outside the permissible topic list; user redirected to support",
+        "RATE_LIMIT_REACHED: User has exceeded the per-session query limit; graceful message displayed"
+      ]
+    },
+    {
+      "id": "REQ-WEB-008",
+      "description": "Social Media Content Automation",
+      "domain": "Public Core",
+      "preconditions": [
+        "Social media accounts (LinkedIn, X/Twitter, Instagram) are connected via OAuth",
+        "Content calendar or trigger events are configured"
+      ],
+      "data_invariants": [
+        "All social posts must pass a human approval gate before publishing; autonomous posting is prohibited",
+        "Content must comply with each platform's character limits and media specifications",
+        "Published posts must not contain PII or any internal operational information"
+      ],
+      "postconditions": [
+        "Approved content published to configured social platforms at the scheduled time",
+        "Post performance metrics (impressions, engagement) fetched and stored after a 24h delay",
+        "Publication log created with platform, timestamp, and content hash"
+      ],
+      "error_states": [
+        "OAUTH_TOKEN_EXPIRED: Social platform authorization token has expired; content queued pending re-auth",
+        "CONTENT_POLICY_VIOLATION: Platform API rejected post due to policy violation; post flagged for revision",
+        "APPROVAL_QUEUE_STALE: Content sat in approval queue beyond SLA; auto-archived and flagged"
+      ]
+    },
+    {
+      "id": "REQ-WEB-009",
+      "description": "Analytics & Conversion Tracking",
+      "domain": "Public Core",
+      "preconditions": [
+        "Analytics instrumentation (event tracking) is deployed on all public site pages",
+        "Cookie consent has been obtained before any tracking scripts execute"
+      ],
+      "data_invariants": [
+        "First-party analytics events are collected regardless of third-party cookie restrictions",
+        "Conversion events (lead submit, demo request, signup) must fire exactly once per qualifying action (no double-count)",
+        "IP addresses must be anonymized (last octet masked) before storage"
+      ],
+      "postconditions": [
+        "All page views, user interactions, and conversion events captured in the analytics store",
+        "Real-time dashboard available for marketing team (< 30 minute data lag)",
+        "Attribution reports available by channel, campaign, and referral source"
+      ],
+      "error_states": [
+        "CONSENT_NOT_GRANTED: Third-party analytics blocked; first-party events continue",
+        "DUPLICATE_CONVERSION_EVENT: Deduplication logic detects a double-fire; second event discarded",
+        "ANALYTICS_COLLECTION_DOWN: Event pipeline is offline; events buffered client-side for up to 5 minutes"
+      ]
+    },
+    {
+      "id": "REQ-WAL-002",
+      "description": "Payroll Instant Credit",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Employee has an active PaySurity digital wallet linked to their payroll profile",
+        "Employer has enabled the Earned Wage Access (EWA) or instant payroll credit feature",
+        "Current earned but unpaid wages have been calculated and verified by the payroll engine"
+      ],
+      "data_invariants": [
+        "Instant credit amount cannot exceed the employee's currently earned and unpaid wage balance",
+        "EWA fee (if applicable) is deducted from the credited amount and reflected in the final paycheck reconciliation",
+        "The total of all instant credits in a pay period cannot exceed 80% of the employee's projected gross pay for that period"
+      ],
+      "postconditions": [
+        "Funds credited to the employee's PaySurity wallet immediately upon approval",
+        "EWA record created and linked to the payroll run for reconciliation at pay period close",
+        "Employee notified via push/email with credited amount, fee (if any), and next payday impact"
+      ],
+      "error_states": [
+        "EWA_LIMIT_EXCEEDED: Requested amount exceeds the maximum allowable percentage of earned wages",
+        "WALLET_NOT_LINKED: Employee does not have an active wallet account for credit delivery",
+        "EMPLOYER_FEATURE_DISABLED: EWA feature is not enabled for this employer's account"
+      ]
+    },
+    {
+      "id": "REQ-WAL-003",
+      "description": "Wallet as Payment Method at POS",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Consumer is authenticated in the PaySurity wallet app with an active session",
+        "POS terminal is configured to accept PaySurity wallet payments",
+        "Consumer's wallet balance is sufficient to cover the transaction amount"
+      ],
+      "data_invariants": [
+        "Wallet payment at POS follows the same double-entry ledger invariant as all wallet transactions",
+        "Transaction amount is pre-authorized against the wallet balance before the POS order is finalized",
+        "Loyalty points earning (if applicable) is triggered by the wallet payment event"
+      ],
+      "postconditions": [
+        "Consumer's wallet balance decremented by the transaction amount",
+        "Merchant's settlement account credited as part of the daily settlement batch",
+        "Transaction appears in both the consumer's wallet history and the merchant's POS transaction log"
+      ],
+      "error_states": [
+        "WALLET_BALANCE_INSUFFICIENT: Consumer's available balance is below the transaction amount",
+        "POS_WALLET_NOT_CONFIGURED: The POS terminal is not authorized to accept wallet payments",
+        "WALLET_FROZEN: Consumer's wallet is under a compliance hold and cannot be used for payments"
+      ]
+    },
+    {
+      "id": "REQ-WAL-004C",
+      "description": "Peer-to-Peer Requests",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Requesting user has an active, verified wallet account",
+        "Target recipient is identified by phone, email, or wallet ID",
+        "Request amount is positive and within the configured P2P request limit"
+      ],
+      "data_invariants": [
+        "A payment request does not move funds; it creates a pending request record only",
+        "Request expires after a configurable period (default: 7 days) if not fulfilled",
+        "Recipient can fulfill the request partially or in full; partial fulfillment creates a new residual request"
+      ],
+      "postconditions": [
+        "Payment request record created and linked to both sender and recipient accounts",
+        "Recipient notified via push/SMS with request details and a one-tap fulfillment action",
+        "Upon fulfillment, a P2P transfer is initiated per REQ-WAL-004"
+      ],
+      "error_states": [
+        "REQUEST_EXPIRED: Recipient did not fulfill the request within the validity window",
+        "SELF_REQUEST_PROHIBITED: User attempted to send a payment request to themselves",
+        "RECIPIENT_BLOCKED_SENDER: Target has blocked payment requests from the sender"
+      ]
+    },
+    {
+      "id": "REQ-WAL-005C",
+      "description": "QR & Deep Link Payments",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Merchant or payee has generated a QR code or deep link payment request via the wallet platform",
+        "Consumer is authenticated and has the consumer wallet app or a deep-link capable browser"
+      ],
+      "data_invariants": [
+        "QR payment flow reuses the canonical REQ-WAL-005 payment request protocol",
+        "Deep links must be validated against the platform's registered URL scheme before processing",
+        "Wallet context (balance, identity) is resolved from the authenticated session, not from the QR payload"
+      ],
+      "postconditions": [
+        "Payment processed per REQ-WAL-005 postconditions",
+        "Merchant POS or payee dashboard reflects the payment in real time via webhook",
+        "Consumer wallet transaction history updated immediately"
+      ],
+      "error_states": [
+        "DEEP_LINK_SCHEME_INVALID: URL scheme does not match the registered PaySurity wallet protocol",
+        "QR_EXPIRED: Payment QR has passed expiry per REQ-WAL-005 rules",
+        "WALLET_SESSION_NOT_FOUND: Consumer deep link opened without an active wallet session; redirect to login"
+      ]
+    },
+    {
+      "id": "REQ-WAL-006C",
+      "description": "Sub-accounts & Micro-savings",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Parent wallet account is active and in good standing",
+        "Feature availability is gated by the consumer's wallet tier or plan"
+      ],
+      "data_invariants": [
+        "Sub-account behavior follows REQ-WAL-006 invariants exactly",
+        "Wallet tier restrictions on the number of sub-accounts are enforced at creation time",
+        "Auto-save rule changes are not retroactive; they apply only to transactions after the change timestamp"
+      ],
+      "postconditions": [
+        "Sub-account created and visible in the consumer wallet app under a dedicated 'Goals' or 'Savings' section",
+        "Auto-save rules configured and active for subsequent qualifying transactions",
+        "Sub-account balance excluded from the main wallet's available spending balance display"
+      ],
+      "error_states": [
+        "TIER_RESTRICTION: Consumer's wallet plan does not include sub-account creation",
+        "DUPLICATE_GOAL_LABEL: Consumer attempted to create two sub-accounts with the same label",
+        "AUTO_SAVE_CONFLICT: Two rules targeting the same trigger event create an ambiguous execution order"
+      ]
+    },
+    {
+      "id": "REQ-WAL-007C",
+      "description": "Automated Money Movement",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Consumer has configured at least one automated money movement rule in their wallet settings",
+        "Rule target (sub-account, external bank, bill payee) is verified and active"
+      ],
+      "data_invariants": [
+        "Automated rule execution follows REQ-WAL-007 invariants exactly",
+        "Rules are evaluated in a defined priority order if multiple rules share a trigger",
+        "Consumers can pause, resume, or delete rules at any time; changes take effect immediately"
+      ],
+      "postconditions": [
+        "Automated movement executes and appears in the transaction history as AUTOMATED type",
+        "Consumer receives a push notification for each automated movement execution",
+        "Rule execution log maintains a full history of all executions for the consumer to review"
+      ],
+      "error_states": [
+        "RULE_PRIORITY_CONFLICT: Multiple rules with equal priority and the same trigger cannot be deterministically ordered",
+        "EXTERNAL_BANK_LINK_EXPIRED: ACH link to external bank has been revoked; automated movement fails",
+        "RULE_PAUSED_BY_SYSTEM: System automatically paused a rule after 3 consecutive failures; consumer notified"
+      ]
+    },
+    {
+      "id": "REQ-WAL-008C",
+      "description": "Parental Controls & Dependent Accounts",
+      "domain": "Finance: Digital Wallets",
+      "preconditions": [
+        "Parent account holder has completed the guardian consent flow for the dependent",
+        "Dependent is under the minimum age threshold for an independent account (configurable, default: 18)"
+      ],
+      "data_invariants": [
+        "Dependent account behavior follows REQ-WAL-008 invariants exactly",
+        "Parent can modify spending limits and category restrictions at any time; changes are effective immediately",
+        "Dependent account is automatically converted to an independent account upon reaching the age threshold, subject to re-verification"
+      ],
+      "postconditions": [
+        "Dependent account fully configured with all parent-defined restrictions applied",
+        "Parent dashboard shows a consolidated view of all dependent accounts and their activity",
+        "Age threshold event (birthday) triggers a notification to the parent for account transition review"
+      ],
+      "error_states": [
+        "DEPENDENT_AGE_INVALID: Age verification check fails for the dependent's provided date of birth",
+        "ACCOUNT_TRANSITION_FAILED: Age-threshold account conversion failed; account remains dependent pending manual review",
+        "RESTRICTION_UPDATE_CONFLICT: Parent and system-level restriction conflict; system restriction takes precedence"
+      ]
+    },
+    {
+      "id": "MST-001",
+      "description": "Tenant microsite auto-provisioning on tenant signup",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "New tenant signup event has been emitted by the core onboarding service",
+        "Tenant record is in ACTIVE state with a confirmed business name and category"
+      ],
+      "data_invariants": [
+        "Each tenant is provisioned exactly one microsite; duplicate provisioning is prevented by an idempotency check on the tenant ID",
+        "Default microsite template is assigned based on the tenant's business category",
+        "Microsite subdomain is derived from the business name with conflict resolution (numeric suffix appended on collision)"
+      ],
+      "postconditions": [
+        "Microsite record created in the tenant configuration store with a unique subdomain",
+        "Default content (placeholder menu, business info from signup) populated from the tenant profile",
+        "Tenant notified via email with their microsite URL and admin access credentials"
+      ],
+      "error_states": [
+        "SUBDOMAIN_COLLISION_UNRESOLVABLE: All numeric suffixes up to the configured limit are taken; provisioning halted, manual intervention required",
+        "TEMPLATE_NOT_FOUND: Business category does not map to any defined template; default template applied with warning",
+        "TENANT_NOT_ACTIVE: Signup event fired for a tenant in PENDING or SUSPENDED state; provisioning deferred"
+      ]
+    },
+    {
+      "id": "MST-002",
+      "description": "Custom domain mapping (CNAME) per tenant",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant has an active microsite provisioned",
+        "Tenant has provided a custom domain they own and has added the required CNAME record at their DNS registrar"
+      ],
+      "data_invariants": [
+        "CNAME verification must confirm the domain resolves to the PaySurity microsite hosting endpoint before activation",
+        "SSL certificate must be automatically provisioned (e.g., via Let's Encrypt / ACME) for the custom domain",
+        "Only one custom domain can be active per microsite at a time; adding a new one deprovisions the previous"
+      ],
+      "postconditions": [
+        "Custom domain is verified, SSL is provisioned, and the microsite is accessible via the tenant's domain",
+        "PaySurity subdomain continues to resolve and redirects (301) to the custom domain",
+        "Custom domain and SSL expiry dates are tracked and auto-renewal is scheduled 30 days before expiry"
+      ],
+      "error_states": [
+        "CNAME_VERIFICATION_FAILED: DNS lookup does not resolve to the expected PaySurity endpoint after a configurable timeout",
+        "SSL_PROVISIONING_FAILED: ACME challenge failed; custom domain remains unverified",
+        "DOMAIN_ALREADY_CLAIMED: The provided custom domain is already mapped to another tenant's microsite"
+      ]
+    },
+    {
+      "id": "MST-003",
+      "description": "Menu management CRUD (categories, items, prices, images)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant admin is authenticated and authorized with MENU_ADMIN role for the microsite",
+        "Microsite is in an active, provisioned state"
+      ],
+      "data_invariants": [
+        "Each menu item must have at minimum: name, category, base price, and availability status",
+        "Images must be validated for format (JPEG/PNG/WebP), maximum size (5MB), and minimum resolution (800x800px) before storage",
+        "Price must be stored as an integer (minor units per ISO 4217) with the currency code specified"
+      ],
+      "postconditions": [
+        "Menu changes are reflected on the live microsite within 60 seconds of save (CDN cache invalidated)",
+        "If POS sync is active (MST-007), changes are propagated to the POS menu configuration",
+        "Version history of menu changes maintained for audit and rollback purposes"
+      ],
+      "error_states": [
+        "IMAGE_VALIDATION_FAILED: Uploaded image fails format, size, or resolution check",
+        "PRICE_BELOW_MINIMUM: Configured price is below the platform minimum (e.g., $0.50)",
+        "POS_SYNC_CONFLICT: Menu change conflicts with a concurrent POS-side change; conflict surfaced for manual resolution"
+      ]
+    },
+    {
+      "id": "MST-004",
+      "description": "Price calculation engine: displayPrice = base x (1 + processingFee) x (1 + marginPct)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Base price for the menu item must be defined",
+        "Processing fee rate and margin percentage must be configured (globally or per-tenant)"
+      ],
+      "data_invariants": [
+        "displayPrice = base_price_minor_units * (1 + processing_fee_rate) * (1 + margin_pct), rounded up to the nearest minor unit",
+        "All intermediate calculations must be performed in integer arithmetic with explicit rounding at the final step only",
+        "The formula components (base, processing_fee_rate, margin_pct) must be logged per calculation for audit purposes"
+      ],
+      "postconditions": [
+        "Display price surfaced on the microsite for the consumer",
+        "Price calculation audit record stored linking the display price to its formula inputs",
+        "If either rate changes, all affected display prices are recalculated synchronously before the change is published"
+      ],
+      "error_states": [
+        "NEGATIVE_DISPLAY_PRICE: Calculation results in a zero or negative display price; item hidden pending admin review",
+        "RATE_NOT_CONFIGURED: Processing fee or margin rate is undefined; calculation cannot proceed",
+        "OVERFLOW_DETECTED: Integer arithmetic overflow detected during calculation; error logged and item price flagged"
+      ]
+    },
+    {
+      "id": "MST-005",
+      "description": "PaySurity margin configurable by super admin (default 20%)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Actor holds the SUPER_ADMIN role",
+        "Target scope (global default or specific tenant override) is specified"
+      ],
+      "data_invariants": [
+        "Margin percentage must be between 0% and 100% (exclusive bounds)",
+        "A change to the global default does not retroactively affect tenants with explicit overrides",
+        "All margin configuration changes are versioned with the actor ID, timestamp, and previous value"
+      ],
+      "postconditions": [
+        "New margin rate applied to the target scope immediately",
+        "All affected microsite display prices recalculated and republished within 5 minutes",
+        "Change audit record created in the platform admin audit log"
+      ],
+      "error_states": [
+        "MARGIN_OUT_OF_BOUNDS: Configured rate is <= 0% or >= 100%",
+        "UNAUTHORIZED_ACTOR: Non-super-admin attempting to modify global or tenant margin",
+        "PRICE_RECALCULATION_FAILED: Recalculation job failed for one or more items; failed items flagged for retry"
+      ]
+    },
+    {
+      "id": "MST-006",
+      "description": "Processing fee configurable (default 5%)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Actor holds the SUPER_ADMIN or FINANCE_ADMIN role",
+        "Target scope (global default or per-tenant override) is specified"
+      ],
+      "data_invariants": [
+        "Processing fee percentage must be between 0% and 10% (hard ceiling enforced by the system)",
+        "Per-tenant overrides are evaluated in the price calculation before the global default",
+        "All processing fee configuration changes are versioned per MST-005 audit standards"
+      ],
+      "postconditions": [
+        "New processing fee applied to the specified scope immediately",
+        "Display prices for all affected microsite items recalculated",
+        "Merchants with per-tenant overrides are notified of any global rate changes that would affect them if overrides were removed"
+      ],
+      "error_states": [
+        "FEE_EXCEEDS_CEILING: Configured rate exceeds the 10% hard ceiling",
+        "TENANT_OVERRIDE_CONFLICT: A global change attempts to set a rate lower than an active tenant override without explicit resolution",
+        "NOTIFICATION_DELIVERY_FAILED: Merchant fee change notification could not be delivered"
+      ]
+    },
+    {
+      "id": "MST-007",
+      "description": "POS <-> Microsite bidirectional sync (menu changes reflect on both)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "The tenant has an active POS system integration configured",
+        "POS sync is explicitly enabled by the tenant admin"
+      ],
+      "data_invariants": [
+        "Sync is event-driven: a change event in either system triggers a sync to the other within a configurable window (default: 60s)",
+        "Conflict resolution policy: the most recent timestamp wins unless a manual lock is applied",
+        "Price sync propagates base prices only; the display price formula is applied by the microsite engine (not the POS)"
+      ],
+      "postconditions": [
+        "Menu item CRUD operations are reflected in both systems within the sync window",
+        "Sync log records every event with direction (POS-to-SITE or SITE-to-POS), item ID, and resolution outcome",
+        "Merchant can view pending sync items and manually trigger a force-sync from the admin panel"
+      ],
+      "error_states": [
+        "SYNC_CONFLICT_UNRESOLVABLE: Both systems modified the same item within the same timestamp window; manual intervention required",
+        "POS_INTEGRATION_OFFLINE: POS system is unreachable; changes queued locally until connectivity restored",
+        "SYNC_LOOP_DETECTED: Mutual trigger loop detected between POS and microsite; sync paused and alert raised"
+      ]
+    },
+    {
+      "id": "MST-008",
+      "description": "Catering orders with advance notice enforcement (minimum 48h)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant has catering order capability enabled in their microsite configuration",
+        "Customer has selected a catering item or package from the microsite menu"
+      ],
+      "data_invariants": [
+        "Catering order submission timestamp plus minimum advance notice (configurable, default: 48 hours) must be <= the requested fulfillment datetime",
+        "Catering orders require a non-refundable deposit (configurable percentage, default: 25%) at time of order",
+        "Catering order minimum spend threshold (if configured) must be met before checkout is permitted"
+      ],
+      "postconditions": [
+        "Catering order placed with a PENDING_CONFIRMATION status pending merchant review",
+        "Deposit charged to the customer's payment method immediately",
+        "Merchant notified of the new catering order with full details for confirmation or counter-offer"
+      ],
+      "error_states": [
+        "ADVANCE_NOTICE_VIOLATED: Requested fulfillment time is less than the minimum advance notice window",
+        "MINIMUM_SPEND_NOT_MET: Cart total for the catering order is below the configured minimum",
+        "DEPOSIT_PAYMENT_FAILED: Deposit authorization declined; order not placed"
+      ]
+    },
+    {
+      "id": "MST-009",
+      "description": "Special event orders (large party) with advance notice and prepayment",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant has special event ordering capability enabled",
+        "Party size meets or exceeds the threshold defined as a 'special event' (configurable, default: 50 guests)"
+      ],
+      "data_invariants": [
+        "Special event orders require full prepayment (100%) at time of booking",
+        "Cancellation policy for special events must be explicitly presented and acknowledged by the customer before checkout",
+        "Special event date must be at least the configured minimum lead time in the future (default: 7 days)"
+      ],
+      "postconditions": [
+        "Special event order placed with PREPAID status",
+        "Full payment captured immediately upon order submission",
+        "Event details synced to the merchant's calendar integration (if configured)"
+      ],
+      "error_states": [
+        "PARTY_SIZE_BELOW_THRESHOLD: Order does not meet the minimum guest count for special event classification",
+        "LEAD_TIME_INSUFFICIENT: Booking date is within the minimum lead time window",
+        "CANCELLATION_POLICY_NOT_ACKNOWLEDGED: Customer did not confirm acknowledgment of the cancellation terms"
+      ]
+    },
+    {
+      "id": "MST-010",
+      "description": "Tenant Admin Panel for CRUD operations",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant admin is authenticated with TENANT_ADMIN or higher role",
+        "Microsite is in active state"
+      ],
+      "data_invariants": [
+        "All admin panel actions are logged in the tenant audit trail with actor, timestamp, and changed values",
+        "Destructive actions (delete item, disable microsite) require a confirmation prompt and are irreversible after confirmation",
+        "Admin panel UI enforces the same business rule validations as the API layer"
+      ],
+      "postconditions": [
+        "CRUD operations execute successfully and are reflected in the live microsite",
+        "Tenant admin receives a summary email of all changes made in a session (configurable: immediate or daily digest)",
+        "Session activity logged for security audit"
+      ],
+      "error_states": [
+        "PERMISSION_INSUFFICIENT: Actor attempts an action requiring a higher privilege level",
+        "OPTIMISTIC_LOCK_CONFLICT: Another admin modified the same record concurrently; actor prompted to refresh and retry",
+        "AUDIT_LOG_WRITE_FAILURE: Admin action succeeded but audit log write failed; critical alert raised"
+      ]
+    },
+    {
+      "id": "MST-011",
+      "description": "Super admin override of per-tenant settings",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Actor holds the SUPER_ADMIN role",
+        "Target tenant ID is valid and the tenant is in an active state"
+      ],
+      "data_invariants": [
+        "Super admin overrides supersede all tenant-configured settings for the targeted field",
+        "All super admin overrides are tagged with a mandatory reason code and stored in a separate override audit log",
+        "Tenants are notified of super admin overrides affecting their configuration within 24 hours unless explicitly suppressed for compliance reasons"
+      ],
+      "postconditions": [
+        "Tenant configuration updated to reflect the super admin override",
+        "Override audit record created with: actor, tenant ID, field, old value, new value, reason code, timestamp",
+        "If applicable, display prices or other derived values recalculated and published"
+      ],
+      "error_states": [
+        "TENANT_NOT_FOUND: Provided tenant ID does not exist",
+        "REASON_CODE_MISSING: Override attempted without a mandatory reason code",
+        "OVERRIDE_CREATES_INVALID_STATE: The override would result in a logically invalid configuration; blocked with error detail"
+      ]
+    },
+    {
+      "id": "MST-012",
+      "description": "SEO: per-tenant meta tags, structured data (Restaurant schema.org)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Microsite is provisioned and publicly accessible",
+        "Tenant business information (name, address, phone, cuisine) is populated in the tenant profile"
+      ],
+      "data_invariants": [
+        "Each page must have a unique meta title and meta description; duplicate meta across pages is prohibited",
+        "schema.org Restaurant structured data must include: name, address, telephone, openingHours, and servesCuisine",
+        "Structured data must be validated against the schema.org specification before publication"
+      ],
+      "postconditions": [
+        "Meta tags and structured data rendered in the page <head> for all indexed pages",
+        "Structured data passes Google Rich Results Test validation",
+        "SEO configuration changes are reflected within the CDN cache invalidation window (< 60s)"
+      ],
+      "error_states": [
+        "STRUCTURED_DATA_VALIDATION_FAILED: Generated JSON-LD fails schema.org validation; page published without structured data, warning logged",
+        "DUPLICATE_META_DETECTED: Two pages have identical meta titles; publishing blocked until resolved",
+        "REQUIRED_FIELD_MISSING: A mandatory structured data field is absent from the tenant profile; default placeholder applied with warning"
+      ]
+    },
+    {
+      "id": "MST-013",
+      "description": "Mobile-optimized responsive design (Core Web Vitals)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Microsite template is deployed and publicly accessible",
+        "Core Web Vitals measurement tooling is configured for the microsite"
+      ],
+      "data_invariants": [
+        "LCP (Largest Contentful Paint) must be < 2.5 seconds on a simulated mid-range mobile device",
+        "CLS (Cumulative Layout Shift) must be < 0.1 on all primary pages",
+        "INP (Interaction to Next Paint) must be < 200 milliseconds",
+        "All images must have explicit width and height attributes to prevent layout shift"
+      ],
+      "postconditions": [
+        "Microsite passes Core Web Vitals assessment on both mobile and desktop",
+        "Responsive layout renders correctly at breakpoints: 375px, 768px, 1280px, 1920px",
+        "Automated CWV regression test runs on each template deployment"
+      ],
+      "error_states": [
+        "LCP_REGRESSION: A deployment causes LCP to exceed the 2.5s threshold; deployment flagged",
+        "CLS_VIOLATION: Layout shift score exceeds 0.1; root cause identified as a missing image dimension attribute",
+        "RESPONSIVE_BREAKPOINT_FAILURE: A critical UI element overflows its container at a defined breakpoint"
+      ]
+    },
+    {
+      "id": "MST-014",
+      "description": "Order flow: menu -> cart -> checkout -> confirmation",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Microsite is active and accepting online orders",
+        "Menu has at least one available item",
+        "Payment processing is enabled for the tenant"
+      ],
+      "data_invariants": [
+        "Cart state is maintained in the browser session; server-side cart is created only at checkout initiation",
+        "Item availability is re-validated at checkout initiation against the live inventory state",
+        "Order total displayed at checkout must match the server-calculated total to prevent price manipulation"
+      ],
+      "postconditions": [
+        "Order successfully placed, payment captured, and confirmation screen displayed with order ID and ETA",
+        "Order event dispatched to the merchant's POS or order management system",
+        "Confirmation email and/or SMS sent to the customer with order summary"
+      ],
+      "error_states": [
+        "ITEM_UNAVAILABLE_AT_CHECKOUT: An item became unavailable between cart add and checkout; customer prompted to remove",
+        "PRICE_MISMATCH: Client-calculated total does not match server total; checkout blocked, cart refreshed",
+        "PAYMENT_DECLINED: Payment method declined at checkout; customer prompted to use an alternate method"
+      ]
+    },
+    {
+      "id": "MST-015",
+      "description": "Real-time order sync with POS when activated",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "POS integration is active and the sync feature is enabled (per MST-007)",
+        "A new order has been successfully placed on the microsite"
+      ],
+      "data_invariants": [
+        "Order sync is a one-way push from microsite to POS for new orders (POS is authoritative for order status updates)",
+        "Order payload must include: items, modifiers, customer note, requested fulfillment time, and payment confirmation",
+        "Sync must complete within the defined latency SLA (default: 10 seconds from order confirmation)"
+      ],
+      "postconditions": [
+        "Order appears in the POS order queue and/or KDS within the sync SLA window",
+        "POS order ID is returned and stored as a reference on the microsite order record",
+        "Sync failure triggers an automatic SMS/push alert to the merchant with the order details as a fallback"
+      ],
+      "error_states": [
+        "POS_SYNC_TIMEOUT: POS system did not acknowledge the order within the SLA; fallback notification sent",
+        "ORDER_PAYLOAD_REJECTED: POS returned a validation error on the order payload; error details logged for triage",
+        "POS_OFFLINE: POS system is unreachable; order queued for sync upon POS reconnection, merchant alerted immediately"
+      ]
+    },
+    {
+      "id": "MST-016",
+      "description": "CFO Billing Tiers (Foundation, Growth, Elite)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant account is active with a defined billing subscription",
+        "Tenant has been assigned to a specific CFO billing tier"
+      ],
+      "data_invariants": [
+        "Tier definitions (features, limits, price) are versioned; a tier change is non-retroactive (applies from the next billing cycle)",
+        "Feature access is enforced at the API layer based on the tenant's current tier; no client-side gating only",
+        "Tier limits (e.g., max menu items, max locations) are hard limits; exceeding them is blocked, not silently truncated"
+      ],
+      "postconditions": [
+        "Tenant's feature access reflects their current tier assignment",
+        "Tier assignment change triggers a re-evaluation of all active features and a welcome/change email",
+        "Invoice for the next billing cycle reflects the updated tier pricing"
+      ],
+      "error_states": [
+        "TIER_LIMIT_EXCEEDED: Tenant attempts to add a feature or resource beyond their tier's hard limit",
+        "TIER_NOT_FOUND: An undefined tier code is assigned to a tenant; tenant defaults to Foundation tier with alert",
+        "BILLING_TIER_MISMATCH: Tenant's active features do not match their assigned tier after a plan change; reconciliation job triggered"
+      ]
+    },
+    {
+      "id": "MST-017",
+      "description": "Elite Tier Segment (Vibrant Spice / Minimalist Artisanal Templates)",
+      "domain": "AI Microsites",
+      "preconditions": [
+        "Tenant must be on the Elite billing tier (MST-016)",
+        "Tenant has selected an Elite template from the template library"
+      ],
+      "data_invariants": [
+        "Elite templates are strictly gated behind the Elite tier; access by lower-tier tenants is blocked at the API and UI layers",
+        "Template customization options are bounded by the defined customization schema per template (no arbitrary CSS injection)",
+        "All Elite template assets (fonts, images) must be served from PaySurity's CDN, not externally linked"
+      ],
+      "postconditions": [
+        "Elite template applied to the tenant's microsite with their branding (logo, colors) injected per the customization schema",
+        "Template change is live within the CDN propagation window (< 60 seconds)",
+        "Previous template version archived for a configurable rollback window (default: 30 days)"
+      ],
+      "error_states": [
+        "TIER_ACCESS_DENIED: Non-Elite tenant attempts to apply an Elite template; request blocked",
+        "CUSTOMIZATION_SCHEMA_VIOLATION: Submitted customization payload contains fields not defined in the template schema",
+        "ASSET_LOAD_FAILURE: A required Elite template asset is unavailable from the CDN; template deployment blocked"
+      ]
+    }
+  ]
+}

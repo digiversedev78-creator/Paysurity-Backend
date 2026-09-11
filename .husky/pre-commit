@@ -1,0 +1,15 @@
+#!/bin/sh
+# Block creation of redundant JSON manifests
+if git diff --cached --name-only | grep -E "^REQUIREMENTS_.*\.json$" | grep -v "REQUIREMENTS_MASTER_MANIFEST.json"; then
+  echo "❌ FATAL: Registry Fracture."
+  echo "Creation or modification of redundant manifests is prohibited."
+  echo "The only permitted JSON registry is REQUIREMENTS_MASTER_MANIFEST.json."
+  exit 1
+fi
+
+# Block creation of /db/ folder in the API
+if git diff --cached --name-only | grep -E "^apps/api/src/db/"; then
+  echo "❌ FATAL: ORM Regression."
+  echo "The legacy /db directory is deprecated. Use /drizzle strictly."
+  exit 1
+fi

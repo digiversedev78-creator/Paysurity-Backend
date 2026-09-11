@@ -1,0 +1,66 @@
+﻿src/app.module.ts(77,31): error TS2307: Cannot find module './modules/reports/reports.module' or its corresponding type declarations.
+src/modules/affiliates/affiliates-payouts.service.ts(390,38): error TS2304: Cannot find name 'isNull'.
+src/modules/affiliates/affiliates-payouts.service.ts(390,82): error TS2304: Cannot find name 'isNull'.
+src/modules/affiliates/drizzle.service.ts(42,29): error TS2368: Type parameter name cannot be 'any'.
+src/modules/affiliates/schema.ts(3,27): error TS2307: Cannot find module '../merchants/schema' or its corresponding type declarations.
+src/modules/ai/ai-customer-segmentation.service.ts(4,3): error TS2305: Module '"@paysurity/database"' has no exported member 'segmentationRunStatusEnum'.
+src/modules/analytics/eod-reporting.engine.ts(123,70): error TS2345: Argument of type 'PayrollSummaryReport' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type 'PayrollSummaryReport'.
+src/modules/analytics/eod-reporting.engine.ts(133,64): error TS2345: Argument of type 'POSSalesReport' is not assignable to parameter of type 'Record<string, unknown>'.
+  Index signature for type 'string' is missing in type 'POSSalesReport'.
+src/modules/api-keys/api-platform.controller.ts(59,16): error TS2304: Cannot find name 'Inject'.
+src/modules/api-keys/api-platform.controller.ts(82,6): error TS2304: Cannot find name 'Inject'.
+src/modules/api-keys/api-platform.module.ts(2,18): error TS2305: Module '"@nestjs/common"' has no exported member 'CacheModule'.
+src/modules/api-keys/api-platform.module.ts(4,33): error TS2307: Cannot find module './audit-log.service' or its corresponding type declarations.
+src/modules/api-keys/apikeys.controller.ts(7,6): error TS2300: Duplicate identifier 'NodePgDatabase'.
+src/modules/auth/audit-log.service.ts(7,35): error TS2307: Cannot find module './dto/create-audit-log.dto' or its corresponding type declarations.
+src/modules/auth/drizzle.service.ts(7,29): error TS2368: Type parameter name cannot be 'any'.
+src/modules/checkout/orders.service.ts(43,11): error TS2488: Type 'any[] | QueryResult<never>' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/modules/compliance/dto/pci-audit-archive.dto.ts(66,47): error TS2304: Cannot find name 'PartialType'.
+src/modules/compliance/pci-audit-archive.service.ts(4,10): error TS2305: Module '"@paysurity/database"' has no exported member 'pciAuditArchives'.
+src/modules/core/security/dpop.guard.ts(2,33): error TS2307: Cannot find module './crypto.utils' or its corresponding type declarations.
+src/modules/delivery/delivery-driver-assignment.service.ts(4,18): error TS2305: Module '"@paysurity/database"' has no exported member 'deliveryDrivers'.
+src/modules/delivery/delivery.service.ts(18,6): error TS2300: Duplicate identifier 'NodePgDatabase'.
+src/modules/ecom/cart.service.ts(7,15): error TS2451: Cannot redeclare block-scoped variable 'sql'.
+src/modules/ecom/checkout.service.ts(6,15): error TS2451: Cannot redeclare block-scoped variable 'sql'.
+src/modules/ecom/checkout.service.ts(11,6): error TS2300: Duplicate identifier 'NodePgDatabase'.
+src/modules/ecom/product.service.ts(221,94): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'SQL<unknown>' is not assignable to parameter of type '(substring: string, ...args: any[]) => string'.
+      Type 'SQL<unknown>' provides no match for the signature '(substring: string, ...args: any[]): string'.
+src/modules/ecom/product.service.ts(343,94): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Argument of type 'SQL<unknown>' is not assignable to parameter of type '(substring: string, ...args: any[]) => string'.
+      Type 'SQL<unknown>' provides no match for the signature '(substring: string, ...args: any[]): string'.
+src/modules/ecom/shipping.controller.ts(36,2): error TS2304: Cannot find name 'Controller'.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(24,24): error TS2339: Property 'userId' does not exist on type 'CreateProductReviewDto'.
+src/modules/ecommerce/product-reviews/product-reviews.service.ts(24,40): error TS2339: Property 'comment' does not exist on type 'CreateProductReviewDto'.
+src/modules/employees/clock.service.ts(16,6): error TS2304: Cannot find name 'Inject'.
+src/modules/employees/dto/employee-schedule.dto.ts(62,48): error TS2304: Cannot find name 'PartialType'.
+src/modules/employees/employees.service.ts(103,25): error TS2339: Property 'scheduledDate' does not exist on type 'CreateEmployeeScheduleDto'.
+src/modules/employees/employees.service.ts(103,60): error TS2339: Property 'role' does not exist on type 'CreateEmployeeScheduleDto'.
+src/modules/event-bus/event-consumers.ts(4,28): error TS2307: Cannot find module '../ops/ops.service' or its corresponding type declarations.
+src/modules/gift-cards/gift-cards.service.ts(478,7): error TS2353: Object literal may only specify known properties, and 'tenantId' does not exist in type 'GiftCardResponseDto'.
+src/modules/grocery/offline/cache.service.ts(1,39): error TS2307: Cannot find module './tpm.utils' or its corresponding type declarations.
+src/modules/inventory/inventory.controller.ts(226,11): error TS2322: Type '{ barcode?: string; name?: string; description?: string; stockLevel?: number; reorderPoint?: number; supplierId?: string; cost?: number; price?: number; category?: string; locationBin?: string; }' is not assignable to type 'Partial<{ name: string; tenantId: string; price: string; barcode: string; supplierId: string; cost: string; id?: string; description?: string; createdAt?: Date; updatedAt?: Date; category?: string; stockLevel?: number; reorderPoint?: number; locationBin?: string; }>'.
+  Types of property 'price' are incompatible.
+    Type 'number' is not assignable to type 'string'.
+src/modules/mastercard/mastercard-send.adapter.ts(221,20): error TS2304: Cannot find name 'HeadersInit'.
+src/modules/mastercard/mastercard.service.ts(4,33): error TS2305: Module '"./mastercard-send.adapter"' has no exported member 'DisbursementRequest'.
+src/modules/mastercard/mastercard.service.ts(4,54): error TS2305: Module '"./mastercard-send.adapter"' has no exported member 'DisbursementResult'.
+src/modules/merchant/dto/merchant.dto.ts(83,40): error TS2304: Cannot find name 'PartialType'.
+src/modules/merchant/merchant-onboarding.controller.ts(248,83): error TS2322: Type 'boolean' is not assignable to type 'string[]'.
+src/modules/merchant/merchant-onboarding.controller.ts(378,72): error TS2322: Type 'boolean' is not assignable to type 'string[]'.
+src/modules/merchant/merchants.service.ts(143,54): error TS2339: Property 'length' does not exist on type 'unknown'.
+src/modules/orders/orders.controller.ts(66,12): error TS1016: A required parameter cannot follow an optional parameter.
+src/modules/orders/orders.dto.ts(17,10): error TS2724: '"@paysurity/database"' has no exported member named 'Order'. Did you mean 'orders'?
+src/modules/payroll/services/payroll-runs.service.ts(13,47): error TS2315: Type 'NodePgDatabase' is not generic.
+src/modules/price-engine/price-engine.service.ts(241,23): error TS2304: Cannot find name 'Query'.
+src/modules/products/products.service.ts(73,47): error TS2339: Property 'pageSize' does not exist on type 'PaginationDto'.
+src/modules/receipts/receipts.module.ts(15,17): error TS2304: Cannot find name 'ReceiptsController'.
+src/modules/returns/returns.dto.ts(53,38): error TS2304: Cannot find name 'PartialType'.
+src/modules/returns/returns.service.ts(88,23): error TS2339: Property 'transactionId' does not exist on type 'ReturnQueryDto'.
+src/modules/settlement/settlement.dto.ts(67,42): error TS2304: Cannot find name 'PartialType'.
+src/modules/tables/dto/table.dto.ts(87,37): error TS2304: Cannot find name 'PartialType'.
+src/modules/tax/tax.controller.ts(41,104): error TS2339: Property 'taxYear' does not exist on type 'GetTaxSummaryReportDto'.
+src/modules/tax/tax.controller.ts(41,132): error TS2339: Property 'employeeId' does not exist on type 'GetTaxSummaryReportDto'.

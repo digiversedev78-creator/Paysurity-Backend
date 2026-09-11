@@ -1,0 +1,54 @@
+name: requirements-preflight
+
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    name: preflight
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run requirements preflight
+        working-directory: Requirements/PaySurity_Requirements_Split_Set_v11_25
+        shell: bash
+        run: |
+          set +e
+          node AGENT_GUARD/preflight_runner.js .
+          code=True
+          if [  -ne 0 ]; then
+            echo "PRECHECK_FAIL_EXIT_CODE="
+            echo "::group::PWD + ls"
+            pwd
+            ls -la
+            echo "::endgroup::"
+
+            echo "::group::Key files (head)"
+            for f in 00_INDEX.md blocking_issues.md; do
+              if [ -f "" ]; then
+                echo "-----  (first 260 lines) -----"
+                sed -n '1,260p' ""
+              fi
+            done
+            echo "::endgroup::"
+
+            echo "::group::preflight artifacts"
+            # Print any generated JSON/text artifacts if present
+            while IFS= read -r -d '' f; do
+              echo "-----  (first 400 lines) -----"
+              sed -n '1,400p' "" || true
+            done < <(find . -maxdepth 3 -type f \( -name 'preflight_*.json' -o -name '*preflight*.json' -o -name 'term_registry*.json' -o -name '*.report.json' \) -print0)
+            echo "::endgroup::"
+          fi
+          exit 

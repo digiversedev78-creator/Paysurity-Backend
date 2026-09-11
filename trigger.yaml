@@ -1,0 +1,6 @@
+name: "paysurity-staging-trigger"
+repositoryEventConfig:
+  repository: "projects/paysurity-platform-2026/locations/us-central1/connections/ps-github-conn/repositories/paysurity-monorepo"
+  push:
+    branch: "^main$"
+filename: "cloudbuild.yaml"

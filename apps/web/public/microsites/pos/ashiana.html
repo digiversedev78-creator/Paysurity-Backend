@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>POS Register — Ashiana Collections</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--bg:#0a0612;--surface:rgba(18,10,30,.94);--glass:rgba(255,255,255,.04);--accent:#d4a030;--accent-dark:#b8850e;--text:#f5f0e8;--muted:rgba(245,240,232,.45)}</style>
+<link rel="stylesheet" href="pos.css">
+</head>
+<body>
+<div class="pos-wrap">
+  <header class="pos-header">
+    <h1>💎 Ashiana Collections POS</h1>
+    <div class="pos-meta">
+      <span class="pos-clock" id="posClock">--:--:--</span>
+      <div class="pos-user">👤 Sales Associate</div>
+    </div>
+  </header>
+  <div class="pos-left">
+    <div class="pos-toolbar">
+      <button class="pos-tool" onclick="POS.showScanner()">📷 Barcode / SKU</button>
+      <button class="pos-tool" onclick="showGiftWrap()">🎁 Gift Wrap</button>
+    </div>
+    <div class="pos-cats" id="posCats" role="tablist"></div>
+    <div class="pos-grid" id="posGrid"></div>
+  </div>
+  <div class="pos-right">
+    <div class="pos-stats">
+      <div class="pos-stat"><div class="pos-stat-label">Transactions</div><div class="pos-stat-val" id="statTxn">0</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Revenue</div><div class="pos-stat-val" id="statRev">$0.00</div></div>
+      <div class="pos-stat"><div class="pos-stat-label">Avg Ticket</div><div class="pos-stat-val" id="statAvg">$0.00</div></div>
+    </div>
+    <div class="pos-order-head"><h2>Current Order</h2><span class="pos-badge" id="posItemCount">0</span></div>
+    <div class="pos-cart" id="posCart"><div class="pos-empty">Scan or tap items</div></div>
+    <div class="pos-footer">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <label style="font-size:11px;color:var(--muted);white-space:nowrap" for="giftWrapCb">🎁 Gift wrap</label>
+        <input type="checkbox" id="giftWrapCb" onchange="toggleGW()">
+        <span id="gwPrice" style="font-size:11px;color:var(--accent);display:none">+$4.99</span>
+      </div>
+      <div class="pos-total-row"><span>Total</span><span class="pos-total" id="posTotal">$0.00</span></div>
+      <div class="pos-pay-methods">
+        <button class="pos-pm on" data-m="CARD_PRESENT">💳 Card</button>
+        <button class="pos-pm" data-m="CASH">💵 Cash</button>
+        <button class="pos-pm" data-m="TAP">📱 Tap</button>
+      </div>
+      <div class="pos-actions">
+        <button class="pos-clear" onclick="POS.clearCart()">Clear</button>
+        <button class="pos-pay" id="posPayBtn" disabled onclick="POS.processPayment(document.querySelector('.pos-pm.on')?.dataset.m||'CARD_PRESENT')">💳 CHARGE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- BARCODE MODAL -->
+<div class="pos-modal" id="scanModal"><div class="pos-modal-box">
+  <h3>📷 Barcode / SKU Scanner</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Enter product name, model, or SKU code</p>
+  <input id="barcodeInput" placeholder="e.g. 'Kundan' or 'ASH-NK-001'" autofocus>
+  <button class="primary" onclick="POS.processBarcode()">🔍 Find Product</button>
+  <button class="secondary" onclick="POS.closeScanner()">Cancel</button>
+</div></div>
+<!-- GIFT WRAP MODAL -->
+<div class="pos-modal" id="giftModal"><div class="pos-modal-box">
+  <h3>🎁 Gift Wrapping</h3>
+  <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Premium gift wrapping with Ashiana signature box</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
+    <button class="primary" style="background:var(--accent)" onclick="addGiftWrap('Standard')">🎁 Standard ($4.99)</button>
+    <button class="primary" style="background:#6366f1" onclick="addGiftWrap('Premium')">💎 Premium ($9.99)</button>
+  </div>
+  <button class="secondary" onclick="document.getElementById('giftModal').style.display='none'">Cancel</button>
+</div></div>
+<!-- RECEIPT MODAL -->
+<div class="pos-modal" id="receiptModal"><div class="pos-modal-box">
+  <div id="receiptContent"></div>
+  <button class="secondary" onclick="POS.closeReceipt()">Close</button>
+</div></div>
+<div class="pos-toast" id="posToast"></div>
+<script src="pos-engine.js"></script>
+<script>
+document.querySelectorAll('.pos-pm').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.pos-pm').forEach(x=>x.classList.remove('on'));this.classList.add('on');
+}));
+function showGiftWrap(){document.getElementById('giftModal').style.display='flex'}
+function addGiftWrap(type){
+  const price=type==='Premium'?999:499;
+  POS.cart.push({n:`🎁 ${type} Gift Wrap`,p:price,e:'🎁',qty:1,idx:-1});
+  POS.renderCart();POS.toast(`${type} gift wrap added!`);
+  document.getElementById('giftModal').style.display='none';
+}
+function toggleGW(){
+  const cb=document.getElementById('giftWrapCb');
+  document.getElementById('gwPrice').style.display=cb.checked?'inline':'none';
+  if(cb.checked){POS.cart.push({n:'🎁 Gift Wrap',p:499,e:'🎁',qty:1,idx:-1});POS.renderCart();}
+  else{const i=POS.cart.findIndex(c=>c.n.includes('Gift Wrap'));if(i>=0){POS.cart.splice(i,1);POS.renderCart();}}
+}
+POS.init({
+  storeName:'Ashiana Collections',
+  email:'admin@ashianacollections.com', password:'Test123!',
+  locationId:'dddddddd-0001-4000-8000-000000000001',
+  orderType:'SHIP', hasKDS:false,
+  items:[
+    {n:'Kundan Bridal Set',p:12999,e:'👰',cat:'Bridal',stock:3},
+    {n:'Polki Choker Set',p:15999,e:'💍',cat:'Bridal',stock:2},
+    {n:'Crystal Bridal Set',p:8999,e:'💎',cat:'Bridal',stock:5},
+    {n:'Maang Tikka',p:3499,e:'👑',cat:'Bridal',stock:8},
+    {n:'Kundan Necklace',p:7999,e:'💎',cat:'Kundan',stock:4},
+    {n:'Polki Jhumkas',p:4599,e:'✨',cat:'Kundan',stock:6},
+    {n:'Kundan Bangles (4)',p:5999,e:'⭕',cat:'Kundan',stock:3},
+    {n:'Polki Nath',p:2299,e:'💫',cat:'Kundan',stock:10},
+    {n:'Zircon Necklace',p:3999,e:'✨',cat:'Zircon',stock:7},
+    {n:'Crystal Earrings',p:1999,e:'💧',cat:'Zircon',stock:12},
+    {n:'Tennis Bracelet',p:2999,e:'💎',cat:'Zircon',stock:9},
+    {n:'Silver Ring',p:2499,e:'💍',cat:'Zircon',stock:15},
+    {n:'Pashmina Shawl',p:4999,e:'🧣',cat:'Fashion',stock:4},
+    {n:'Velvet Clutch',p:3499,e:'👜',cat:'Fashion',stock:6},
+    {n:'Oxidized Anklet',p:1299,e:'🦶',cat:'Fashion',stock:20},
+    {n:'Pearl Hair Pins',p:999,e:'📌',cat:'Fashion',stock:25},
+  ]
+});
+</script>
+</body>
+</html>

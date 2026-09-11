@@ -1,0 +1,6 @@
+﻿src/modules/tables/tables.service.ts(37,44): error TS1003: Identifier expected.
+src/modules/tables/tables.service.ts(37,78): error TS1109: Expression expected.
+src/modules/tables/tables.service.ts(39,47): error TS1003: Identifier expected.
+src/modules/tables/tables.service.ts(39,73): error TS1109: Expression expected.
+src/modules/tables/tables.service.ts(41,44): error TS1003: Identifier expected.
+src/modules/tables/tables.service.ts(41,78): error TS1109: Expression expected.
