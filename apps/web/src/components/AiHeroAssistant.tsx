@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AiSandboxGuard } from '@paysurity/auth';
+
 
 const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL || 'http://localhost:4001';
 
@@ -92,7 +92,7 @@ export default function AiHeroAssistant() {
   };
 
   return (
-    <AiSandboxGuard>
+    
       <div className="w-full max-w-2xl relative mt-4 flex flex-col items-start text-left">
       
       {/* Chat Messages Area */}
@@ -186,6 +186,7 @@ export default function AiHeroAssistant() {
         </div>
       </div>
       </div>
-    </AiSandboxGuard>
+    
   );
 }
+
